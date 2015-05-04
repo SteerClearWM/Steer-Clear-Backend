@@ -16,4 +16,4 @@ Install requirements
 
 Run app
 
-`$ python app.py`
+`$ python runserver.py`
