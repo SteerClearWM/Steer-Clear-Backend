@@ -9,3 +9,4 @@ class SteerClearTestCase(unittest.TestCase):
 	def test_heartbeat(self):
 		response = self.app.get('/')
 		self.assertEquals(response.status, "200 OK")
+		self.assertEquals(response.data, "pulse")
