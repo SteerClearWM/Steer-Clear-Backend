@@ -1,4 +1,4 @@
-from app import app
+from steerclear import app
 
 @app.route('/')
 def heartbeat():
