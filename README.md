@@ -17,3 +17,9 @@ Install requirements
 Run app
 
 `$ python runserver.py`
+
+##Testing
+
+To run tests use **nosetests**
+
+`$ nosetests`
