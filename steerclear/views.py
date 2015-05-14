@@ -22,11 +22,12 @@ def rides():
 	if request.method == 'GET':
 		return json.jsonify({'rides': list_rides()})
 	
-	print request.form
 	name = request.form.get('name', '')
-	print "name: " + name
+	if not name:
+		abort(404)
+
 	phone_number = request.form.get('phone_number', '')
-	if not name or not phone_number:
+	if not phone_number:
 		abort(404)
 
 	new_ride = add_ride(name, phone_number)
