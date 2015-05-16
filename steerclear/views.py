@@ -70,3 +70,8 @@ def rides():
     new_ride = add_ride(phone_number, num_passengers, pickup, dropoff)
     return json.jsonify({'ride': new_ride})
 
+@app.route('/clear')
+def clear():
+    db.session.query(Ride).delete()
+    db.session.commit()
+    return "OK"
