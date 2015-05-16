@@ -60,7 +60,7 @@ returns a json object of the list of all rides. Sample:
 
 ### POST rides
 
-Add a ride to the queue. Payload must have the following data fields:
+Add a ride to the queue. Payload must be form encoded. Payload must have the following data fields:
 
 **phone_number**: phone number in string format
 
