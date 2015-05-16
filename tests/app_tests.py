@@ -1,6 +1,6 @@
 from steerclear import app, db
 from steerclear.models import *
-import unittest, tempfile, json
+import unittest, json
 
 """
 SteerClearTestCase
@@ -16,7 +16,6 @@ class SteerClearTestCase(unittest.TestCase):
     instance and creates new test database
     """
     def setUp(self):
-        _, db_abs_path = tempfile.mkstemp()
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
         self.client = app.test_client()
