@@ -12,6 +12,11 @@ def add_ride(phone_number, num_passengers, pickup, dropoff):
     db.session.commit()
     return new_ride.as_dict()
 
+@app.errorhandler(404)
+def resource_not_found(error):
+    return "Sorry", 404
+
+
 """
 heartbeat
 ---------

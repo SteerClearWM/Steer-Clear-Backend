@@ -71,3 +71,39 @@ class SteerClearTestCase(unittest.TestCase):
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {u"ride": payload})
+
+        bad_payload = payload.copy()
+        bad_payload.pop('phone_number', None)
+        bad_payload.pop('id', None)
+        r = self.client.post('/rides', data=bad_payload)
+        self.assertEquals(r.status_code, 404)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('num_passengers', None)
+        bad_payload.pop('id', None)
+        r = self.client.post('/rides', data=bad_payload)
+        self.assertEquals(r.status_code, 404)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('start_latitude', None)
+        bad_payload.pop('id', None)
+        r = self.client.post('/rides', data=bad_payload)
+        self.assertEquals(r.status_code, 404)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('start_longitude', None)
+        bad_payload.pop('id', None)
+        r = self.client.post('/rides', data=bad_payload)
+        self.assertEquals(r.status_code, 404)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('end_latitude', None)
+        bad_payload.pop('id', None)
+        r = self.client.post('/rides', data=bad_payload)
+        self.assertEquals(r.status_code, 404)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('end_longitude', None)
+        bad_payload.pop('id', None)
+        r = self.client.post('/rides', data=bad_payload)
+        self.assertEquals(r.status_code, 404)   
