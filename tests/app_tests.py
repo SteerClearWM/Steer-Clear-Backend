@@ -17,10 +17,9 @@ class SteerClearTestCase(unittest.TestCase):
 	def test_heartbeat(self):
 		response = self.client.get('/')
 		self.assertEquals(response.status_code, 200)
-		self.assertEquals(response.data, "pulse")
+		self.assertEquals(response.get_data(), "pulse")
 
 	def test_list_rides(self):
 		response = self.client.get('/rides')
 		self.assertEquals(response.status_code, 200)
-		self.assertEquals(json.loads(response.data), {"rides": []})
-
+		self.assertEquals(json.loads(response.get_data()), {"rides": []})
