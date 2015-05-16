@@ -14,6 +14,14 @@ Install requirements
 
 `$ pip install -r requirements.txt`
 
+Create Database (NOTE: only works on Mac or Unix based systems right now)
+
+`$ python create_db.py`
+
+Check that all tests pass
+
+`$ nosetests`
+
 Run app
 
 `$ python runserver.py`
