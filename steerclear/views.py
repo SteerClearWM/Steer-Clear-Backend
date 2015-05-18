@@ -7,10 +7,6 @@ def list_rides():
     result = Ride.query.all()
     return map(Ride.as_dict, result)
 
-def add_ride(ride):
-    db.session.add(ride)
-    db.session.commit()
-
 @app.errorhandler(404)
 def resource_not_found(error):
     return "Sorry", 404
@@ -36,15 +32,17 @@ to the queue and return the ride json object in the response
 @app.route('/rides', methods=['GET', 'POST'])
 def rides():
     if request.method == 'GET':
-        return json.jsonify({'rides': list_rides()})
+        ride_list = list_rides()
+        return json.jsonify({'rides': ride_list})
 
     form = RideForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        new_ride = form.as_ride()
-        add_ride(new_ride)
+    new_ride = form.as_ride()                               # convert form to Ride object
+    if request.method == 'POST' and form.validate_on_submit():  # validate form data
+        db.session.add(new_ride)                                # and and commit new ride object to database
+        db.session.commit()
         return json.jsonify({'ride': new_ride.as_dict()})
     
-    abort(404)
+    return json.jsonify({'ride': new_ride.as_dict()}), 404
 
 @app.route('/clear')
 def clear():
