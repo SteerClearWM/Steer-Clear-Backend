@@ -2,8 +2,23 @@ from steerclear import app
 from steerclear.forms import RideForm
 import unittest, flask
 
+"""
+RideFormTestCase
+----------------
+Test class for the RideForm class
+"""
 class RideFormTestCase(unittest.TestCase):
 
+    """
+    submit_form
+    -----------
+    helper method to submit a RideForm by faking
+    a request context. Returns True is the form
+    validated and False if not.
+
+    *payload* is a dictionary of name/value pairs
+              of the form data that is being submitted
+    """
     def submit_form(self, payload):
         with app.test_request_context():
             form = RideForm(data=payload)
@@ -18,6 +33,11 @@ class RideFormTestCase(unittest.TestCase):
             u"end_longitude": 4.4,
         }
 
+    """
+    test_ride_form_correct_submit
+    -----------------------------
+    Tests that a RideForm can be validated correctly
+    """
     def test_ride_form_correct_submit(self):
         result = self.submit_form(self.payload)
         self.assertTrue(result)
@@ -36,18 +56,36 @@ class RideFormTestCase(unittest.TestCase):
             result = self.submit_form(bad_payload)
             self.assertFalse(result)
 
+    """
+    test_num_passengers_min_range
+    -----------------------------
+    Tests that a RideForm accepts the correct min
+    range value for the 'num_passengers' field
+    """
     def test_num_passengers_min_range(self):
         payload = self.payload.copy()
         payload[u'num_passengers'] = 1
         result = self.submit_form(payload)
         self.assertTrue(result)
 
+    """
+    test_num_passengers_max_range
+    -----------------------------
+    Tests that a RideForm accepts the correct max
+    range value for the 'num_passengers' field
+    """
     def test_num_passengers_max_range(self):
         payload = self.payload.copy()
         payload[u'num_passengers'] = 8
         result = self.submit_form(payload)
         self.assertTrue(result)
 
+    """
+    test_num_passengers_bad_range
+    -----------------------------
+    Tests that a RideForm does not accept values
+    for the 'num_passengers' field that are out of range
+    """
     def test_num_passengers_bad_range(self):
         bad_payload = self.payload.copy()
         bad_payload[u'num_passengers'] = 0
