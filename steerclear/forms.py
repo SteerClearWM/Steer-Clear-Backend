@@ -11,7 +11,6 @@ Should validate that all form parameters are required
 and are of the right type, length, etc...
 """
 class RideForm(Form):
-    phone_number = StringField('phone_number', [DataRequired(), Length(min=8, max=20)])
     num_passengers = IntegerField('num_passengers', [DataRequired(), NumberRange(min=1, max=8)])
     start_latitude = FloatField('start_latitude', [DataRequired()])
     start_longitude = FloatField('start_longitude', [DataRequired()])
@@ -25,7 +24,6 @@ class RideForm(Form):
     """
     def as_ride(self):
         return Ride(
-            self.phone_number.data,
             self.num_passengers.data,
             (self.start_latitude.data, self.start_longitude.data),
             (self.end_latitude.data, self.end_longitude.data)

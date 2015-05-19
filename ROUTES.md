@@ -27,9 +27,7 @@ returns a json object of the list of all rides. Sample:
       "id": 1, 
       
       "num_passengers": 4, 
-      
-      "phone_number": "aaa-aaa-aaaa", 
-      
+            
       "start_latitude": 10.0, 
       
       "start_longitude": 50.1
@@ -45,9 +43,7 @@ returns a json object of the list of all rides. Sample:
       "id": 2, 
     
       "num_passengers": 4, 
-    
-      "phone_number": "aaa-aaa-aaaa", 
-    
+        
       "start_latitude": 10.0, 
     
       "start_longitude": 50.1
@@ -61,8 +57,6 @@ returns a json object of the list of all rides. Sample:
 ### POST rides
 
 Add a ride to the queue. Payload must have the following data fields:
-
-**phone_number**: phone number in string format
 
 **num_passengers**: integer value of the number of passengers in ride
 
