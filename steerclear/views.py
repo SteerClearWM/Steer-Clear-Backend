@@ -44,6 +44,16 @@ def rides():
     
     return json.jsonify({'ride': new_ride.as_dict()}), 404
 
+"""
+honk
+----
+Sends a push notification to ride object with *ride_id*
+value as their id
+"""
+@app.route('/rides/<int:ride_id>', methods=['PUT'])
+def honk(ride_id):
+    pass
+
 @app.route('/clear')
 def clear():
     db.session.query(Ride).delete()
