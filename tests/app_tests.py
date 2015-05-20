@@ -17,7 +17,7 @@ class SteerClearTestCase(unittest.TestCase):
     """
     def setUp(self):
         app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
         self.client = app.test_client()
         db.create_all()
 
@@ -46,7 +46,7 @@ class SteerClearTestCase(unittest.TestCase):
     ---------------
     Tests that listing all of the rides in the queue is correct.
     """
-    def test_list_rides(self):
+    def test_list_rides_empty(self):
         response = self.client.get('/rides')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {"rides": []})
@@ -60,7 +60,6 @@ class SteerClearTestCase(unittest.TestCase):
     """
     def test_add_ride(self):
         payload = {
-                    u"phone_number": u"123-456-7890",
                     u"num_passengers": 3,
                     u"start_latitude": 1.1,
                     u"start_longitude": 2.2,
@@ -71,12 +70,6 @@ class SteerClearTestCase(unittest.TestCase):
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {u"ride": payload})
-
-        bad_payload = payload.copy()
-        bad_payload.pop('phone_number', None)
-        bad_payload.pop('id', None)
-        r = self.client.post('/rides', data=bad_payload)
-        self.assertEquals(r.status_code, 404)
 
         bad_payload = payload.copy()
         bad_payload.pop('num_passengers', None)

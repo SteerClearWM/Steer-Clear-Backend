@@ -14,7 +14,15 @@ Install requirements
 
 `$ pip install -r requirements.txt`
 
-Create Database (NOTE: only works on Mac or Unix based systems right now)
+Activate OS specific environment variables settings
+
+    #Linux/Mac
+    $ ./scripts/setup.sh
+   
+    #Windows
+    > ./scripts/setup.bat
+
+Create Database (NOTE: this will delete old database at the moment)
 
 `$ python create_db.py`
 
