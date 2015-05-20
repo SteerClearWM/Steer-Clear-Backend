@@ -56,7 +56,7 @@ returns a json object of the list of all rides. Sample:
 
 ### POST rides
 
-Add a ride to the queue. Payload must have the following data fields:
+Add a ride to the queue. On success, returns json object with created ride. On failure, returns request payload for helpful debugging. Payload must have the following data fields:
 
 **num_passengers**: integer value of the number of passengers in ride
 
