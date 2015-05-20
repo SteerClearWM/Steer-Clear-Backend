@@ -7,6 +7,16 @@ def list_rides():
     result = Ride.query.all()
     return map(Ride.as_dict, result)
 
+def cancel_ride(ride_id):
+    if not ride_id:
+        raise Exception
+    canceled_ride = Ride.query.get(ride_id)
+    if not canceled_ride:
+        raise Exception
+
+    db.session.delete(canceled_ride)
+    db.session.commit()
+
 @app.errorhandler(404)
 def resource_not_found(error):
     return "Sorry", 404
@@ -30,7 +40,18 @@ as a json object. If the method is POST, add a new ride
 to the queue and return the ride json object in the response
 """
 @app.route('/rides', methods=['GET', 'POST'])
-def rides():
+@app.route('/rides/<int:ride_id>', methods=['PUT', 'DELETE'])
+def rides(ride_id=None):
+    if request.method == 'PUT':
+        return "asd;lfkjasd"
+
+    if request.method == 'DELETE':
+        try:
+            cancel_ride(ride_id)
+            return "OK"
+        except Exception:
+            abort(404)
+
     if request.method == 'GET':
         ride_list = list_rides()
         return json.jsonify({'rides': ride_list})
