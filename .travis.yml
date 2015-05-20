@@ -1,6 +1,6 @@
 language: python
 # command to install dependencies
 install: "pip install -r requirements.txt"
-script: ./scripts/setup.sh
+env: STEERCLEAR_SETTINGS=settings/unix_settings.py
 # command to run tests
 script: nosetests
