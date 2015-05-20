@@ -17,7 +17,7 @@ class SteerClearTestCase(unittest.TestCase):
     """
     def setUp(self):
         app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
         self.client = app.test_client()
         db.create_all()
 
