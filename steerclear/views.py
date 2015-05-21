@@ -46,6 +46,20 @@ def make_list_rides(ride_id):
         except Exception:
             return "Sorry", 404
 
+def make_hail_ride():
+    try:
+        new_ride = hail_ride()
+        return json.jsonify({'ride': new_ride})
+    except Exception:
+        return "Sorry", 404
+
+def make_delete_ride(ride_id):
+    try:
+        cancel_ride(ride_id)
+        return "OK"
+    except Exception:
+        return "Sorry", 404
+
 """
 heartbeat
 ---------
@@ -70,18 +84,10 @@ def rides(ride_id=None):
         return make_list_rides(ride_id)
 
     if request.method == 'POST':
-        try:
-            new_ride = hail_ride()
-            return json.jsonify({'ride': new_ride})
-        except Exception:
-            return "Sorry", 404
+        return make_hail_ride()
 
     if request.method == 'DELETE':
-        try:
-            cancel_ride(ride_id)
-            return "OK"
-        except Exception:
-            return "Sorry", 404
+        return make_delete_ride(ride_id)
 
     if request.method == 'PUT':
         return "asd;lfkjasd"
