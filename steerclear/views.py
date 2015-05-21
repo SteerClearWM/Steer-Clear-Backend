@@ -3,10 +3,24 @@ from flask import request, json, abort
 from models import *
 from forms import *
 
+"""
+list_rides
+----------
+Lists all of the rides in the ride queue.
+Returns a list of Ride dictionaries
+"""
 def list_rides():
     rides = Ride.query.all()
     return map(Ride.as_dict, rides)
 
+"""
+list_ride
+---------
+List a specific ride base on ride_id.
+Returns the Ride dictionary of the ride
+with id *ride_id* or raises an exception if
+the Ride doesn't exist
+"""
 def list_ride(ride_id):
     if ride_id is None:
         raise Exception
@@ -15,16 +29,29 @@ def list_ride(ride_id):
         raise Exception
     return ride.as_dict()
 
+"""
+hail_ride
+---------
+Creates a new Ride object and adds it to the ride queue.
+Returns the created Ride dictionary.
+Raises an exception if form data is invalid.
+"""
 def hail_ride():
     form = RideForm()
     print form.data
     if not form.validate_on_submit():
         raise Exception
     new_ride = form.as_ride()
-    db.session.add(new_ride)                                # and and commit new ride object to database
+    db.session.add(new_ride)
     db.session.commit()
     return new_ride.as_dict()
 
+"""
+cancel_ride
+-----------
+Removes a ride with a specific *ride_id* from the ride queue.
+Raises an exception if *ride_id* is None or if no Ride exists
+"""
 def cancel_ride(ride_id):
     if ride_id is None:
         raise Exception
@@ -82,13 +109,10 @@ to the queue and return the ride json object in the response
 def rides(ride_id=None):
     if request.method == 'GET':
         return make_list_rides(ride_id)
-
     if request.method == 'POST':
         return make_hail_ride()
-
     if request.method == 'DELETE':
         return make_delete_ride(ride_id)
-
     if request.method == 'PUT':
         return "asd;lfkjasd"
 
