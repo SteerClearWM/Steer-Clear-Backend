@@ -68,6 +68,12 @@ Add a ride to the queue. On success, returns json object with created ride. On f
 
 **end_longitude**: floating point longitude value of end location
 
+### DELETE rides
+
+Delete a ride from the queue. Cancels a ride based on id. Returns "OK" 200 on success and "Sorry" 404 on failure. Example request:
+
+**DELETE /rides/4** - deletes ride object with id 4 or returns 404 if no object exists
+
 ## /clear
 
 Clears and empties the ride queue
