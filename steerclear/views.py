@@ -4,6 +4,14 @@ from models import *
 from forms import *
 
 """
+honk
+----
+Send push notification to ride with id ride_id
+"""
+def honk(ride_id):
+    return "OK"
+
+"""
 list_rides
 ----------
 Lists all of the rides in the ride queue.
@@ -129,7 +137,7 @@ def rides(ride_id=None):
     if request.method == 'DELETE':
         return make_delete_ride(ride_id)
     if request.method == 'PUT':
-        return "asd;lfkjasd"
+        return honk(ride_id)
 
 """
 honk
