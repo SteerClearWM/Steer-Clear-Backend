@@ -62,6 +62,11 @@ def cancel_ride(ride_id):
     db.session.delete(canceled_ride)
     db.session.commit()
 
+"""
+make_list_rides
+---------------
+Wrapper for listing the ride queue or a single ride.
+"""
 def make_list_rides(ride_id):
     if ride_id is None:
         ride_list = list_rides()
@@ -73,6 +78,11 @@ def make_list_rides(ride_id):
         except Exception:
             return "Sorry", 404
 
+"""
+make_hail_ride
+--------------
+Wrapper for hailing a ride
+"""
 def make_hail_ride():
     try:
         new_ride = hail_ride()
@@ -80,6 +90,11 @@ def make_hail_ride():
     except Exception:
         return "Sorry", 404
 
+"""
+make_delete_ride
+----------------
+Wrapper for canceling a ride
+"""
 def make_delete_ride(ride_id):
     try:
         cancel_ride(ride_id)
