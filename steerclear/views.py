@@ -8,18 +8,18 @@ def list_rides():
     return map(Ride.as_dict, rides)
 
 def list_ride(ride_id):
-    if not ride_id:
+    if ride_id is None:
         raise Exception
     ride = Ride.query.get(ride_id)
-    if not ride:
+    if ride is None:
         raise Exception
     return ride.as_dict()
 
 def cancel_ride(ride_id):
-    if not ride_id:
+    if ride_id is None:
         raise Exception
     canceled_ride = Ride.query.get(ride_id)
-    if not canceled_ride:
+    if canceled_ride is None:
         raise Exception
 
     db.session.delete(canceled_ride)
@@ -56,15 +56,15 @@ def rides(ride_id=None):
             return "Sorry", 404
 
     if request.method == 'GET':
-        if ride_id:
+        if ride_id is None:
+            ride_list = list_rides()
+            return json.jsonify({'rides': ride_list})
+        else:
             try:
                 ride = list_ride(ride_id)
                 return json.jsonify({'ride': ride})
             except Exception:
                 return "Sorry", 404
-        else:
-            ride_list = list_rides()
-            return json.jsonify({'rides': ride_list})
 
     form = RideForm()
     new_ride = form.as_ride()                               # convert form to Ride object

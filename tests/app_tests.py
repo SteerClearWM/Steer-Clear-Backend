@@ -52,6 +52,82 @@ class SteerClearTestCase(unittest.TestCase):
         self.assertEquals(json.loads(response.get_data()), {"rides": []})
 
     """
+    test_list_rides_not_empty
+    -------------------------
+    Tests that api can return the rides list correctly when
+    the queue is not empty
+    """
+    def test_list_rides_not_empty(self):
+        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5))            # add ride objects to db
+        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6))
+        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7))
+        r1_dict = r1.as_dict()                          # store dict versions
+        r2_dict = r2.as_dict()                     
+        r3_dict = r3.as_dict()
+        r1_dict['id'] = 1                               # assign correct id vals
+        r2_dict['id'] = 2
+        r3_dict['id'] = 3
+        db.session.add(r1)
+        db.session.add(r2)
+        db.session.add(r3)
+        db.session.commit()
+
+        response = self.client.get('/rides')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
+
+    """
+    test_list_ride_bad_ride_id
+    --------------------------
+    Tests that trying to get a specific ride with
+    a bad ride id returns 404
+    """
+    def test_list_ride_bad_ride_id(self):
+        # check that bad ride_id get request returns 404
+        response = self.client.get('/rides/0')
+        self.assertEquals(response.status_code, 404)
+
+        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5)))
+        db.session.commit()
+
+        # check that bad ride_id with not empty database returns 404
+        response = self.client.get('/rides/2')
+        self.assertEquals(response.status_code, 404)
+
+    """
+    test_list_ride_success
+    ----------------------
+    Tests that api successfully gets a specified
+    ride object given its ride_id
+    """
+    def test_list_ride_success(self):
+        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5))            # add ride objects to db
+        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6))
+        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7))
+        r1_dict = r1.as_dict()                          # store dict versions
+        r2_dict = r2.as_dict()                     
+        r3_dict = r3.as_dict()
+        r1_dict['id'] = 1                               # assign correct id vals
+        r2_dict['id'] = 2
+        r3_dict['id'] = 3
+        db.session.add(r1)
+        db.session.add(r2)
+        db.session.add(r3)
+        db.session.commit()
+
+        response = self.client.get('/rides/1')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(json.loads(response.get_data()), {'ride': r1_dict})
+
+        response = self.client.get('/rides/2')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(json.loads(response.get_data()), {'ride': r2_dict})
+
+        response = self.client.get('/rides/3')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(json.loads(response.get_data()), {'ride': r3_dict})
+
+    """
     test_add_ride
     -------------
     Tests that adding a new ride request works. Sends POST ride
