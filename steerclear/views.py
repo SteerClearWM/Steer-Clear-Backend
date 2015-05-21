@@ -15,6 +15,16 @@ def list_ride(ride_id):
         raise Exception
     return ride.as_dict()
 
+def hail_ride():
+    form = RideForm()
+    print form.data
+    if not form.validate_on_submit():
+        raise Exception
+    new_ride = form.as_ride()
+    db.session.add(new_ride)                                # and and commit new ride object to database
+    db.session.commit()
+    return new_ride.as_dict()
+
 def cancel_ride(ride_id):
     if ride_id is None:
         raise Exception
@@ -66,14 +76,12 @@ def rides(ride_id=None):
             except Exception:
                 return "Sorry", 404
 
-    form = RideForm()
-    new_ride = form.as_ride()                               # convert form to Ride object
-    if request.method == 'POST' and form.validate_on_submit():  # validate form data
-        db.session.add(new_ride)                                # and and commit new ride object to database
-        db.session.commit()
-        return json.jsonify({'ride': new_ride.as_dict()})
-    
-    return json.jsonify({'ride': new_ride.as_dict()}), 404
+    if request.method == 'POST':
+        try:
+            new_ride = hail_ride()
+            return json.jsonify({'ride': new_ride})
+        except Exception:
+            return "Sorry", 404
 
 @app.route('/clear')
 def clear():
