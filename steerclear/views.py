@@ -17,11 +17,6 @@ def cancel_ride(ride_id):
     db.session.delete(canceled_ride)
     db.session.commit()
 
-@app.errorhandler(404)
-def resource_not_found(error):
-    return "Sorry", 404
-
-
 """
 heartbeat
 ---------
@@ -50,7 +45,7 @@ def rides(ride_id=None):
             cancel_ride(ride_id)
             return "OK"
         except Exception:
-            abort(404)
+            return "Sorry", 404
 
     if request.method == 'GET':
         ride_list = list_rides()
