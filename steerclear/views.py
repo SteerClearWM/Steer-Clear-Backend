@@ -4,8 +4,16 @@ from models import *
 from forms import *
 
 def list_rides():
-    result = Ride.query.all()
-    return map(Ride.as_dict, result)
+    rides = Ride.query.all()
+    return map(Ride.as_dict, rides)
+
+def list_ride(ride_id):
+    if not ride_id:
+        raise Exception
+    ride = Ride.query.get(ride_id)
+    if not ride:
+        raise Exception
+    return ride.as_dict()
 
 def cancel_ride(ride_id):
     if not ride_id:
@@ -35,7 +43,7 @@ as a json object. If the method is POST, add a new ride
 to the queue and return the ride json object in the response
 """
 @app.route('/rides', methods=['GET', 'POST'])
-@app.route('/rides/<int:ride_id>', methods=['PUT', 'DELETE'])
+@app.route('/rides/<int:ride_id>', methods=['GET', 'PUT', 'DELETE'])
 def rides(ride_id=None):
     if request.method == 'PUT':
         return "asd;lfkjasd"
@@ -48,8 +56,15 @@ def rides(ride_id=None):
             return "Sorry", 404
 
     if request.method == 'GET':
-        ride_list = list_rides()
-        return json.jsonify({'rides': ride_list})
+        if ride_id:
+            try:
+                ride = list_ride(ride_id)
+                return json.jsonify({'ride': ride})
+            except Exception:
+                return "Sorry", 404
+        else:
+            ride_list = list_rides()
+            return json.jsonify({'rides': ride_list})
 
     form = RideForm()
     new_ride = form.as_ride()                               # convert form to Ride object
