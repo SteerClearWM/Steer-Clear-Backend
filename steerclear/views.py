@@ -35,6 +35,17 @@ def cancel_ride(ride_id):
     db.session.delete(canceled_ride)
     db.session.commit()
 
+def make_list_rides(ride_id):
+    if ride_id is None:
+        ride_list = list_rides()
+        return json.jsonify({'rides': ride_list})
+    else:
+        try:
+            ride = list_ride(ride_id)
+            return json.jsonify({'ride': ride})
+        except Exception:
+            return "Sorry", 404
+
 """
 heartbeat
 ---------
@@ -55,8 +66,15 @@ to the queue and return the ride json object in the response
 @app.route('/rides', methods=['GET', 'POST'])
 @app.route('/rides/<int:ride_id>', methods=['GET', 'PUT', 'DELETE'])
 def rides(ride_id=None):
-    if request.method == 'PUT':
-        return "asd;lfkjasd"
+    if request.method == 'GET':
+        return make_list_rides(ride_id)
+
+    if request.method == 'POST':
+        try:
+            new_ride = hail_ride()
+            return json.jsonify({'ride': new_ride})
+        except Exception:
+            return "Sorry", 404
 
     if request.method == 'DELETE':
         try:
@@ -65,23 +83,8 @@ def rides(ride_id=None):
         except Exception:
             return "Sorry", 404
 
-    if request.method == 'GET':
-        if ride_id is None:
-            ride_list = list_rides()
-            return json.jsonify({'rides': ride_list})
-        else:
-            try:
-                ride = list_ride(ride_id)
-                return json.jsonify({'ride': ride})
-            except Exception:
-                return "Sorry", 404
-
-    if request.method == 'POST':
-        try:
-            new_ride = hail_ride()
-            return json.jsonify({'ride': new_ride})
-        except Exception:
-            return "Sorry", 404
+    if request.method == 'PUT':
+        return "asd;lfkjasd"
 
 @app.route('/clear')
 def clear():
