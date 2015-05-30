@@ -43,3 +43,10 @@ class ETATestCase(unittest.TestCase):
 		end = (37.273485,-76.719628)
 		eta = calculate_eta(start, end)
 		self.assertEquals(eta, 252)
+
+	@myvcr.use_cassette()
+	def test_calculate_eta_bad_status(self):
+		start = (37.272042,-76.714027)
+		end = (0,0)
+		eta = calculate_eta(start, end)
+		self.assertEquals(eta, None)
