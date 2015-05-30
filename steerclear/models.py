@@ -20,8 +20,9 @@ class Ride(db.Model):
         self.end_latitude, self.end_longitude = dropoff
 
     def __repr__(self):
-        return "<Ride(Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETA %r)>" % \
+        return "<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETA %r)>" % \
                 (
+                    self.id,
                     self.num_passengers, 
                     self.start_latitude, 
                     self.start_longitude,
