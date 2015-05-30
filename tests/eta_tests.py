@@ -1,5 +1,9 @@
 from steerclear.eta import *
-import unittest, json, urllib
+import unittest, json, urllib, vcr, requests, os
+
+dirname = os.path.dirname(os.path.abspath(__file__))
+
+myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
 
 """
 ETATestCase
@@ -32,3 +36,10 @@ class ETATestCase(unittest.TestCase):
 			'origins': "%f,%f" % start,
 			'destinations': "%f,%f" % end
 		}))
+
+	@myvcr.use_cassette()
+	def test_calculate_eta(self):
+		start = (37.272042,-76.714027)
+		end = (37.273485,-76.719628)
+		eta = calculate_eta(start, end)
+		self.assertEquals(eta, 252)
