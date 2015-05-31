@@ -13,6 +13,7 @@ using google's distancematrix api
 """
 class ETATestCase(unittest.TestCase):
 	
+
 	def test_build_url(self):
 		base_url = DISTANCEMATRIX_BASE_URL + '?'
 		query = {}
@@ -48,5 +49,33 @@ class ETATestCase(unittest.TestCase):
 	def test_calculate_eta_bad_status(self):
 		start = (37.272042,-76.714027)
 		end = (0,0)
+		eta = calculate_eta(start, end)
+		self.assertEquals(eta, None)
+
+	@myvcr.use_cassette()
+	def test_calculate_eta_bad_rows(self):
+		start = (0,0)
+		end = (0,0)
+		eta = calculate_eta(start, end)
+		self.assertEquals(eta, None)
+
+	@myvcr.use_cassette()
+	def test_calculate_eta_bad_elements(self):
+		start = (1,1)
+		end = start
+		eta = calculate_eta(start, end)
+		self.assertEquals(eta, None)
+
+	@myvcr.use_cassette()
+	def test_calculate_eta_bad_duration(self):
+		start = (2,2)
+		end = start
+		eta = calculate_eta(start, end)
+		self.assertEquals(eta, None)
+
+	@myvcr.use_cassette()
+	def test_calculate_eta_bad_value(self):
+		start = (3,3)
+		end = start
 		eta = calculate_eta(start, end)
 		self.assertEquals(eta, None)

@@ -1,0 +1,26 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.7.0 CPython/2.7.3 Linux/3.5.0-51-generic]
+    method: GET
+    uri: https://maps.googleapis.com/maps/api/distancematrix/json?origins=1.000000%2C1.000000&destinations=1.000000%2C1.000000
+  response:
+    body: {string: !!python/unicode "{\n   \"destination_addresses\" : [ \"1,1\" ],\n\
+        \   \"origin_addresses\" : [ \"1,1\" ],\n   \"rows\" : [\n      {}\n   ],\n   \"status\" : \"OK\"\n}\n"}
+    headers:
+      accept-ranges: [none]
+      alternate-protocol: ['443:quic,p=1']
+      cache-control: ['public, max-age=86400']
+      content-type: [application/json; charset=UTF-8]
+      date: ['Sun, 31 May 2015 02:05:52 GMT']
+      expires: ['Mon, 01 Jun 2015 02:05:52 GMT']
+      server: [mafe]
+      vary: ['Accept-Language,Accept-Encoding']
+      x-frame-options: [SAMEORIGIN]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+version: 1
