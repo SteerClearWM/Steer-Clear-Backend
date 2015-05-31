@@ -1,6 +1,12 @@
 # Steer-Clear-Backend
 Backend and web app repo for Steer Clear app
 
+## TODO
+
+* Create custom api exceptions
+
+* add error checking/exception handling for database operations
+
 ##Setup and Installation
 Create virtualenv
 
