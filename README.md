@@ -25,7 +25,7 @@ Install requirements
 Activate OS specific environment variables settings
 
     #Linux/Mac
-    $ ./scripts/setup.sh
+    $ source ./scripts/setup.sh
    
     #Windows
     > ./scripts/setup.bat
