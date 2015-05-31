@@ -5,11 +5,17 @@ DISTANCEMATRIX_BASE_URL = 'https://maps.googleapis.com/maps/api/distancematrix/j
 def build_url(query):
     return DISTANCEMATRIX_BASE_URL + '?' + urllib.urlencode(query)
 
-def build_distancematrix_url(start, end):
+def build_query(origins, destinations):
+    origins = map(lambda x: '%f,%f' % x, origins)
+    destinations = map(lambda x: '%f,%f' % x, destinations)
     query = {
-        'origins': "%f,%f" % start,
-        'destinations': "%f,%f" % end
+        'origins': '|'.join(origins),
+        'destinations': '|'.join(destinations)
     }
+    return query
+
+def build_distancematrix_url(origins, destinations):
+    query = build_query(origins, destinations)
     return build_url(query)
 
 def calculate_eta(start, end):
