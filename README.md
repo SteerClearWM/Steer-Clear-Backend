@@ -7,6 +7,8 @@ Backend and web app repo for Steer Clear app
 
 * add error checking/exception handling for database operations
 
+* add api key for google distancematrix api
+
 ##Setup and Installation
 Create virtualenv
 
