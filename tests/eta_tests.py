@@ -32,6 +32,19 @@ class ETATestCase(unittest.TestCase):
 		url = build_url(query)
 		self.assertEquals(url, base_url + urllib.urlencode(query))
 
+		query = {'origins': '-71,70|65,45.2345', 'destinations': '65,45.2345|-71,70'}
+		url = build_url(query)
+		self.assertEquals(url, base_url + urllib.urlencode(query))
+
+	def test_build_query(self):
+		origins = (0.0,0.0)
+		destinations = (0.0,0.0)
+		query = build_query(origins, destinations)
+		self.assertEquals(query, {
+			'origins': '%f,%f' % origins, 
+			'destinations': '%f,%f' % destinations
+		})
+
 	"""
 	test_build_distancematrix_url
 	-----------------------------
