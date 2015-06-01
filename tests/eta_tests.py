@@ -1,4 +1,5 @@
 from steerclear.eta import *
+from steerclear.models import Ride
 import unittest, json, urllib, vcr, requests, os
 
 # vcr object used to record api request responses or return already recorded responses
@@ -139,6 +140,16 @@ class ETATestCase(unittest.TestCase):
         make_test(self.rows2, 1, [[100]])
         make_test(self.rows3, 2, [[0], [100]])
         make_test(self.rows, 3, [[0], [100], [0, 100]])
+
+    @myvcr.use_cassette()
+    def test_time_between_rides(self):
+        cur_ride = Ride(1, (0.0, 0.0), (37.272042, -76.714027))
+        next_ride = Ride(1, (37.273485, -76.719628), (37.280893, -76.719691))
+        eta = time_between_rides(cur_ride, next_ride)
+        self.assertEquals(eta, {
+            'pickup_time_sec': 252,
+            'travel_time_sec': 171
+        })
 
     # """
     # test_calculate_eta
