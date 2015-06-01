@@ -13,6 +13,11 @@ using google's distancematrix api
 """
 class ETATestCase(unittest.TestCase):
     
+    """
+    setUp
+    -----
+    Set up some sample data for testing the eta functionality
+    """
     def setUp(self):
         self.element1 = {u'status': u'OK', u'duration': {u'value': 0}}
         self.element2 = {u'status': u'OK', u'duration': {u'value': 100}}
@@ -51,6 +56,13 @@ class ETATestCase(unittest.TestCase):
         url = build_url(query)
         self.assertEquals(url, base_url + urllib.urlencode(query))
 
+    """
+    test_build_query
+    ----------------
+    Tests that build_query will take a list of origin lat/long pairs
+    and a list of destinations lat/long pairs and build the right
+    google distancematrix api url
+    """
     def test_build_query(self):
         origins = [(0.0,0.0)]
         destinations = [(0.0,0.0)]
@@ -93,6 +105,12 @@ class ETATestCase(unittest.TestCase):
         }
         self.assertEquals(url, base_url + urllib.urlencode(query))
 
+    """
+    test_get_element_eta
+    --------------------
+    Tests that get_element_eta will corectly get the eta from an
+    element field
+    """
     def test_get_element_eta(self):
         def make_test(element, result):
             eta = get_element_eta(element)
@@ -105,6 +123,12 @@ class ETATestCase(unittest.TestCase):
         make_test(self.element1, 0)
         make_test(self.element2, 100)
 
+    """
+    test_get_elements_eta
+    ---------------------
+    Tests that get_elements_eta will corectly get all eta's from
+    an elements field
+    """
     def test_get_elements_eta(self):
         def make_test(elements, result):
             eta_list = get_elements_eta(elements)
@@ -117,6 +141,12 @@ class ETATestCase(unittest.TestCase):
         make_test(self.elements2, [100])
         make_test(self.elements, [0, 100])
 
+    """
+    test_get_row_eta
+    ----------------
+    Tests that get_row_eta will get the eta_list
+    from a row field
+    """
     def test_get_row_eta(self):
         def make_test(row, result):
             eta_list = get_row_eta(row)
@@ -127,6 +157,12 @@ class ETATestCase(unittest.TestCase):
         make_test(self.row2, [100])
         make_test(self.row, [0, 100])
 
+    """
+    test_get_rows_eta
+    -----------------
+    Tests that get_rows_eta will get all eta_lists from
+    the rows field
+    """
     def test_get_rows_eta(self):
         def make_test(rows, num_queries, result):
             eta_list = get_rows_eta(rows, num_queries)
@@ -141,6 +177,12 @@ class ETATestCase(unittest.TestCase):
         make_test(self.rows3, 2, [[0], [100]])
         make_test(self.rows, 3, [[0], [100], [0, 100]])
 
+    """
+    test_time_between_rides
+    -----------------------
+    Tests that time_between_rides will return the right
+    pickup_time_sec and travel_time_sec given two ride requests
+    """
     @myvcr.use_cassette()
     def test_time_between_rides(self):
         cur_ride = Ride(1, (0.0, 0.0), (37.272042, -76.714027))
@@ -151,6 +193,12 @@ class ETATestCase(unittest.TestCase):
             'travel_time_sec': 171
         })
 
+    """
+    test_time_between_rides_bad_latlong
+    -----------------------------------
+    Tests that time_between_rides will return None
+    given a bad lat/long field for one of the ride requests
+    """
     @myvcr.use_cassette()
     def test_time_between_rides_bad_latlong(self):
         cur_ride = Ride(1, (0.0, 0.0), (0.0, 0.0))
