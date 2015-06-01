@@ -151,6 +151,13 @@ class ETATestCase(unittest.TestCase):
             'travel_time_sec': 171
         })
 
+    @myvcr.use_cassette()
+    def test_time_between_rides_bad_latlong(self):
+        cur_ride = Ride(1, (0.0, 0.0), (0.0, 0.0))
+        next_ride = Ride(1, (37.273485, -76.719628), (37.280893, -76.719691))
+        eta = time_between_rides(cur_ride, next_ride)
+        self.assertEquals(eta, None)
+
     # """
     # test_calculate_eta
     # ------------------
