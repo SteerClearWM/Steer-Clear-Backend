@@ -1,10 +1,27 @@
 import requests, urllib
 
+# Base url for the google distancematrix api
 DISTANCEMATRIX_BASE_URL = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 
+"""
+build_url
+---------
+Takes a query of key/value pairs and returns the
+correctly formatted google distancematrix api url
+"""
 def build_url(query):
     return DISTANCEMATRIX_BASE_URL + '?' + urllib.urlencode(query)
 
+"""
+build_query
+-----------
+Takes the list of origins and destinations and returns
+the correctly formated query dictionary.
+* origins - list of (lat,long) tuples of the origin positions
+* destinations - list of (lat,long) tuples of the destination positions
+* NOTE: correct format for query dictionary is {'origins': 'lat1,long1|...|latn,longn', 
+'destinations': 'lat1,long1|...|latn,longn'}
+"""
 def build_query(origins, destinations):
     origins = map(lambda x: '%f,%f' % x, origins)
     destinations = map(lambda x: '%f,%f' % x, destinations)
@@ -14,65 +31,116 @@ def build_query(origins, destinations):
     }
     return query
 
+"""
+build_distancematrix_url
+------------------------
+Takes list of origin and destination positions and returns
+the google distancematrix_api url
+"""
 def build_distancematrix_url(origins, destinations):
     query = build_query(origins, destinations)
     return build_url(query)
 
+"""
+distancematrix_api
+------------------
+Takes list of origin and destination positions, queries the google
+distancematrix api with the parameters, and returns the api response
+"""
 def distancematrix_api(origins, destinations):
     url = build_distancematrix_url(origins, destinations)
     return requests.get(url)
 
+"""
+get_element_eta
+---------------
+Returns the eta value from the 'element' field in the google
+distancematrix api json response
+"""
 def get_element_eta(element):
-    if element is None:
+    if element is None:                         # check element object is not None
         return None
-    if element.get(u'status', u'') != u'OK':
+    if element.get(u'status', u'') != u'OK':    # check there were no errors in api request
         return None
-    duration = element.get(u'duration', None)
+    duration = element.get(u'duration', None)   # check for existence of duration field    
     if duration is None:
         return None
-    return duration.get(u'value', None)
+    return duration.get(u'value', None)         # return eta or None
 
+"""
+get_elements_eta
+---------------
+Returns all of the eta's from the 'elements' field in the google
+distancematrix api json response
+"""
 def get_elements_eta(elements):
-    if elements is None:
+    if elements is None:                                     # check elements object is not None
        return None
-    elements_eta_list = map(get_element_eta, elements)
-    if elements_eta_list == [] or None in elements_eta_list:
+    elements_eta_list = map(get_element_eta, elements)       # get all eta's
+    if elements_eta_list == [] or None in elements_eta_list: # check that there were no errors in request
         return None
     return elements_eta_list
 
+"""
+get_row_eta
+---------------
+Returns all of the eta's from the 'row' field in the google
+distancematrix api json response
+"""
 def get_row_eta(row):
-    if row is None:
+    if row is None:                                         # check row object is not None
         return None
-    return get_elements_eta(row.get(u'elements', None))
+    return get_elements_eta(row.get(u'elements', None))     # get list of all eta's
 
+"""
+get_rows_eta
+---------------
+Returns the list of all of the eta_lists from the 
+'rows' field in the google distancematrix api json response
+"""
 def get_rows_eta(rows, num_queries):
-    if rows is None:
+    if rows is None:                        # check that rows object is not None
         return None
-    if len(rows) != num_queries:
-        return None
-    eta_list = map(get_row_eta, rows)
-    if eta_list == [] or None in eta_list:
+    if len(rows) != num_queries:            # make sure number of location queries matches
+        return None                         # the number of rows
+    eta_list = map(get_row_eta, rows)       # get list of all eta_lists
+    if eta_list == [] or None in eta_list:  # check that there were no erros in request
         return None
     return eta_list
 
+"""
+time_between_rides
+------------------
+Takes the current ride and next ride requests and calculates
+the time it will take to travel from the dropoff location of
+the current request to the pickup location of the next request
+as well as the time it will take to service the next ride request
+from pickup to dropoff locations using google's distancematrix api
+"""
 def time_between_rides(cur_ride, next_ride):
+    # first origin is the dropoff location of cur_ride.
+    # second origin is the pickup location of next_ride
     origins = [
         (cur_ride.end_latitude, cur_ride.end_longitude), 
         (next_ride.start_latitude, next_ride.start_longitude)
     ]
+    # first destination is the pickup location of next_ride
+    # second destination is the dropoff location of next_ride
     destinations = [
         (next_ride.start_latitude, next_ride.start_longitude),
         (next_ride.end_latitude, next_ride.end_longitude)
     ]
-    response = distancematrix_api(origins, destinations)
-    if response.status_code != requests.codes.ok:
+    response = distancematrix_api(origins, destinations)  # get api response
+    if response.status_code != requests.codes.ok:         # check for response errors
         return None
-    data = response.json()
-    rows = data.get(u'rows', None)
-    eta_list = get_rows_eta(rows, len(origins))
-    if eta_list is None:
+    data = response.json()                                # get json response
+    rows = data.get(u'rows', None)                        # get 'rows' field
+    eta_list = get_rows_eta(rows, len(origins))           # get list of all eta_lists
+    if eta_list is None:                                  # check for error
         return None
-    return {
-        'pickup_time_sec': eta_list[0][0],
-        'travel_time_sec': eta_list[1][1]
+    result =  {
+        'pickup_time_sec': eta_list[0][0],  # time to go from cur_ride end to next_ride start
+        'travel_time_sec': eta_list[1][1]   # time to go from cur_ride start to end
     }
+
+    return result
