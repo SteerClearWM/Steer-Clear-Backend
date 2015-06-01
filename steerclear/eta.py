@@ -55,26 +55,6 @@ def get_rows_eta(rows, num_queries):
         return None
     return eta_list
 
-# def calculate_eta(origins, destinations):
-#     url = build_distancematrix_url(origins, destinations)
-#     response = requests.get(url)
-#     if response.status_code != requests.codes.ok:
-#         return None
-#     data = response.json()
-#     rows = data.get(u'rows', None)
-#     if rows is None:
-#         return None
-#     elements = rows[0].get(u'elements', None)
-#     if elements is None:
-#         return None
-#     ride = elements[0]
-#     if ride.get(u'status', u'') != u'OK':
-#         return None
-#     duration = ride.get(u'duration', None)
-#     if duration is None:
-#         return None
-#     return duration.get(u'value', None)
-
 def time_between_rides(cur_ride, next_ride):
     origins = [
         (cur_ride.end_latitude, cur_ride.end_longitude), 
