@@ -72,6 +72,9 @@ class SteerClearTestCase(unittest.TestCase):
         r1_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
         r2_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
         r3_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r1_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r2_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r3_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
@@ -120,6 +123,9 @@ class SteerClearTestCase(unittest.TestCase):
         r1_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
         r2_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
         r3_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r1_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r2_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r3_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
@@ -153,7 +159,7 @@ class SteerClearTestCase(unittest.TestCase):
                     u"end_longitude": 4.4,
                     u"pickup_time": u'Mon, 01 Jan 1 00:00:00 GMT',
                     u"travel_time": 0,
-                    u"dropoff_time": None,
+                    u"dropoff_time": u'Mon, 01 Jan 1 00:00:00 GMT',
                   }
         response = self.client.post('/rides', data=payload)
         payload[u'id'] = 1
