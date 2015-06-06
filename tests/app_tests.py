@@ -60,9 +60,9 @@ class SteerClearTestCase(unittest.TestCase):
     """
     def test_list_rides_not_empty(self):
         dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, dtime) # add ride objects to db
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, dtime)
+        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
+        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
+        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
         r1_dict = r1.as_dict()                             # store dict versions
         r2_dict = r2.as_dict()                     
         r3_dict = r3.as_dict()
@@ -90,7 +90,7 @@ class SteerClearTestCase(unittest.TestCase):
         self.assertEquals(response.status_code, 404)
 
         dtime = datetime(1,1,1)
-        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, dtime))
+        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime))
         db.session.commit()
 
         # check that bad ride_id with not empty database returns 404
@@ -105,9 +105,9 @@ class SteerClearTestCase(unittest.TestCase):
     """
     def test_list_ride_success(self):
         dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, dtime) # add ride objects to db
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, dtime)
+        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
+        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
+        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
         r1_dict = r1.as_dict()                             # store dict versions
         r2_dict = r2.as_dict()                     
         r3_dict = r3.as_dict()
@@ -192,7 +192,7 @@ class SteerClearTestCase(unittest.TestCase):
         self.assertEquals(response.status_code, 404)
 
         dtime = datetime(1,1,1)
-        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, dtime))
+        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime))
         db.session.commit()
 
         # check that bad ride_id with not empty database returns 404
@@ -206,9 +206,9 @@ class SteerClearTestCase(unittest.TestCase):
     """
     def test_rides_delete_success(self):
         dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, dtime) # add ride objects to db
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, dtime)
+        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
+        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
+        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
         r2_dict = r2.as_dict()                             # store dict versions
         r3_dict = r3.as_dict()
         db.session.add(r1)

@@ -46,6 +46,7 @@ def hail_ride():
         (form.start_latitude.data, form.start_longitude.data),
         (form.end_latitude.data, form.end_longitude.data),
         datetime(1,1,1),
+        0,
         datetime(1,1,1)
     )
     db.session.add(new_ride)
