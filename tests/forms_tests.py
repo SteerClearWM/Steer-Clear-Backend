@@ -108,24 +108,3 @@ class RideFormTestCase(unittest.TestCase):
         bad_payload[u'num_passengers'] = 100
         result = self.submit_form(bad_payload)
         self.assertFalse(result)
-
-    """
-    test_as_ride
-    ------------
-    Tests that RideForm.as_dict can convert a valid 
-    RideForm to the correct Ride object.
-    """
-    def test_as_ride(self):
-        payload = self.payload.copy()
-        form_ride = None
-        with app.test_request_context():
-            form = RideForm(data=payload)
-            form_ride = form.as_ride()
-        ride = Ride(
-                payload[u'num_passengers'],
-                (payload[u'start_latitude'], payload[u'start_longitude']),
-                (payload[u'end_latitude'], payload[u'end_longitude'])
-            )
-
-        self.assertEquals(form_ride.as_dict(), ride.as_dict())
-

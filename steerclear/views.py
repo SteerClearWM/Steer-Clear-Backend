@@ -40,7 +40,11 @@ def hail_ride():
     form = RideForm()
     if not form.validate_on_submit():
         return None
-    new_ride = form.as_ride()
+    new_ride = Ride(
+        form.num_passengers.data,
+        (form.start_latitude.data, form.start_longitude.data),
+        (form.end_latitude.data, form.end_longitude.data)
+    )
     db.session.add(new_ride)
     db.session.commit()
     return new_ride.as_dict()
