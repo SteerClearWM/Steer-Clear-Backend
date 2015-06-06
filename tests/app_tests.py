@@ -69,6 +69,9 @@ class SteerClearTestCase(unittest.TestCase):
         r1_dict['id'] = 1                                  # assign correct id vals
         r2_dict['id'] = 2
         r3_dict['id'] = 3
+        r1_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r2_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r3_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
@@ -114,6 +117,9 @@ class SteerClearTestCase(unittest.TestCase):
         r1_dict['id'] = 1                                  # assign correct id vals
         r2_dict['id'] = 2
         r3_dict['id'] = 3
+        r1_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r2_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r3_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
@@ -145,7 +151,7 @@ class SteerClearTestCase(unittest.TestCase):
                     u"start_longitude": 2.2,
                     u"end_latitude": 3.3,
                     u"end_longitude": 4.4,
-                    u"pickup_time": None,
+                    u"pickup_time": u'Mon, 01 Jan 1 00:00:00 GMT',
                     u"travel_time": None,
                     u"dropoff_time": None,
                   }

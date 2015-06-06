@@ -20,6 +20,7 @@ class Ride(db.Model):
         self.num_passengers = num_passengers
         self.start_latitude, self.start_longitude = pickup
         self.end_latitude, self.end_longitude = dropoff
+        self.pickup_time = pickup_time
 
     def __repr__(self):
         return "<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETA %r)>" % \
@@ -30,6 +31,7 @@ class Ride(db.Model):
                     self.start_longitude,
                     self.end_latitude, 
                     self.end_longitude,
+                    self.pickup_time
                 )
 
     def as_dict(self):
