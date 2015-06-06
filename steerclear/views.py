@@ -2,6 +2,7 @@ from steerclear import app
 from flask import request, json, abort
 from models import *
 from forms import *
+from datetime import datetime
 
 """
 list_rides
@@ -43,7 +44,9 @@ def hail_ride():
     new_ride = Ride(
         form.num_passengers.data,
         (form.start_latitude.data, form.start_longitude.data),
-        (form.end_latitude.data, form.end_longitude.data)
+        (form.end_latitude.data, form.end_longitude.data),
+        datetime(1,1,1),
+        datetime(1,1,1)
     )
     db.session.add(new_ride)
     db.session.commit()

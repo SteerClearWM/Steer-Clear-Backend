@@ -14,7 +14,7 @@ class Ride(db.Model):
     end_latitude = db.Column(db.Float)
     end_longitude = db.Column(db.Float)
 
-    def __init__(self, num_passengers, pickup, dropoff):
+    def __init__(self, num_passengers, pickup, dropoff, pickup_time, dropoff_time):
         self.num_passengers = num_passengers
         self.start_latitude, self.start_longitude = pickup
         self.end_latitude, self.end_longitude = dropoff
