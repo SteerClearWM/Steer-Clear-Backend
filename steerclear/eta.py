@@ -109,26 +109,26 @@ def get_rows_eta(rows, num_queries):
     return eta_list
 
 """
-time_between_rides
+time_between_locations
 ------------------
-Takes the current ride and next ride requests and calculates
-the time it will take to travel from the dropoff location of
-the current request to the pickup location of the next request
-as well as the time it will take to service the next ride request
-from pickup to dropoff locations using google's distancematrix api
+Takes the current location, pickup location for the next ride
+request, dropoff location for the next ride request all in lat/long
+tuples and returns the time it will take in seconds to go from the
+current location to the pickup location and the time it will take in
+seconds to go from the pickup location to the dropoff location.
 """
-def time_between_rides(cur_ride, next_ride):
+def time_between_locations(cur_loc, pickup_loc, dropoff_loc):
     # first origin is the dropoff location of cur_ride.
     # second origin is the pickup location of next_ride
     origins = [
-        (cur_ride.end_latitude, cur_ride.end_longitude), 
-        (next_ride.start_latitude, next_ride.start_longitude)
+        cur_loc, 
+        pickup_loc
     ]
     # first destination is the pickup location of next_ride
     # second destination is the dropoff location of next_ride
     destinations = [
-        (next_ride.start_latitude, next_ride.start_longitude),
-        (next_ride.end_latitude, next_ride.end_longitude)
+        pickup_loc,
+        dropoff_loc
     ]
     response = distancematrix_api(origins, destinations)  # get api response
     if response.status_code != requests.codes.ok:         # check for response errors
