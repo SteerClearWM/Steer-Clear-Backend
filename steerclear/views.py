@@ -23,10 +23,10 @@ the Ride doesn't exist
 """
 def list_ride(ride_id):
     if ride_id is None:
-        raise Exception
+        return None
     ride = Ride.query.get(ride_id)
     if ride is None:
-        raise Exception
+        return None
     return ride.as_dict()
 
 """
@@ -39,7 +39,7 @@ Raises an exception if form data is invalid.
 def hail_ride():
     form = RideForm()
     if not form.validate_on_submit():
-        raise Exception
+        return None
     new_ride = form.as_ride()
     db.session.add(new_ride)
     db.session.commit()
@@ -70,12 +70,10 @@ def make_list_rides(ride_id):
     if ride_id is None:
         ride_list = list_rides()
         return json.jsonify({'rides': ride_list})
-    else:
-        try:
-            ride = list_ride(ride_id)
-            return json.jsonify({'ride': ride})
-        except Exception:
-            return "Sorry", 404
+    ride = list_ride(ride_id)
+    if ride is None:
+        return "Sorry", 404
+    return json.jsonify({'ride': ride})
 
 """
 make_hail_ride
@@ -83,11 +81,10 @@ make_hail_ride
 Wrapper for hailing a ride
 """
 def make_hail_ride():
-    try:
-        new_ride = hail_ride()
-        return json.jsonify({'ride': new_ride})
-    except Exception:
+    new_ride = hail_ride()
+    if new_ride is None:
         return "Sorry", 404
+    return json.jsonify({'ride': new_ride})
 
 """
 make_delete_ride
