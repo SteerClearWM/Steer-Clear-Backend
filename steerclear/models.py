@@ -1,4 +1,3 @@
-# from flask.ext.sqlalchemy import SQLAlchemy
 from steerclear import db
 import sqlalchemy.types as types
 from datetime import datetime
@@ -13,6 +12,9 @@ class Ride(db.Model):
     start_longitude = db.Column(db.Float)
     end_latitude = db.Column(db.Float)
     end_longitude = db.Column(db.Float)
+    pickup_time = db.Column(types.DateTime)
+    travel_time = db.Column(db.Integer)
+    dropoff_time = db.Column(types.DateTime)
 
     def __init__(self, num_passengers, pickup, dropoff, pickup_time, travel_time, dropoff_time):
         self.num_passengers = num_passengers

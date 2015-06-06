@@ -145,6 +145,9 @@ class SteerClearTestCase(unittest.TestCase):
                     u"start_longitude": 2.2,
                     u"end_latitude": 3.3,
                     u"end_longitude": 4.4,
+                    u"pickup_time": None,
+                    u"travel_time": None,
+                    u"dropoff_time": None,
                   }
         response = self.client.post('/rides', data=payload)
         payload[u'id'] = 1
