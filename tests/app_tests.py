@@ -152,7 +152,7 @@ class SteerClearTestCase(unittest.TestCase):
                     u"end_latitude": 3.3,
                     u"end_longitude": 4.4,
                     u"pickup_time": u'Mon, 01 Jan 1 00:00:00 GMT',
-                    u"travel_time": None,
+                    u"travel_time": 0,
                     u"dropoff_time": None,
                   }
         response = self.client.post('/rides', data=payload)
