@@ -38,7 +38,6 @@ Raises an exception if form data is invalid.
 """
 def hail_ride():
     form = RideForm()
-    print form.data
     if not form.validate_on_submit():
         raise Exception
     new_ride = form.as_ride()
