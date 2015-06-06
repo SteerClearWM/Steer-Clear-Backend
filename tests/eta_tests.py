@@ -184,7 +184,7 @@ class ETATestCase(unittest.TestCase):
     pickup_time_sec and travel_time_sec given two ride requests
     """
     @myvcr.use_cassette()
-    def test_time_between_rides(self):
+    def test_time_between_locations(self):
         cur_loc = (37.272042, -76.714027)
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
@@ -201,7 +201,7 @@ class ETATestCase(unittest.TestCase):
     given a bad lat/long field for one of the ride requests
     """
     @myvcr.use_cassette()
-    def test_time_between_rides_bad_latlong(self):
+    def test_time_between_locations_bad_latlong(self):
         cur_loc = (0.0, 0.0)
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
