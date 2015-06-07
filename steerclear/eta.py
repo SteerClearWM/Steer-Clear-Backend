@@ -117,19 +117,7 @@ tuples and returns the time it will take in seconds to go from the
 current location to the pickup location and the time it will take in
 seconds to go from the pickup location to the dropoff location.
 """
-def time_between_locations(cur_loc, pickup_loc, dropoff_loc):
-    # first origin is the dropoff location of cur_ride.
-    # second origin is the pickup location of next_ride
-    origins = [
-        cur_loc, 
-        pickup_loc
-    ]
-    # first destination is the pickup location of next_ride
-    # second destination is the dropoff location of next_ride
-    destinations = [
-        pickup_loc,
-        dropoff_loc
-    ]
+def time_between_locations(origins, destinations):
     response = distancematrix_api(origins, destinations)  # get api response
     if response.status_code != requests.codes.ok:         # check for response errors
         return None
