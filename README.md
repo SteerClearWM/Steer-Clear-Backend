@@ -27,8 +27,8 @@ Activate OS specific environment variables settings
     #Linux/Mac
     $ source ./scripts/setup.sh
    
-    #Windows
-    > ./scripts/setup.bat
+    #Windows - do this is cmd not powershell. you might need to use setx instead
+    > set STEERCLEAR_SETTINGS=settings\windows_settings.py
 
 Create Database (NOTE: this will delete old database at the moment)
 
