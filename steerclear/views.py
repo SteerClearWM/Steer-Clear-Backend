@@ -6,14 +6,12 @@ from eta import time_between_locations
 from datetime import datetime, timedelta
 
 def calculate_time_data(pickup_loc, dropoff_loc):
-    # pickup_loc = (form.start_latitude.data, form.start_longitude.data)
-    # dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
-
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
     if last_ride is None:
         eta = time_between_locations([pickup_loc], [dropoff_loc])
         if eta is None:
             return None
+       
         pickup_time = datetime.utcnow() + timedelta(0, 10 * 60)
         travel_time = eta[0][0]
         dropoff_time = pickup_time + timedelta(0, travel_time)
@@ -22,20 +20,12 @@ def calculate_time_data(pickup_loc, dropoff_loc):
         eta = time_between_locations([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
         if eta is None:
             return None
+        
         pickup_time = last_ride.dropoff_time + timedelta(0, eta[0][0])
         travel_time = eta[1][1]
         dropoff_time = pickup_time + timedelta(0, travel_time)
+    
     return (pickup_time, travel_time, dropoff_time)
-
-    # (pickup_time, travel_time, dropoff_time) = time_data
-    # new_ride = Ride(
-    #     form.num_passengers.data,
-    #     pickup_loc,
-    #     dropoff_loc,
-    #     pickup_time,
-    #     travel_time,
-    #     dropoff_time
-    # )
 
 """
 list_rides
@@ -74,14 +64,15 @@ def hail_ride():
     form = RideForm()
     if not form.validate_on_submit():
         return None
-
+    
     pickup_loc = (form.start_latitude.data, form.start_longitude.data)
     dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
+    
     time_data = calculate_time_data(pickup_loc, dropoff_loc)
     if time_data is None:
         return None
+    
     pickup_time, travel_time, dropoff_time = time_data
-
     new_ride = Ride(
         form.num_passengers.data,
         pickup_loc,
@@ -90,15 +81,7 @@ def hail_ride():
         travel_time,
         dropoff_time
     )
-
-    # new_ride = Ride(
-    #     form.num_passengers.data,
-    #     (form.start_latitude.data, form.start_longitude.data),
-    #     (form.end_latitude.data, form.end_longitude.data),
-    #     datetime(1,1,1),
-    #     0,
-    #     datetime(1,1,1)
-    # )
+   
     db.session.add(new_ride)
     db.session.commit()
     return new_ride.as_dict()
