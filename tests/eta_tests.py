@@ -178,7 +178,7 @@ class ETATestCase(unittest.TestCase):
         make_test(self.rows, 3, [[0], [100], [0, 100]])
 
     """
-    test_time_between_rides
+    test_time_between_locations
     -----------------------
     Tests that time_between_rides will return the right
     pickup_time_sec and travel_time_sec given two ride requests
@@ -188,13 +188,10 @@ class ETATestCase(unittest.TestCase):
         origins = [(37.272042, -76.714027), (37.273485, -76.719628)]
         destinations = [(37.273485, -76.719628), (37.280893, -76.719691)]
         eta = time_between_locations(origins, destinations)
-        self.assertEquals(eta, {
-            'pickup_time_sec': 252,
-            'travel_time_sec': 171
-        })
+        self.assertEquals(eta, [[252, 218], [0, 171]])
 
     """
-    test_time_between_rides_bad_latlong
+    test_time_between_locations_bad_latlong
     -----------------------------------
     Tests that time_between_rides will return None
     given a bad lat/long field for one of the ride requests
@@ -205,3 +202,10 @@ class ETATestCase(unittest.TestCase):
         destinations = [(37.273485, -76.719628), (37.280893, -76.719691)]
         eta = time_between_locations(origins, destinations)
         self.assertEquals(eta, None)
+
+    @myvcr.use_cassette()
+    def test_time_between_locations_no_start_loc(self):
+        origins = [(37.273485, -76.719628)]
+        destinations = [(37.273485, -76.719628), (37.280893, -76.719691)]
+        eta = time_between_locations(origins, destinations)
+        self.assertEquals(eta, [[0, 171]])

@@ -124,11 +124,4 @@ def time_between_locations(origins, destinations):
     data = response.json()                                # get json response
     rows = data.get(u'rows', None)                        # get 'rows' field
     eta_list = get_rows_eta(rows, len(origins))           # get list of all eta_lists
-    if eta_list is None:                                  # check for error
-        return None
-    result =  {
-        'pickup_time_sec': eta_list[0][0],  # time to go from cur_ride end to next_ride start
-        'travel_time_sec': eta_list[1][1]   # time to go from cur_ride start to end
-    }
-
-    return result
+    return eta_list
