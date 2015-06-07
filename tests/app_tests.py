@@ -276,8 +276,33 @@ class SteerClearTestCase(unittest.TestCase):
         self.assertEquals(dropoff_time, expected_dropoff_time)
 
     @myvcr.use_cassette()
-    def test_calculate_time_data_no_rides_bad_eta(self):
+    def test_calculate_time_data_no_rides_bad_pickup_loc(self):
         pickup_loc = (0.0, 0.0)
         dropoff_loc = (37.280893, -76.719691)
         result = calculate_time_data(pickup_loc, dropoff_loc)
         self.assertEquals(result, None)
+
+    @myvcr.use_cassette()
+    def test_calculate_time_data_no_rides_bad_dest_loc(self):
+        pickup_loc = (37.280893, -76.719691)
+        dropoff_loc = (0.0, 0.0)
+        result = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)
+
+    @myvcr.use_cassette()
+    def test_calculate_time_data_with_last_ride(self):
+        ride = Ride(1, (0.0, 0.0), (37.272042, -76.714027), None, None, datetime(2015,6,13,1,2,3))
+        db.session.add(ride)
+        db.session.commit()
+        pickup_loc = (37.273485, -76.719628)
+        dropoff_loc = (37.280893, -76.719691)
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 252)
+        expected_travel_time = 171
+        expected_dropoff_time = expected_pickup_time + timedelta(0, expected_travel_time)
+        (pickup_time, travel_time, dropoff_time) = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(pickup_time, expected_pickup_time)
+        self.assertEquals(travel_time, expected_travel_time)
+        self.assertEquals(dropoff_time, expected_dropoff_time)
+
+    # def test_calculate_time_delta_with_last_ride_bad_eta(self):
+

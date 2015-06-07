@@ -5,11 +5,6 @@ from forms import *
 from eta import time_between_locations
 from datetime import datetime, timedelta
 
-# def calculate_time_data(start_time, time_till_pickup, travel_time):
-#     pickup_time = start_time + time_till_pickup
-#     dropoff_time = pickup_time + travel_time
-#     return pickup_time, travel_time, dropoff_time
-
 def calculate_time_data(pickup_loc, dropoff_loc):
     # pickup_loc = (form.start_latitude.data, form.start_longitude.data)
     # dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
@@ -19,12 +14,6 @@ def calculate_time_data(pickup_loc, dropoff_loc):
         eta = time_between_locations([pickup_loc], [dropoff_loc])
         if eta is None:
             return None
-        # time_data = calculate_time_data(
-        #     datetime.utcnow(), 
-        #     timedelta(0, 10 * 60), 
-        #     eta[0][0]
-        # )
-
         pickup_time = datetime.utcnow() + timedelta(0, 10 * 60)
         travel_time = eta[0][0]
         dropoff_time = pickup_time + timedelta(0, travel_time)
@@ -33,12 +22,6 @@ def calculate_time_data(pickup_loc, dropoff_loc):
         eta = time_between_locations([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
         if eta is None:
             return None
-        # time_data = calculate_time_data(
-        #     last_ride.dropoff_time, 
-        #     timedelta(0, eta[0][0]), 
-        #     eta[1][1]
-        # )
-        # print str(eta)
         pickup_time = last_ride.dropoff_time + timedelta(0, eta[0][0])
         travel_time = eta[1][1]
         dropoff_time = pickup_time + timedelta(0, travel_time)
