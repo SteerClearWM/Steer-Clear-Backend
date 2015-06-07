@@ -206,6 +206,6 @@ class ETATestCase(unittest.TestCase):
     @myvcr.use_cassette()
     def test_time_between_locations_no_start_loc(self):
         origins = [(37.273485, -76.719628)]
-        destinations = [(37.273485, -76.719628), (37.280893, -76.719691)]
+        destinations = [(37.280893, -76.719691)]
         eta = time_between_locations(origins, destinations)
-        self.assertEquals(eta, [[0, 171]])
+        self.assertEquals(eta, [[171]])
