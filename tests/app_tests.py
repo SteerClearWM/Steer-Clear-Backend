@@ -155,16 +155,23 @@ class SteerClearTestCase(unittest.TestCase):
     request data to '/rides/' and checks if the response json object
     is a valid ride request
     """
+    @myvcr.use_cassette()
+    @replace('steerclear.views.datetime', test_datetime(2015,6,13,1,2,3))
     def test_add_ride(self):
+        self.maxDiff = None
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
+        expected_dropoff_time = expected_pickup_time + timedelta(0, 171)
+        expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S GMT')
+        expected_dropoff_string = expected_dropoff_time.strftime('%a, %d %b %Y %H:%M:%S GMT')
         payload = {
                     u"num_passengers": 3,
-                    u"start_latitude": 1.1,
-                    u"start_longitude": 2.2,
-                    u"end_latitude": 3.3,
-                    u"end_longitude": 4.4,
-                    u"pickup_time": u'Mon, 01 Jan 1 00:00:00 GMT',
-                    u"travel_time": 0,
-                    u"dropoff_time": u'Mon, 01 Jan 1 00:00:00 GMT',
+                    u"start_latitude": 37.273485,
+                    u"start_longitude": -76.719628,
+                    u"end_latitude": 37.280893,
+                    u"end_longitude": -76.719691,
+                    u"pickup_time": expected_pickup_string,
+                    u"travel_time": 171,
+                    u"dropoff_time": expected_dropoff_string,
                   }
         response = self.client.post('/rides', data=payload)
         payload[u'id'] = 1

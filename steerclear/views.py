@@ -74,14 +74,31 @@ def hail_ride():
     form = RideForm()
     if not form.validate_on_submit():
         return None
+
+    pickup_loc = (form.start_latitude.data, form.start_longitude.data)
+    dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
+    time_data = calculate_time_data(pickup_loc, dropoff_loc)
+    if time_data is None:
+        return None
+    pickup_time, travel_time, dropoff_time = time_data
+
     new_ride = Ride(
         form.num_passengers.data,
-        (form.start_latitude.data, form.start_longitude.data),
-        (form.end_latitude.data, form.end_longitude.data),
-        datetime(1,1,1),
-        0,
-        datetime(1,1,1)
+        pickup_loc,
+        dropoff_loc,
+        pickup_time,
+        travel_time,
+        dropoff_time
     )
+
+    # new_ride = Ride(
+    #     form.num_passengers.data,
+    #     (form.start_latitude.data, form.start_longitude.data),
+    #     (form.end_latitude.data, form.end_longitude.data),
+    #     datetime(1,1,1),
+    #     0,
+    #     datetime(1,1,1)
+    # )
     db.session.add(new_ride)
     db.session.commit()
     return new_ride.as_dict()
