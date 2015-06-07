@@ -1,7 +1,12 @@
 from steerclear import app, db
 from steerclear.models import *
-import unittest, json
-from datetime import datetime
+from steerclear.views import *
+import unittest, json, vcr
+from datetime import datetime, timedelta
+from testfixtures import replace, test_datetime
+
+# vcr object used to record api request responses or return already recorded responses
+myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
 
 """
 SteerClearTestCase
@@ -257,3 +262,22 @@ class SteerClearTestCase(unittest.TestCase):
         self.assertEquals(Ride.query.get(1), None)
         self.assertEquals(Ride.query.get(2), None)
         self.assertEquals(Ride.query.get(3), None)
+
+    @myvcr.use_cassette()
+    @replace('steerclear.views.datetime', test_datetime(2015,6,13,1,2,3))
+    def test_calculate_time_data_no_rides(self):
+        pickup_loc = (37.273485, -76.719628)
+        dropoff_loc = (37.280893, -76.719691)
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
+        expected_dropoff_time = expected_pickup_time + timedelta(0, 171)
+        (pickup_time, travel_time, dropoff_time) = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(pickup_time, expected_pickup_time)
+        self.assertEquals(travel_time, 171)
+        self.assertEquals(dropoff_time, expected_dropoff_time)
+
+    @myvcr.use_cassette()
+    def test_calculate_time_data_no_rides_bad_eta(self):
+        pickup_loc = (0.0, 0.0)
+        dropoff_loc = (37.280893, -76.719691)
+        result = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)

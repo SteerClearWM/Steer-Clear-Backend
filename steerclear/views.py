@@ -2,7 +2,57 @@ from steerclear import app
 from flask import request, json, abort
 from models import *
 from forms import *
-from datetime import datetime
+from eta import time_between_locations
+from datetime import datetime, timedelta
+
+# def calculate_time_data(start_time, time_till_pickup, travel_time):
+#     pickup_time = start_time + time_till_pickup
+#     dropoff_time = pickup_time + travel_time
+#     return pickup_time, travel_time, dropoff_time
+
+def calculate_time_data(pickup_loc, dropoff_loc):
+    # pickup_loc = (form.start_latitude.data, form.start_longitude.data)
+    # dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
+
+    last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
+    if last_ride is None:
+        eta = time_between_locations([pickup_loc], [dropoff_loc])
+        if eta is None:
+            return None
+        # time_data = calculate_time_data(
+        #     datetime.utcnow(), 
+        #     timedelta(0, 10 * 60), 
+        #     eta[0][0]
+        # )
+
+        pickup_time = datetime.utcnow() + timedelta(0, 10 * 60)
+        travel_time = eta[0][0]
+        dropoff_time = pickup_time + timedelta(0, travel_time)
+    else:
+        start_loc = (last_ride.end_latitude, last_ride.end_longitude)
+        eta = time_between_locations([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
+        if eta is None:
+            return None
+        # time_data = calculate_time_data(
+        #     last_ride.dropoff_time, 
+        #     timedelta(0, eta[0][0]), 
+        #     eta[1][1]
+        # )
+        # print str(eta)
+        pickup_time = last_ride.dropoff_time + timedelta(0, eta[0][0])
+        travel_time = eta[1][1]
+        dropoff_time = pickup_time + timedelta(0, travel_time)
+    return (pickup_time, travel_time, dropoff_time)
+
+    # (pickup_time, travel_time, dropoff_time) = time_data
+    # new_ride = Ride(
+    #     form.num_passengers.data,
+    #     pickup_loc,
+    #     dropoff_loc,
+    #     pickup_time,
+    #     travel_time,
+    #     dropoff_time
+    # )
 
 """
 list_rides
