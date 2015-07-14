@@ -1,5 +1,5 @@
 from steerclear import app
-from flask import request, json, abort
+from flask import request, json, abort, render_template
 from models import *
 from forms import *
 from eta import time_between_locations
@@ -173,3 +173,7 @@ def clear():
     db.session.query(Ride).delete()
     db.session.commit()
     return "OK"
+
+@app.route('/index')
+def index():
+    return render_template('index.html')
