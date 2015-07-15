@@ -1,6 +1,6 @@
 from steerclear import app, db
-from steerclear.models import *
-from steerclear.views import *
+from steerclear.api.models import *
+from steerclear.api.views import *
 import unittest, json, vcr
 from datetime import datetime, timedelta
 from testfixtures import replace, test_datetime
@@ -158,7 +158,7 @@ class SteerClearTestCase(unittest.TestCase):
     is a valid ride request
     """
     @myvcr.use_cassette()
-    @replace('steerclear.views.datetime', test_datetime(2015,6,13,1,2,3))
+    @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
     def test_add_ride(self):
         self.maxDiff = None
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
@@ -273,7 +273,7 @@ class SteerClearTestCase(unittest.TestCase):
         self.assertEquals(Ride.query.get(3), None)
 
     @myvcr.use_cassette()
-    @replace('steerclear.views.datetime', test_datetime(2015,6,13,1,2,3))
+    @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
     def test_calculate_time_data_no_rides(self):
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
