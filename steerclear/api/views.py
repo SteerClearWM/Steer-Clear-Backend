@@ -1,4 +1,4 @@
-from flask import Blueprint, request, json, abort, render_template
+from flask import Blueprint, request, json, abort
 from models import *
 from forms import *
 from eta import time_between_locations
