@@ -44,7 +44,15 @@ class RideListAPI(Resource):
             abort(404)
         return json.jsonify({'ride': new_ride.as_dict()})
 
+class RideAPI(Resource):
+    def get(self, ride_id):
+        ride = Ride.query.get(ride_id)
+        if ride is None:
+            abort(404)
+        return json.jsonify({'ride': ride.as_dict()})
+
 api.add_resource(RideListAPI, '/rides')
+api.add_resource(RideAPI, '/rides/<int:ride_id>')
 
 def calculate_time_data(pickup_loc, dropoff_loc):
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
@@ -68,31 +76,6 @@ def calculate_time_data(pickup_loc, dropoff_loc):
     
     return (pickup_time, travel_time, dropoff_time)
 
-"""
-list_rides
-----------
-Lists all of the rides in the ride queue.
-Returns a list of Ride dictionaries
-"""
-def list_rides():
-    rides = Ride.query.all()
-    return map(Ride.as_dict, rides)
-
-"""
-list_ride
----------
-List a specific ride base on ride_id.
-Returns the Ride dictionary of the ride
-with id *ride_id* or raises an exception if
-the Ride doesn't exist
-"""
-def list_ride(ride_id):
-    if ride_id is None:
-        return None
-    ride = Ride.query.get(ride_id)
-    if ride is None:
-        return None
-    return ride.as_dict()
 
 """
 cancel_ride
@@ -109,20 +92,6 @@ def cancel_ride(ride_id):
 
     db.session.delete(canceled_ride)
     db.session.commit()
-
-"""
-make_list_rides
----------------
-Wrapper for listing the ride queue or a single ride.
-"""
-def make_list_rides(ride_id):
-    if ride_id is None:
-        ride_list = list_rides()
-        return json.jsonify({'rides': ride_list})
-    ride = list_ride(ride_id)
-    if ride is None:
-        return "Sorry", 404
-    return json.jsonify({'ride': ride})
 
 """
 make_delete_ride
@@ -144,10 +113,8 @@ If it is a GET request, return the queue of rides
 as a json object. If the method is POST, add a new ride
 to the queue and return the ride json object in the response
 """
-@api_bp.route('/rides/<int:ride_id>', methods=['GET', 'PUT', 'DELETE'])
+@api_bp.route('/rides/<int:ride_id>', methods=['PUT', 'DELETE'])
 def rides(ride_id=None):
-    if request.method == 'GET':
-        return make_list_rides(ride_id)
     if request.method == 'DELETE':
         return make_delete_ride(ride_id)
     if request.method == 'PUT':
