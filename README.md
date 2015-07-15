@@ -56,6 +56,12 @@ routing parameters for steerclear backend api
 
 Simple check to see if server is running. Should return the string "pulse" and status code 200
 
+### /index
+
+*Temporary Route Name*
+
+Displays driver side management page
+
 ### /rides
 
 URL for interacting with the ride queue. can list all rides, list a single ride, add a ride, or delete a ride
@@ -111,9 +117,9 @@ returns a json object of the list of all rides. Sample:
 
 **NOTE**: the **pickup_time** and **dropoff_time** fields are datetime objects representing UTC times that are formatted as strings using the following format string **"%a, %d %b %Y %H:%M:%S GMT"**. Where **%a** is the weekday's abreviated name (i.e. Mon), **%d** is the day of the month as a zero-padded decimal number (i.e. 09 and 22), **%b** is the month's abreviated name (i.e. Sep), **%Y** is the four digit year value (i.e. 2015), **%H** is the hour zero-padded hour value (i.e. 02 or 20), **%M** is the zero-padded minute value (i.e. 05 or 52), and **%S** is the zero-padded seconds value (i.e. 06 or 33).
 
-#### GET rides/<ride_id>
+#### GET rides/\<ride_id\>
 
-returns a json object for the ride object with the corresponding **<ride_id>** value or 404s if no object has the right id. Sample using request  **GET rides/2**:
+returns a json object for the ride object with the corresponding **\<ride_id\>** value or 404s if no object has the right id. Sample using request  **GET rides/2**:
 
     {
       "ride": {
@@ -144,9 +150,9 @@ Add a ride to the queue. On success, returns json object with created ride. On f
 
 **end_longitude**: floating point longitude value of end location
 
-#### DELETE rides/<ride_id>
+#### DELETE rides/\<ride_id\>
 
-Delete a ride from the queue with cooresponding **<ride_id>**. Cancels a ride based on id. Returns "OK" 200 on success and "Sorry" 404 on failure. Example request: **DELETE /rides/4** - deletes ride object with id 4 or returns 404 if no object exists
+Delete a ride from the queue with cooresponding **\<ride_id\>**. Cancels a ride based on id. Returns "OK" 200 on success and "Sorry" 404 on failure. Example request: **DELETE /rides/4** - deletes ride object with id 4 or returns 404 if no object exists
 
 ### /clear
 
