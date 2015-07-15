@@ -8,5 +8,7 @@ db = SQLAlchemy(app)
 
 from steerclear import views
 from steerclear.api.views import api
+from steerclear.driver_portal.views import driver_portal
 
 app.register_blueprint(api)
+app.register_blueprint(driver_portal)
