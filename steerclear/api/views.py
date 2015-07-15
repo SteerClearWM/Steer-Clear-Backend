@@ -4,6 +4,7 @@ from models import *
 from forms import *
 from eta import time_between_locations
 from datetime import datetime, timedelta
+from sqlalchemy import exc
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_bp)
@@ -13,6 +14,35 @@ class RideListAPI(Resource):
         rides = Ride.query.all()
         rides = map(Ride.as_dict, rides)
         return json.jsonify({'rides': rides})
+
+    def post(self):
+        form = RideForm()
+        if not form.validate_on_submit():
+            abort(404)
+        
+        pickup_loc = (form.start_latitude.data, form.start_longitude.data)
+        dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
+        time_data = calculate_time_data(pickup_loc, dropoff_loc)
+        if time_data is None:
+            abort(404)
+        
+        pickup_time, travel_time, dropoff_time = time_data
+        new_ride = Ride(
+            form.num_passengers.data,
+            pickup_loc,
+            dropoff_loc,
+            pickup_time,
+            travel_time,
+            dropoff_time
+        )
+        
+        try:
+            db.session.add(new_ride)
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
+            abort(404)
+        return json.jsonify({'ride': new_ride.as_dict()})
 
 api.add_resource(RideListAPI, '/rides')
 
@@ -65,39 +95,6 @@ def list_ride(ride_id):
     return ride.as_dict()
 
 """
-hail_ride
----------
-Creates a new Ride object and adds it to the ride queue.
-Returns the created Ride dictionary.
-Raises an exception if form data is invalid.
-"""
-def hail_ride():
-    form = RideForm()
-    if not form.validate_on_submit():
-        return None
-    
-    pickup_loc = (form.start_latitude.data, form.start_longitude.data)
-    dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
-    
-    time_data = calculate_time_data(pickup_loc, dropoff_loc)
-    if time_data is None:
-        return None
-    
-    pickup_time, travel_time, dropoff_time = time_data
-    new_ride = Ride(
-        form.num_passengers.data,
-        pickup_loc,
-        dropoff_loc,
-        pickup_time,
-        travel_time,
-        dropoff_time
-    )
-   
-    db.session.add(new_ride)
-    db.session.commit()
-    return new_ride.as_dict()
-
-"""
 cancel_ride
 -----------
 Removes a ride with a specific *ride_id* from the ride queue.
@@ -128,17 +125,6 @@ def make_list_rides(ride_id):
     return json.jsonify({'ride': ride})
 
 """
-make_hail_ride
---------------
-Wrapper for hailing a ride
-"""
-def make_hail_ride():
-    new_ride = hail_ride()
-    if new_ride is None:
-        return "Sorry", 404
-    return json.jsonify({'ride': new_ride})
-
-"""
 make_delete_ride
 ----------------
 Wrapper for canceling a ride
@@ -158,13 +144,10 @@ If it is a GET request, return the queue of rides
 as a json object. If the method is POST, add a new ride
 to the queue and return the ride json object in the response
 """
-@api_bp.route('/rides', methods=['POST'])
 @api_bp.route('/rides/<int:ride_id>', methods=['GET', 'PUT', 'DELETE'])
 def rides(ride_id=None):
     if request.method == 'GET':
         return make_list_rides(ride_id)
-    if request.method == 'POST':
-        return make_hail_ride()
     if request.method == 'DELETE':
         return make_delete_ride(ride_id)
     if request.method == 'PUT':
