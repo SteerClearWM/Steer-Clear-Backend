@@ -87,7 +87,7 @@ class SteerClearTestCase(unittest.TestCase):
         db.session.add(r3)
         db.session.commit()
 
-        response = self.client.get('/rides')
+        response = self.client.get(API + '/rides')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
 
