@@ -8,6 +8,8 @@ from testfixtures import replace, test_datetime
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
 
+API = '/api'
+
 """
 SteerClearTestCase
 ------------------
@@ -53,7 +55,7 @@ class SteerClearTestCase(unittest.TestCase):
     Tests that listing all of the rides in the queue is correct.
     """
     def test_list_rides_empty(self):
-        response = self.client.get('/rides')
+        response = self.client.get(API + '/rides')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {"rides": []})
 

@@ -1,9 +1,11 @@
 from steerclear import app
-from flask import request, json, abort, render_template
+from flask import Blueprint, request, json, abort, render_template
 from models import *
 from forms import *
 from eta import time_between_locations
 from datetime import datetime, timedelta
+
+api = Blueprint('api', __name__, url_prefix='/api')
 
 def calculate_time_data(pickup_loc, dropoff_loc):
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
@@ -156,8 +158,8 @@ If it is a GET request, return the queue of rides
 as a json object. If the method is POST, add a new ride
 to the queue and return the ride json object in the response
 """
-@app.route('/rides', methods=['GET', 'POST'])
-@app.route('/rides/<int:ride_id>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/rides', methods=['GET', 'POST'])
+@api.route('/rides/<int:ride_id>', methods=['GET', 'PUT', 'DELETE'])
 def rides(ride_id=None):
     if request.method == 'GET':
         return make_list_rides(ride_id)
@@ -168,7 +170,7 @@ def rides(ride_id=None):
     if request.method == 'PUT':
         return "asd;lfkjasd"
 
-@app.route('/clear')
+@api.route('/clear')
 def clear():
     db.session.query(Ride).delete()
     db.session.commit()

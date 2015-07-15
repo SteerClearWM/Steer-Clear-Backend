@@ -7,3 +7,6 @@ app.config.from_envvar('STEERCLEAR_SETTINGS')
 db = SQLAlchemy(app)
 
 from steerclear import views
+from steerclear.views import api
+
+app.register_blueprint(api)
