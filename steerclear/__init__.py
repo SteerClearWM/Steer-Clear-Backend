@@ -8,9 +8,9 @@ app.config.from_envvar('STEERCLEAR_SETTINGS')
 db = SQLAlchemy(app)
 
 from steerclear import views
-from steerclear.api.views import api
+from steerclear.api.views import api_bp
 from steerclear.driver_portal.views import driver_portal
 
 # register all blueprints to the app
-app.register_blueprint(api)
+app.register_blueprint(api_bp)
 app.register_blueprint(driver_portal)
