@@ -1,5 +1,5 @@
 from steerclear import app, db
-from steerclear.api.models import *
+from steerclear.models import *
 from steerclear.api.views import *
 import unittest, json, vcr
 from datetime import datetime, timedelta

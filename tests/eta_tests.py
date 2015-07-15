@@ -1,5 +1,5 @@
 from steerclear.eta import *
-from steerclear.api.models import Ride
+from steerclear.models import Ride
 import unittest, json, urllib, vcr, requests, os
 
 # vcr object used to record api request responses or return already recorded responses
