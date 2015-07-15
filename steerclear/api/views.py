@@ -51,6 +51,18 @@ class RideAPI(Resource):
             abort(404)
         return json.jsonify({'ride': ride.as_dict()})
 
+    def delete(self, ride_id):
+        ride = Ride.query.get(ride_id)
+        if ride is None:
+            abort(404)
+        try:
+            db.session.delete(ride)
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
+            abort(404)
+        return "OK"
+
 api.add_resource(RideListAPI, '/rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>')
 
@@ -75,50 +87,6 @@ def calculate_time_data(pickup_loc, dropoff_loc):
         dropoff_time = pickup_time + timedelta(0, travel_time)
     
     return (pickup_time, travel_time, dropoff_time)
-
-
-"""
-cancel_ride
------------
-Removes a ride with a specific *ride_id* from the ride queue.
-Raises an exception if *ride_id* is None or if no Ride exists
-"""
-def cancel_ride(ride_id):
-    if ride_id is None:
-        raise Exception
-    canceled_ride = Ride.query.get(ride_id)
-    if canceled_ride is None:
-        raise Exception
-
-    db.session.delete(canceled_ride)
-    db.session.commit()
-
-"""
-make_delete_ride
-----------------
-Wrapper for canceling a ride
-"""
-def make_delete_ride(ride_id):
-    try:
-        cancel_ride(ride_id)
-        return "OK"
-    except Exception:
-        return "Sorry", 404
-
-"""
-rides
------
-View for handling all ride functionality.
-If it is a GET request, return the queue of rides
-as a json object. If the method is POST, add a new ride
-to the queue and return the ride json object in the response
-"""
-@api_bp.route('/rides/<int:ride_id>', methods=['PUT', 'DELETE'])
-def rides(ride_id=None):
-    if request.method == 'DELETE':
-        return make_delete_ride(ride_id)
-    if request.method == 'PUT':
-        return "asd;lfkjasd"
 
 @api_bp.route('/clear')
 def clear():
