@@ -6,26 +6,41 @@ from eta import time_between_locations
 from datetime import datetime, timedelta
 from sqlalchemy import exc
 
+# set up api blueprint
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_bp)
 
+"""
+RideListAPI
+-----------
+HTTP commands for interfacing with a list of
+ride objects. uri: /rides
+"""
 class RideListAPI(Resource):
+    """
+    Return the list of Ride objects in the queue
+    """
     def get(self):
-        rides = Ride.query.all()
-        rides = map(Ride.as_dict, rides)
-        return json.jsonify({'rides': rides})
+        rides = Ride.query.all()                # query db for Rides
+        rides = map(Ride.as_dict, rides)        # convert all Rides to dictionaries
+        return json.jsonify({'rides': rides})   # return response
 
+    """
+    Create a new Ride object and place it in the queue
+    """
     def post(self):
-        form = RideForm()
+        form = RideForm()                       # validate RideForm or 404
         if not form.validate_on_submit():
             abort(404)
         
+        # calculate pickup and dropoff time
         pickup_loc = (form.start_latitude.data, form.start_longitude.data)
         dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
         time_data = calculate_time_data(pickup_loc, dropoff_loc)
         if time_data is None:
             abort(404)
         
+        # create new Ride object
         pickup_time, travel_time, dropoff_time = time_data
         new_ride = Ride(
             form.num_passengers.data,
@@ -37,26 +52,39 @@ class RideListAPI(Resource):
         )
         
         try:
-            db.session.add(new_ride)
+            db.session.add(new_ride)    # add new Ride object to db
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
             abort(404)
         return json.jsonify({'ride': new_ride.as_dict()})
 
+"""
+RideAPI
+-------
+HTTP commands for interfacing with a single Ride object
+uri: /rides/<ride_id>
+"""
 class RideAPI(Resource):
+    """
+    Return the Ride object with the corresponding id as
+    a json object or 404
+    """
     def get(self, ride_id):
-        ride = Ride.query.get(ride_id)
-        if ride is None:
+        ride = Ride.query.get(ride_id)                  # query db for Ride
+        if ride is None:                                # 404 if Ride does not exist
             abort(404)
         return json.jsonify({'ride': ride.as_dict()})
 
+    """
+    Delete a specific Ride object
+    """
     def delete(self, ride_id):
-        ride = Ride.query.get(ride_id)
-        if ride is None:
+        ride = Ride.query.get(ride_id)  # query db for Ride object
+        if ride is None:                # 404 if not found
             abort(404)
         try:
-            db.session.delete(ride)
+            db.session.delete(ride)     # attempt to delete Ride object from db
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
