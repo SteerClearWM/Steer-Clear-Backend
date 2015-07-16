@@ -87,7 +87,7 @@ class RideAPI(Resource):
         ride = Ride.query.get(ride_id)                  # query db for Ride
         if ride is None:                                # 404 if Ride does not exist
             abort(404)
-        return json.jsonify({'ride': ride.as_dict()})
+        return {'ride': marshal(ride.as_dict(), ride_fields)}, 200
 
     """
     Delete a specific Ride object

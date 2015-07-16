@@ -106,7 +106,6 @@ class SteerClearAPITestCase(unittest.TestCase):
     ride object given its ride_id
     """
     def test_list_ride_success(self):
-        self.maxDiff = None
         dtime = datetime(1,1,1)
         r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
         r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
@@ -117,12 +116,12 @@ class SteerClearAPITestCase(unittest.TestCase):
         r1_dict[u'id'] = 1                                  # assign correct id vals
         r2_dict[u'id'] = 2
         r3_dict[u'id'] = 3
-        r1_dict[u'pickup_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
-        r2_dict[u'pickup_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
-        r3_dict[u'pickup_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
-        r1_dict[u'dropoff_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
-        r2_dict[u'dropoff_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
-        r3_dict[u'dropoff_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
+        r1_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
+        r2_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
+        r3_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
+        r1_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
+        r2_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
+        r3_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
