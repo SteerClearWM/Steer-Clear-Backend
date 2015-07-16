@@ -152,8 +152,8 @@ class SteerClearAPITestCase(unittest.TestCase):
     def test_add_ride(self):
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
         expected_dropoff_time = expected_pickup_time + timedelta(0, 171)
-        expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S GMT')
-        expected_dropoff_string = expected_dropoff_time.strftime('%a, %d %b %Y %H:%M:%S GMT')
+        expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
+        expected_dropoff_string = expected_dropoff_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
         payload = {
                     u"num_passengers": 3,
                     u"start_latitude": 37.273485,

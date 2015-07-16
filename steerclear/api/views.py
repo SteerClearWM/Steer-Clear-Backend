@@ -70,7 +70,7 @@ class RideListAPI(Resource):
         except exc.IntegrityError:
             db.session.rollback()
             abort(400)
-        return json.jsonify({'ride': new_ride.as_dict()})
+        return {'ride': marshal(new_ride.as_dict(), ride_fields)}, 200
 
 """
 RideAPI
