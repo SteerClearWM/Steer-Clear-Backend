@@ -1,5 +1,5 @@
 from flask import Blueprint, request, json
-from flask_restful import Resource, Api, abort
+from flask_restful import Resource, Api, fields, marshal, abort
 from models import *
 from forms import *
 from eta import time_between_locations
@@ -10,6 +10,18 @@ from sqlalchemy import exc
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_bp)
 
+ride_fields = {
+    'id': fields.Integer(),
+    'num_passengers': fields.Integer(),
+    'start_latitude': fields.Float(),
+    'start_longitude': fields.Float(),
+    'end_latitude': fields.Float(),
+    'end_longitude': fields.Float(),
+    'pickup_time': fields.DateTime(dt_format='rfc822'),
+    'travel_time': fields.Integer(),
+    'dropoff_time': fields.DateTime(dt_format='rfc822'), 
+}
+
 """
 RideListAPI
 -----------
@@ -17,13 +29,14 @@ HTTP commands for interfacing with a list of
 ride objects. uri: /rides
 """
 class RideListAPI(Resource):
+
     """
     Return the list of Ride objects in the queue
     """
     def get(self):
-        rides = Ride.query.all()                # query db for Rides
-        rides = map(Ride.as_dict, rides)        # convert all Rides to dictionaries
-        return json.jsonify({'rides': rides})   # return response
+        rides = Ride.query.all()                            # query db for Rides
+        rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
+        return {'rides': marshal(rides, ride_fields)}, 200  # return response
 
     """
     Create a new Ride object and place it in the queue

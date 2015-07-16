@@ -65,12 +65,12 @@ class SteerClearAPITestCase(unittest.TestCase):
         r1_dict['id'] = 1                                  # assign correct id vals
         r2_dict['id'] = 2
         r3_dict['id'] = 3
-        r1_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r2_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r3_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r1_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r2_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r3_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r1_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r2_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r3_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r1_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r2_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r3_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
@@ -106,6 +106,7 @@ class SteerClearAPITestCase(unittest.TestCase):
     ride object given its ride_id
     """
     def test_list_ride_success(self):
+        self.maxDiff = None
         dtime = datetime(1,1,1)
         r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
         r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
@@ -113,15 +114,15 @@ class SteerClearAPITestCase(unittest.TestCase):
         r1_dict = r1.as_dict()                             # store dict versions
         r2_dict = r2.as_dict()                     
         r3_dict = r3.as_dict()
-        r1_dict['id'] = 1                                  # assign correct id vals
-        r2_dict['id'] = 2
-        r3_dict['id'] = 3
-        r1_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r2_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r3_dict['pickup_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r1_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r2_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
-        r3_dict['dropoff_time'] = 'Mon, 01 Jan 1 00:00:00 GMT'
+        r1_dict[u'id'] = 1                                  # assign correct id vals
+        r2_dict[u'id'] = 2
+        r3_dict[u'id'] = 3
+        r1_dict[u'pickup_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
+        r2_dict[u'pickup_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
+        r3_dict[u'pickup_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
+        r1_dict[u'dropoff_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
+        r2_dict[u'dropoff_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
+        r3_dict[u'dropoff_time'] = u'Mon, 01 Jan 1 00:00:00 GMT'
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
@@ -149,7 +150,6 @@ class SteerClearAPITestCase(unittest.TestCase):
     @myvcr.use_cassette()
     @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
     def test_add_ride(self):
-        self.maxDiff = None
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
         expected_dropoff_time = expected_pickup_time + timedelta(0, 171)
         expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S GMT')
