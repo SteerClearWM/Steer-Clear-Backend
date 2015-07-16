@@ -238,7 +238,8 @@ class SteerClearAPITestCase(unittest.TestCase):
 
         # test can delete a ride
         response = self.client.delete(API + '/rides/1')
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 204)
+        self.assertEquals(response.data, '')
         self.assertEquals(len(Ride.query.all()), 2)
         self.assertEquals(Ride.query.get(1), None)
         self.assertEquals(Ride.query.get(2).as_dict(), r2_dict)
@@ -246,7 +247,8 @@ class SteerClearAPITestCase(unittest.TestCase):
         
         # test can delete a ride out of order
         response = self.client.delete(API + '/rides/3')
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 204)
+        self.assertEquals(response.data, '')
         self.assertEquals(len(Ride.query.all()), 1)
         self.assertEquals(Ride.query.get(1), None)
         self.assertEquals(Ride.query.get(2).as_dict(), r2_dict)
@@ -254,7 +256,8 @@ class SteerClearAPITestCase(unittest.TestCase):
 
         # test can delete final ride
         response = self.client.delete(API + '/rides/2')
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 204)
+        self.assertEquals(response.data, '')
         self.assertEquals(Ride.query.all(), [])
         self.assertEquals(Ride.query.get(1), None)
         self.assertEquals(Ride.query.get(2), None)

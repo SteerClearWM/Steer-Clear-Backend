@@ -102,7 +102,7 @@ class RideAPI(Resource):
         except exc.IntegrityError:
             db.session.rollback()
             abort(404)
-        return "OK"
+        return "", 204
 
 api.add_resource(RideListAPI, '/rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>')
