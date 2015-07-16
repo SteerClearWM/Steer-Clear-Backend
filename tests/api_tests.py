@@ -173,31 +173,31 @@ class SteerClearAPITestCase(unittest.TestCase):
         bad_payload.pop('num_passengers', None)
         bad_payload.pop('id', None)
         r = self.client.post(API + '/rides', data=bad_payload)
-        self.assertEquals(r.status_code, 404)
+        self.assertEquals(r.status_code, 400)
 
         bad_payload = payload.copy()
         bad_payload.pop('start_latitude', None)
         bad_payload.pop('id', None)
         r = self.client.post(API + '/rides', data=bad_payload)
-        self.assertEquals(r.status_code, 404)
+        self.assertEquals(r.status_code, 400)
 
         bad_payload = payload.copy()
         bad_payload.pop('start_longitude', None)
         bad_payload.pop('id', None)
         r = self.client.post(API + '/rides', data=bad_payload)
-        self.assertEquals(r.status_code, 404)
+        self.assertEquals(r.status_code, 400)
 
         bad_payload = payload.copy()
         bad_payload.pop('end_latitude', None)
         bad_payload.pop('id', None)
         r = self.client.post(API + '/rides', data=bad_payload)
-        self.assertEquals(r.status_code, 404)
+        self.assertEquals(r.status_code, 400)
 
         bad_payload = payload.copy()
         bad_payload.pop('end_longitude', None)
         bad_payload.pop('id', None)
         r = self.client.post(API + '/rides', data=bad_payload)
-        self.assertEquals(r.status_code, 404)
+        self.assertEquals(r.status_code, 400)
 
     """
     test_rides_delete_bad_ride_id

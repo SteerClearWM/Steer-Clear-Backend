@@ -31,14 +31,14 @@ class RideListAPI(Resource):
     def post(self):
         form = RideForm()                       # validate RideForm or 404
         if not form.validate_on_submit():
-            abort(404)
+            abort(400)
         
         # calculate pickup and dropoff time
         pickup_loc = (form.start_latitude.data, form.start_longitude.data)
         dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
         time_data = calculate_time_data(pickup_loc, dropoff_loc)
         if time_data is None:
-            abort(404)
+            abort(400)
         
         # create new Ride object
         pickup_time, travel_time, dropoff_time = time_data
@@ -56,7 +56,7 @@ class RideListAPI(Resource):
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
-            abort(404)
+            abort(400)
         return json.jsonify({'ride': new_ride.as_dict()})
 
 """
