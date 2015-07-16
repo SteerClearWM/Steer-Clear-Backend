@@ -166,7 +166,7 @@ class SteerClearAPITestCase(unittest.TestCase):
                   }
         response = self.client.post(API + '/rides', data=payload)
         payload[u'id'] = 1
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 201)
         self.assertEquals(json.loads(response.get_data()), {u"ride": payload})
 
         bad_payload = payload.copy()
