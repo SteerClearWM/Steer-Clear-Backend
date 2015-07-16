@@ -10,6 +10,7 @@ from sqlalchemy import exc
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_bp)
 
+# response format for Ride objects
 ride_fields = {
     'id': fields.Integer(),
     'num_passengers': fields.Integer(),
@@ -104,6 +105,7 @@ class RideAPI(Resource):
             abort(404)
         return "", 204
 
+# route urls to resources
 api.add_resource(RideListAPI, '/rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>')
 
