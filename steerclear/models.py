@@ -1,4 +1,5 @@
 """
 Import all blueprint and module models
 """
-from steerclear.api.models import *
+from .api.models import *
+from .login.models import *

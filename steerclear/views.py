@@ -1,5 +1,6 @@
 """
 Import all blueprint and modules views
 """
-from steerclear.api.views import *
-from steerclear.driver_portal.views import *
+from .api.views import *
+from .driver_portal.views import *
+from .login.views import *
