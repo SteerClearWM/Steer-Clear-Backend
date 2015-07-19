@@ -1,7 +1,6 @@
 from flask_wtf import Form
 from wtforms import IntegerField, StringField, FloatField
 from wtforms.validators import DataRequired, NumberRange, Length
-from models import Ride
 
 """
 RideForm
