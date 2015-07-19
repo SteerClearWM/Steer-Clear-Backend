@@ -1,5 +1,5 @@
-from flask import Blueprint, flash
-from flask.ext.login import login_user
+from flask import Blueprint, flash, render_template
+from flask.ext.login import login_user, login_required
 from steerclear import login_manager
 from forms import *
 from models import *
@@ -19,4 +19,9 @@ def login():
         if user:
             login_user(user)
             return "logged in"
-    return "not logged in"
+    return render_template('login.html')
+
+@login_bp.route('/test')
+@login_required
+def test():
+	return "Congrats, you are logged in"

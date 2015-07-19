@@ -3,6 +3,8 @@ Backend and web app repo for Steer Clear app
 
 ## TODO
 
+* Replace temp secret key with secure key
+
 * Create custom api exceptions
 
 * add error checking/exception handling for database operations
