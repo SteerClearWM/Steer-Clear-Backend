@@ -2,12 +2,19 @@ from steerclear import app
 from steerclear.forms import UserForm
 import unittest, flask
 
+# username string min and max lengths
 USERNAME_MIN_LENGTH = 1
 USERNAME_MAX_LENGTH = 119
 
+# password string min and max lengths
 PASSWORD_MIN_LENGTH = 1
 PASSWORD_MAX_LENGTH = 119
 
+"""
+UserFormTestCase
+----------------
+Tests for login module UserForm
+"""
 class UserFormTestCase(unittest.TestCase):
 
     """
@@ -54,6 +61,12 @@ class UserFormTestCase(unittest.TestCase):
             result = self.submit_form(bad_payload)
             self.assertFalse(result)
 
+    """
+    test_username_min_length
+    ------------------------
+    Tests that a UserForm validates the minimum length
+    for the username field correctly
+    """
     def test_username_min_length(self):
         payload = self.payload.copy()
         payload[u'username'] = 'x' * USERNAME_MIN_LENGTH
@@ -65,6 +78,12 @@ class UserFormTestCase(unittest.TestCase):
         result = self.submit_form(payload)
         self.assertFalse(result)
 
+    """
+    test_username_max_length
+    ------------------------
+    Tests that a UserForm validates the maximum length
+    for the username field correctly
+    """
     def test_username_max_length(self):
         payload = self.payload.copy()
         payload[u'username'] = 'x' * USERNAME_MAX_LENGTH
@@ -76,6 +95,12 @@ class UserFormTestCase(unittest.TestCase):
         result = self.submit_form(payload)
         self.assertFalse(result)
 
+    """
+    test_password_min_length
+    ------------------------
+    Tests that a UserForm validates the minimum length
+    for the password field correctly
+    """
     def test_password_min_length(self):
         payload = self.payload.copy()
         payload[u'password'] = 'x' * PASSWORD_MIN_LENGTH
@@ -87,6 +112,12 @@ class UserFormTestCase(unittest.TestCase):
         result = self.submit_form(payload)
         self.assertFalse(result)
 
+    """
+    test_password_max_length
+    ------------------------
+    Tests that a UserForm validates the maximum length
+    for the password field correctly
+    """
     def test_password_max_length(self):
         payload = self.payload.copy()
         payload[u'password'] = 'x' * PASSWORD_MAX_LENGTH
