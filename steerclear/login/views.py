@@ -1,9 +1,15 @@
 from flask import Blueprint, flash
 from flask.ext.login import login_user
+from steerclear import login_manager
 from forms import *
 from models import *
 
+
 login_bp = Blueprint('login', __name__, url_prefix='/login')
+
+@login_manager.user_loader
+def user_loader(user_id):
+    return User.query.get(int(user_id))
 
 @login_bp.route('/', methods=['GET', 'POST'])
 def login():
