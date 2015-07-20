@@ -1,6 +1,7 @@
 from steerclear import app, db
 from steerclear.models import *
 from steerclear.api.views import *
+from flask.ext import testing
 import unittest, json, vcr
 from datetime import datetime, timedelta
 from testfixtures import replace, test_datetime
@@ -15,7 +16,14 @@ SteerClearAPITestCase
 ------------------
 TestCase for testing all api routes
 """
-class SteerClearAPITestCase(unittest.TestCase):
+class SteerClearAPITestCase(testing.TestCase):
+
+    render_templates = False
+
+    def create_app(self):
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
+        return app
 
     """
     setUp
@@ -24,9 +32,6 @@ class SteerClearAPITestCase(unittest.TestCase):
     instance and creates new test database
     """
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
-        self.client = app.test_client()
         db.create_all()
 
     """
