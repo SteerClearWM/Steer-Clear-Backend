@@ -2,6 +2,7 @@ from steerclear import app, db
 from steerclear.models import *
 from steerclear.api.views import *
 from flask.ext import testing
+from flask import url_for
 import unittest, json, vcr
 from datetime import datetime, timedelta
 from testfixtures import replace, test_datetime
@@ -49,7 +50,7 @@ class SteerClearAPITestCase(testing.TestCase):
     Tests that listing all of the rides in the queue is correct.
     """
     def test_list_rides_empty(self):
-        response = self.client.get(API + '/rides')
+        response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {"rides": []})
 
@@ -81,7 +82,7 @@ class SteerClearAPITestCase(testing.TestCase):
         db.session.add(r3)
         db.session.commit()
 
-        response = self.client.get(API + '/rides')
+        response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
 
@@ -168,7 +169,7 @@ class SteerClearAPITestCase(testing.TestCase):
                     u"travel_time": 171,
                     u"dropoff_time": expected_dropoff_string,
                   }
-        response = self.client.post(API + '/rides', data=payload)
+        response = self.client.post(url_for('api.rides'), data=payload)
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
         self.assertEquals(json.loads(response.get_data()), {u"ride": payload})
@@ -176,31 +177,31 @@ class SteerClearAPITestCase(testing.TestCase):
         bad_payload = payload.copy()
         bad_payload.pop('num_passengers', None)
         bad_payload.pop('id', None)
-        r = self.client.post(API + '/rides', data=bad_payload)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
         self.assertEquals(r.status_code, 400)
 
         bad_payload = payload.copy()
         bad_payload.pop('start_latitude', None)
         bad_payload.pop('id', None)
-        r = self.client.post(API + '/rides', data=bad_payload)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
         self.assertEquals(r.status_code, 400)
 
         bad_payload = payload.copy()
         bad_payload.pop('start_longitude', None)
         bad_payload.pop('id', None)
-        r = self.client.post(API + '/rides', data=bad_payload)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
         self.assertEquals(r.status_code, 400)
 
         bad_payload = payload.copy()
         bad_payload.pop('end_latitude', None)
         bad_payload.pop('id', None)
-        r = self.client.post(API + '/rides', data=bad_payload)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
         self.assertEquals(r.status_code, 400)
 
         bad_payload = payload.copy()
         bad_payload.pop('end_longitude', None)
         bad_payload.pop('id', None)
-        r = self.client.post(API + '/rides', data=bad_payload)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
         self.assertEquals(r.status_code, 400)
 
     """

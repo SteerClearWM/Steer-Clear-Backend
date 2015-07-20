@@ -106,8 +106,8 @@ class RideAPI(Resource):
         return "", 204
 
 # route urls to resources
-api.add_resource(RideListAPI, '/rides')
-api.add_resource(RideAPI, '/rides/<int:ride_id>')
+api.add_resource(RideListAPI, '/rides', endpoint='rides')
+api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
 
 def calculate_time_data(pickup_loc, dropoff_loc):
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
