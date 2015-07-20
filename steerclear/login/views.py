@@ -11,6 +11,16 @@ login_bp = Blueprint('login', __name__)
 def user_loader(user_id):
     return User.query.get(int(user_id))
 
+"""
+login
+-----
+main endpoint for logging users in and out
+GET - returns the login page
+POST - logs user in if valid username and password
+       and redirects to index page else returns the login template
+:TODO: factor in password hashing + salt. add
+       more helpful error messages
+"""
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = UserForm()
@@ -21,6 +31,12 @@ def login():
             return redirect(url_for('driver_portal.index'))
     return render_template('login.html')
 
+"""
+logout
+------
+Logs out the user. User must already be logged in, else
+return 401. Once user is logged out, redirect to login page
+"""
 @login_bp.route('/logout', methods=['GET'])
 @login_required
 def logout():
