@@ -5,8 +5,15 @@ from steerclear import login_manager
 from forms import *
 from models import *
 
+# setup login blueprint
 login_bp = Blueprint('login', __name__)
 
+"""
+user_loader
+-----------
+Returns a user given the (unicode) user_id.
+this needs to be implemented for flask-login extension to work
+"""
 @login_manager.user_loader
 def user_loader(user_id):
     return User.query.get(int(user_id))
