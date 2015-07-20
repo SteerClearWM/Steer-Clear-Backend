@@ -112,3 +112,32 @@ class SteerClearLoginTestCase(testing.TestCase):
             data=self.payload
         )
         self.assertRedirects(response, url_for('driver_portal.index'))
+
+    """
+    test_logout_requires_login
+    --------------------------
+    Tests that the logout route requires the user to be loged in
+    """
+    def test_logout_requires_login(self):
+        response = self.client.get(url_for('login.logout'))
+        self.assertEquals(response.status_code, 401)
+
+    """
+    test_logout_success
+    -------------------
+    Tests that a user can successfully logout
+    """
+    def test_logout_success(self):
+        # login a user
+        user = User(username='ryan', password='1234')
+        db.session.add(user)
+        db.session.commit()
+        self.client.post(url_for('login.login'), data=self.payload)
+
+        # logout user
+        response = self.client.get(url_for('login.logout'))
+        self.assertRedirects(response, url_for('login.login'))
+
+        # make sure we are actually loged out
+        response = self.client.get(url_for('login.logout'))
+        self.assertEquals(response.status_code, 401)
