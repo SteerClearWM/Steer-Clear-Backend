@@ -57,7 +57,7 @@ class SteerClearLoginTestCase(testing.TestCase):
     """
     def test_get_login_page(self):
         response = self.client.get(url_for('login.login'))
-        self.assert_template_used(LOGIN_TEMPLATE_NAME)
+        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
 
     """
@@ -68,7 +68,7 @@ class SteerClearLoginTestCase(testing.TestCase):
     def test_login_failure_incorrect_username(self):
         # test with no Users in db
         response = self.client.post(url_for('login.login'), data=self.payload)
-        self.assert_template_used(LOGIN_TEMPLATE_NAME)
+        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
 
         # test with user that has different username but same password
@@ -76,5 +76,39 @@ class SteerClearLoginTestCase(testing.TestCase):
         db.session.add(user)
         db.session.commit()
         response = self.client.post(url_for('login.login'), data=self.payload)
-        self.assert_template_used(LOGIN_TEMPLATE_NAME)
+        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
+
+    """
+    test_login_failure_incorrect_password
+    -------------------------------------
+    Tests that login fails if the user supplies the wrong password
+    """
+    def test_login_failure_incorrect_password(self):
+        # test with no Users in db
+        response = self.client.post(url_for('login.login'), data=self.payload)
+        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
+        self.assertTrue(response.status_code, 200)
+
+        # test with user that has same username but different password
+        user = User(username='ryan', password='4321')
+        db.session.add(user)
+        db.session.commit()
+        response = self.client.post(url_for('login.login'), data=self.payload)
+        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
+        self.assertTrue(response.status_code, 200)
+
+    """
+    test_login_success
+    ------------------
+    Tests that a user can login successfully
+    """
+    def test_login_success(self):
+        user = User(username='ryan', password='1234')
+        db.session.add(user)
+        db.session.commit()
+        response = self.client.post(
+            url_for('login.login'), 
+            data=self.payload
+        )
+        self.assertRedirects(response, url_for('driver_portal.index'))
