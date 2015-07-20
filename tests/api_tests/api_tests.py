@@ -10,8 +10,6 @@ from testfixtures import replace, test_datetime
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
 
-API = '/api'
-
 """
 SteerClearAPITestCase
 ------------------
@@ -94,7 +92,7 @@ class SteerClearAPITestCase(testing.TestCase):
     """
     def test_list_ride_bad_ride_id(self):
         # check that bad ride_id get request returns 404
-        response = self.client.get(API + '/rides/0')
+        response = self.client.get(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
         dtime = datetime(1,1,1)
@@ -102,7 +100,7 @@ class SteerClearAPITestCase(testing.TestCase):
         db.session.commit()
 
         # check that bad ride_id with not empty database returns 404
-        response = self.client.get(API + '/rides/2')
+        response = self.client.get(url_for('api.ride', ride_id=2))
         self.assertEquals(response.status_code, 404)
 
     """
@@ -133,15 +131,15 @@ class SteerClearAPITestCase(testing.TestCase):
         db.session.add(r3)
         db.session.commit()
 
-        response = self.client.get(API + '/rides/1')
+        response = self.client.get(url_for('api.ride', ride_id=1))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'ride': r1_dict})
 
-        response = self.client.get(API + '/rides/2')
+        response = self.client.get(url_for('api.ride', ride_id=2))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'ride': r2_dict})
 
-        response = self.client.get(API + '/rides/3')
+        response = self.client.get(url_for('api.ride', ride_id=3))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'ride': r3_dict})
 
@@ -211,7 +209,7 @@ class SteerClearAPITestCase(testing.TestCase):
     """
     def test_rides_delete_bad_ride_id(self):
         # check that bad ride_id delete request returns 404
-        response = self.client.delete(API + '/rides/0')
+        response = self.client.delete(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
         dtime = datetime(1,1,1)
@@ -219,7 +217,7 @@ class SteerClearAPITestCase(testing.TestCase):
         db.session.commit()
 
         # check that bad ride_id with not empty database returns 404
-        response = self.client.delete(API + '/rides/2')
+        response = self.client.delete(url_for('api.ride', ride_id=2))
         self.assertEquals(response.status_code, 404)
 
     """
@@ -243,7 +241,7 @@ class SteerClearAPITestCase(testing.TestCase):
         r3_dict['id'] = 3
 
         # test can delete a ride
-        response = self.client.delete(API + '/rides/1')
+        response = self.client.delete(url_for('api.ride', ride_id=1))
         self.assertEquals(response.status_code, 204)
         self.assertEquals(response.data, '')
         self.assertEquals(len(Ride.query.all()), 2)
@@ -252,7 +250,7 @@ class SteerClearAPITestCase(testing.TestCase):
         self.assertEquals(Ride.query.get(3).as_dict(), r3_dict)
         
         # test can delete a ride out of order
-        response = self.client.delete(API + '/rides/3')
+        response = self.client.delete(url_for('api.ride', ride_id=3))
         self.assertEquals(response.status_code, 204)
         self.assertEquals(response.data, '')
         self.assertEquals(len(Ride.query.all()), 1)
@@ -261,7 +259,7 @@ class SteerClearAPITestCase(testing.TestCase):
         self.assertEquals(Ride.query.get(3), None)
 
         # test can delete final ride
-        response = self.client.delete(API + '/rides/2')
+        response = self.client.delete(url_for('api.ride', ride_id=2))
         self.assertEquals(response.status_code, 204)
         self.assertEquals(response.data, '')
         self.assertEquals(Ride.query.all(), [])
