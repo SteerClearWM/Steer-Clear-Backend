@@ -36,7 +36,7 @@ def login():
         if user and user.password == form.password.data:
             login_user(user)
             return redirect(url_for('driver_portal.index'))
-    return render_template('login.html')
+    return render_template('login.html', action=url_for('.login'))
 
 """
 logout

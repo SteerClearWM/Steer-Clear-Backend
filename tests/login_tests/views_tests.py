@@ -59,6 +59,7 @@ class SteerClearLoginTestCase(testing.TestCase):
         response = self.client.get(url_for('login.login'))
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
+        self.assertContext('action', url_for('login.login'))
 
     """
     test_login_failure_incorrect_username
