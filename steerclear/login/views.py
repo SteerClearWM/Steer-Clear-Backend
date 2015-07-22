@@ -51,18 +51,28 @@ def logout():
     logout_user()
     return redirect(url_for('.login'))
 
+"""
+register
+--------
+Main endpoint for registering new users in the system
+GET - returns the register user template
+POST - takes a username/password form and creates a new user.
+       If a user already exists with the same username, flash an error message
+       and return the register screen again. On success, redirect user to login page
+"""
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    # attempt to validate UserForm
     form = UserForm()
     if form.validate_on_submit():
+        # attempt to create a new User in the db
         new_user = User(username=form.username.data, password=form.password.data)
         try:
             db.session.add(new_user)
             db.session.commit()
         except exc.IntegrityError:
-            flash('user already exists')
+            # user already exists
             return render_template('login.html', action=url_for('.register'))
-            abort(404)
         return redirect(url_for('.login'))
     return render_template('login.html', action=url_for('.register'))
 
