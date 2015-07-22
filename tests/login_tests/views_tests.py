@@ -111,10 +111,7 @@ class SteerClearLoginTestCase(testing.TestCase):
         user = User(username='ryan', password='1234')
         db.session.add(user)
         db.session.commit()
-        response = self.client.post(
-            url_for('login.login'), 
-            data=self.payload
-        )
+        response = self.client.post(url_for('login.login'), data=self.payload)
         self.assertRedirects(response, url_for('driver_portal.index'))
 
     """
@@ -177,6 +174,22 @@ class SteerClearLoginTestCase(testing.TestCase):
         self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
         self.assertContext('action', url_for('login.register'))
 
+    """
+    test_register_success
+    ---------------------
+    Tests that we can register a new user successfully
+    """
     def test_register_success(self):
+        # create user and check for success in response
         response = self.client.post(url_for('login.register'), data=self.payload)
         self.assertRedirects(response, url_for('login.login'))
+
+        # find new user in db and check that it has correct username/password
+        user = User.query.filter_by(username=self.payload[u'username']).first()
+        self.assertIsNotNone(user)
+        self.assertEquals(user.username, self.payload[u'username'])
+        self.assertEquals(user.password, self.payload[u'password'])
+
+        # make sure we can log in as new user
+        response = self.client.post(url_for('login.login'), data=self.payload)
+        self.assertRedirects(response, url_for('driver_portal.index'))
