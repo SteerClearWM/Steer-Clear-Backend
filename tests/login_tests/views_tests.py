@@ -6,6 +6,7 @@ from steerclear.models import User
 
 # name of templates used by the login module
 LOGIN_TEMPLATE_NAME = 'login.html'
+REGISTER_TEMPLATE_NAME = 'login.html'
 
 """
 SteerClearLoginTestCase
@@ -79,6 +80,7 @@ class SteerClearLoginTestCase(testing.TestCase):
         response = self.client.post(url_for('login.login'), data=self.payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
+        self.assertContext('action', url_for('login.login'))
 
     """
     test_login_failure_incorrect_password
@@ -98,6 +100,7 @@ class SteerClearLoginTestCase(testing.TestCase):
         response = self.client.post(url_for('login.login'), data=self.payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
+        self.assertContext('action', url_for('login.login'))
 
     """
     test_login_success
@@ -142,3 +145,38 @@ class SteerClearLoginTestCase(testing.TestCase):
         # make sure we are actually loged out
         response = self.client.get(url_for('login.logout'))
         self.assertEquals(response.status_code, 401)
+
+    """
+    test_get_register_page
+    ----------------------
+    Tests that we can GET the register page correctly
+    with the right context
+    """
+    def test_get_register_page(self):
+        # check that GET request succeeded
+        response = self.client.get(url_for('login.register'))
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
+        self.assertContext('action', url_for('login.register'))
+
+    """
+    test_register_failure_username_exists
+    -------------------------------------
+    Tests that trying to register a new user with
+    a username that already exists fails
+    """
+    def test_register_failure_username_exists(self):
+        # create a user
+        user = User(username='ryan', password='1234')
+        db.session.add(user)
+        db.session.commit()
+
+        # check that POST request failed
+        response = self.client.post(url_for('login.register'), data=self.payload)
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
+        self.assertContext('action', url_for('login.register'))
+
+    def test_register_success(self):
+        response = self.client.post(url_for('login.register'), data=self.payload)
+        self.assertRedirects(response, url_for('login.login'))

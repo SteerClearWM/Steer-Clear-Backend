@@ -1,5 +1,6 @@
 from flask import Blueprint, flash, render_template, url_for, redirect
 from flask.ext.login import login_user, logout_user, login_required
+from flask_restful import abort
 from sqlalchemy import exc
 from steerclear import login_manager
 from forms import *
@@ -59,6 +60,8 @@ def register():
             db.session.add(new_user)
             db.session.commit()
         except exc.IntegrityError:
+            flash('user already exists')
+            return render_template('login.html', action=url_for('.register'))
             abort(404)
         return redirect(url_for('.login'))
     return render_template('login.html', action=url_for('.register'))
