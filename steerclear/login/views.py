@@ -61,7 +61,7 @@ def register():
         except exc.IntegrityError:
             abort(404)
         return redirect(url_for('.login'))
-    return render_template('login.html')
+    return render_template('login.html', action=url_for('.register'))
 
 @login_bp.route('/test_login')
 @login_required
