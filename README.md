@@ -50,9 +50,82 @@ To run tests use **nosetests**
 
 `$ nosetests`
 
+## Login
+At the Moment, login is done with a username and password. We will be switching to just using an email address and a per session random cookie for login later.
+
+### GET /login
+* Returns the login page
+
+### POST /login
+* Route to actually log a user in
+* Takes a form with a **username** and **password** field. 
+* On success, redirects to **index** page.
+
+### GET /logout
+* **requires user to be logged in**
+* Logs the current user out of the system
+
+## Registering Users
+You can register a new user (assuming the user does not already exist) by making a simple POST request with a username and password field
+
+### GET /register
+* Returns the register page
+
+### POST /register
+* Creates a new user. 
+* Takes a form with a **username** and **password** field. 
+* If the user already exists return the register page again 
+* **TODO** add error message
+
+## Driver Portal
+
+### GET /index
+* **requires driver be logged in**
+* Returns the ride request queue management page (not really implemented yet)
+
+## API
+* All API routes require that the user be logged in
+* All API routes are prefixed by **/api/**
+
+## RideList
+API endpoint for getting the lists of all ride requests or creating a new ride request.
+
+### GET /api/rides
+* Returns the queue of ride requests as a json object
+* Sample:
+
+    {
+        "rides": [
+        {
+          "dropoff_time": "Sun, 07 Jun 2015 02:18:50 GMT", 
+          "end_latitude": 37.280893, 
+          "end_longitude": -76.719691, 
+          "id": 1, 
+          "num_passengers": 4, 
+          "pickup_time": "Sun, 07 Jun 2015 02:15:59 GMT", 
+          "start_latitude": 37.273485, 
+          "start_longitude": -76.719628, 
+          "travel_time": 171
+        }, 
+        {
+          "dropoff_time": "Sun, 07 Jun 2015 02:24:49 GMT", 
+          "end_latitude": 37.280893, 
+          "end_longitude": -76.719691, 
+          "id": 2, 
+          "num_passengers": 4, 
+          "pickup_time": "Sun, 07 Jun 2015 02:21:58 GMT", 
+          "start_latitude": 37.273485, 
+          "start_longitude": -76.719628, 
+          "travel_time": 171
+        }
+      ]
+    }
+
+
+
 ##Routes
 
-routing parameters for steerclear backend api
+* routing parameters for steerclear backend api
 
 ### /
 
