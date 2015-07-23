@@ -135,10 +135,8 @@ Ride request objects have several fields:
 API endpoint for getting, updating, and deleting ride requests
 
 ### GET /api/rides/<int:ride_id>
-* Returns the ride request object with the corresponding **ride_id**
-* **ride_id** is an integer
-* returns 404 if the ride request does not exist
-* Sample request **GET /api/rides/2**:
+Sample request **GET /api/rides/2**:
+
     {
       "ride": {
         "dropoff_time": "Sun, 07 Jun 2015 02:24:49 GMT", 
@@ -153,6 +151,10 @@ API endpoint for getting, updating, and deleting ride requests
       }
     }
 
+* Returns the ride request object with the corresponding **ride_id**
+* **ride_id** is an integer
+* returns 404 if the ride request does not exist
+
 ### DELETE /api/rides/<int:ride_id>
 * Deletes the ride request with id **ride_id**
 * Returns status code 204 on success
@@ -162,8 +164,7 @@ API endpoint for getting, updating, and deleting ride requests
 API endpoint for getting the lists of all ride requests or creating a new ride request.
 
 ### GET /api/rides
-* Returns the queue of ride requests as a json object
-* Sample:
+Sample Response:
 
     {
         "rides": [
@@ -191,6 +192,8 @@ API endpoint for getting the lists of all ride requests or creating a new ride r
         }
       ]
     }
+
+* Returns the queue of ride requests as a json object
 
 ### POST /api/rides
 * Creates a new ride request
