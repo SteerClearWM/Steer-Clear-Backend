@@ -1,6 +1,6 @@
 from flask import url_for
 from flask.ext import testing
-import unittest
+from tests.base import base
 from steerclear import app, db
 from steerclear.models import User
 
@@ -13,21 +13,7 @@ SteerClearLoginTestCase
 -----------------------
 TestCase for testing the login module
 """
-class SteerClearLoginTestCase(testing.TestCase):
-
-    # do not render templates in responses
-    render_templates = False
-
-    """
-    create_app
-    ----------
-    Creates an instance of the steerclear flask app
-    and sets up testing context
-    """
-    def create_app(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
-        return app
+class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
 
     """
     setUp
@@ -35,20 +21,11 @@ class SteerClearLoginTestCase(testing.TestCase):
     called before each test function. creates new test database
     """
     def setUp(self):
+        super(SteerClearLoginTestCase, self).setUp()
         self.payload = {
             u'username': u'ryan',
             u'password': u'1234',
         }
-        db.create_all()
-
-    """
-    tearDown
-    --------
-    called after each test function. breaks down test fixtures
-    """
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
 
     """
     test_get_login_page

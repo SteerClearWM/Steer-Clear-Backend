@@ -1,7 +1,6 @@
 from steerclear import app, db
 from steerclear.models import Ride
 from steerclear.api.views import calculate_time_data
-from flask.ext import testing
 from flask import url_for
 import json, vcr
 from datetime import datetime, timedelta
