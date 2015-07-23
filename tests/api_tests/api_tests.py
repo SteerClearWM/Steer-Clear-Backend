@@ -86,6 +86,65 @@ class SteerClearRideListAPITestCase(testing.TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
 
+    """
+    test_post_ride_list
+    -------------
+    Tests that adding a new ride request works. Sends POST ride
+    request data to '/rides/' and checks if the response json object
+    is a valid ride request
+    """
+    @myvcr.use_cassette()
+    @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
+    def test_post_ride_list(self):
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
+        expected_dropoff_time = expected_pickup_time + timedelta(0, 171)
+        expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
+        expected_dropoff_string = expected_dropoff_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
+        payload = {
+                    u"num_passengers": 3,
+                    u"start_latitude": 37.273485,
+                    u"start_longitude": -76.719628,
+                    u"end_latitude": 37.280893,
+                    u"end_longitude": -76.719691,
+                    u"pickup_time": expected_pickup_string,
+                    u"travel_time": 171,
+                    u"dropoff_time": expected_dropoff_string,
+                  }
+        response = self.client.post(url_for('api.rides'), data=payload)
+        payload[u'id'] = 1
+        self.assertEquals(response.status_code, 201)
+        self.assertEquals(json.loads(response.get_data()), {u"ride": payload})
+
+        bad_payload = payload.copy()
+        bad_payload.pop('num_passengers', None)
+        bad_payload.pop('id', None)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
+        self.assertEquals(r.status_code, 400)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('start_latitude', None)
+        bad_payload.pop('id', None)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
+        self.assertEquals(r.status_code, 400)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('start_longitude', None)
+        bad_payload.pop('id', None)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
+        self.assertEquals(r.status_code, 400)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('end_latitude', None)
+        bad_payload.pop('id', None)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
+        self.assertEquals(r.status_code, 400)
+
+        bad_payload = payload.copy()
+        bad_payload.pop('end_longitude', None)
+        bad_payload.pop('id', None)
+        r = self.client.post(url_for('api.rides'), data=bad_payload)
+        self.assertEquals(r.status_code, 400)
+
 
 """
 SteerClearAPITestCase
@@ -177,65 +236,6 @@ class SteerClearAPITestCase(testing.TestCase):
         response = self.client.get(url_for('api.ride', ride_id=3))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'ride': r3_dict})
-
-    """
-    test_add_ride
-    -------------
-    Tests that adding a new ride request works. Sends POST ride
-    request data to '/rides/' and checks if the response json object
-    is a valid ride request
-    """
-    @myvcr.use_cassette()
-    @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
-    def test_add_ride(self):
-        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
-        expected_dropoff_time = expected_pickup_time + timedelta(0, 171)
-        expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
-        expected_dropoff_string = expected_dropoff_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
-        payload = {
-                    u"num_passengers": 3,
-                    u"start_latitude": 37.273485,
-                    u"start_longitude": -76.719628,
-                    u"end_latitude": 37.280893,
-                    u"end_longitude": -76.719691,
-                    u"pickup_time": expected_pickup_string,
-                    u"travel_time": 171,
-                    u"dropoff_time": expected_dropoff_string,
-                  }
-        response = self.client.post(url_for('api.rides'), data=payload)
-        payload[u'id'] = 1
-        self.assertEquals(response.status_code, 201)
-        self.assertEquals(json.loads(response.get_data()), {u"ride": payload})
-
-        bad_payload = payload.copy()
-        bad_payload.pop('num_passengers', None)
-        bad_payload.pop('id', None)
-        r = self.client.post(url_for('api.rides'), data=bad_payload)
-        self.assertEquals(r.status_code, 400)
-
-        bad_payload = payload.copy()
-        bad_payload.pop('start_latitude', None)
-        bad_payload.pop('id', None)
-        r = self.client.post(url_for('api.rides'), data=bad_payload)
-        self.assertEquals(r.status_code, 400)
-
-        bad_payload = payload.copy()
-        bad_payload.pop('start_longitude', None)
-        bad_payload.pop('id', None)
-        r = self.client.post(url_for('api.rides'), data=bad_payload)
-        self.assertEquals(r.status_code, 400)
-
-        bad_payload = payload.copy()
-        bad_payload.pop('end_latitude', None)
-        bad_payload.pop('id', None)
-        r = self.client.post(url_for('api.rides'), data=bad_payload)
-        self.assertEquals(r.status_code, 400)
-
-        bad_payload = payload.copy()
-        bad_payload.pop('end_longitude', None)
-        bad_payload.pop('id', None)
-        r = self.client.post(url_for('api.rides'), data=bad_payload)
-        self.assertEquals(r.status_code, 400)
 
     """
     test_rides_delete_bad_ride_id
