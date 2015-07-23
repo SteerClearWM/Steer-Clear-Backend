@@ -87,6 +87,53 @@ You can register a new user (assuming the user does not already exist) by making
 * All API routes require that the user be logged in
 * All API routes are prefixed by **/api/**
 
+## Ride Request Objects
+Ride request objects have several fields:
+* **id**: id number of the ride object in the queue
+
+* **num_passengers**: number of passengers in the ride request
+
+* **start_latitude**: latitude coordinate for the pickup location
+
+* **start_longitude**: longitude coordinate for the pickup location
+
+* **end_latitude**: latitude coordinate for the dropoff location
+
+* **end_longitude**: longitude coordinate for the dropoff location
+
+* **pickup_time**: estimated pickup time as a datetime object
+
+* **travel_time**: estimated time it will take in seconds to go from pickup location to dropoff location
+
+* **dropoff_time**: estimated time for arriving at the dropoff location as a datetime object
+
+## Rides
+API endpoint for getting, updating, and deleting ride requests
+
+### GET /api/rides/<int:ride_id>
+* Returns the ride request object with the corresponding **ride_id**
+* **ride_id** is an integer
+* returns 404 if the ride request does not exist
+* Sample request **GET /api/rides/2**:
+    {
+      "ride": {
+        "dropoff_time": "Sun, 07 Jun 2015 02:24:49 GMT", 
+        "end_latitude": 37.280893, 
+        "end_longitude": -76.719691, 
+        "id": 2, 
+        "num_passengers": 4, 
+        "pickup_time": "Sun, 07 Jun 2015 02:21:58 GMT", 
+        "start_latitude": 37.273485, 
+        "start_longitude": -76.719628, 
+        "travel_time": 171
+      }
+    }
+
+### DELETE /api/rides/<int:ride_id>
+* Deletes the ride request with id **ride_id**
+* Returns status code 204 on success
+* If there is no ride request object with **ride_**, return 404
+
 ## RideList
 API endpoint for getting the lists of all ride requests or creating a new ride request.
 
@@ -120,6 +167,31 @@ API endpoint for getting the lists of all ride requests or creating a new ride r
         }
       ]
     }
+
+### POST /api/rides
+* Creates a new ride request
+* Returns the created ride object on success (this will most likely change to just returning the created ride id).
+* returns error code 400 on failure
+* Expects a form with the following fields
+  * **id**: id number of the ride object in the queue
+
+  * **num_passengers**: number of passengers in the ride request
+
+  * **start_latitude**: latitude coordinate for the pickup location
+
+  * **start_longitude**: longitude coordinate for the pickup location
+
+  * **end_latitude**: latitude coordinate for the dropoff location
+
+  * **end_longitude**: longitude coordinate for the dropoff location
+
+  * **pickup_time**: estimated pickup time. See note below for string format
+
+  * **travel_time**: estimated time it will take in seconds to go from pickup location to dropoff location
+
+  * **dropoff_time**: estimated time for arriving at the dropoff location. see note below for string format
+
+  * **NOTE**: the **pickup_time** and **dropoff_time** fields are datetime objects representing UTC times that are formatted as strings using the following format string **"%a, %d %b %Y %H:%M:%S GMT"**. Where **%a** is the weekday's abreviated name (i.e. Mon), **%d** is the day of the month as a zero-padded decimal number (i.e. 09 and 22), **%b** is the month's abreviated name (i.e. Sep), **%Y** is the four digit year value (i.e. 2015), **%H** is the hour zero-padded hour value (i.e. 02 or 20), **%M** is the zero-padded minute value (i.e. 05 or 52), and **%S** is the zero-padded seconds value (i.e. 06 or 33).
 
 
 
