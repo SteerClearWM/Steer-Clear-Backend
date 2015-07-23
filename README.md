@@ -12,6 +12,8 @@ Backend and web app repo for Steer Clear app
 * add api key for google distancematrix api
 
 ##Setup and Installation
+`clone` project and `cd` into directory
+
 Create virtualenv
 
 `$ virtualenv --no-site-packages env`
@@ -43,6 +45,8 @@ Check that all tests pass
 Run app
 
 `$ python runserver.py`
+
+App will now be accesible through `localhost:5000`
 
 ##Testing
 
@@ -77,6 +81,7 @@ At the Moment, login is done with a username and password. We will be switching 
 * Route to actually log a user in
 * Takes a form with a **username** and **password** field. 
 * On success, redirects to **index** page.
+* On failure, returns login page again
 
 ### GET /logout
 * **requires user to be logged in**
@@ -107,6 +112,7 @@ Desktop app that allows steerclear drivers to log in and manage the queue of rid
 
 ## Ride Request Objects
 Ride request objects have several fields:
+
 * **id**: id number of the ride object in the queue
 
 * **num_passengers**: number of passengers in the ride request
@@ -150,7 +156,7 @@ API endpoint for getting, updating, and deleting ride requests
 ### DELETE /api/rides/<int:ride_id>
 * Deletes the ride request with id **ride_id**
 * Returns status code 204 on success
-* If there is no ride request object with **ride_**, return 404
+* If there is no ride request object with the  **ride_id**, return 404
 
 ## RideList
 API endpoint for getting the lists of all ride requests or creating a new ride request.
