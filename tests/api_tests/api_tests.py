@@ -1,16 +1,23 @@
 from steerclear import app, db
-from steerclear.models import *
-from steerclear.api.views import *
+from steerclear.models import Ride
+from steerclear.api.views import calculate_time_data
 from flask.ext import testing
 from flask import url_for
-import unittest, json, vcr
+import json, vcr
 from datetime import datetime, timedelta
 from testfixtures import replace, test_datetime
 
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
 
+"""
+RideListAPITestCase
+-------------------
+Test cases for the RideListAPI class that deals with managing and
+interacting with the list of ride requests
+"""
 class RideListAPITestCase(testing.TestCase):
+    
     render_templates = False
 
     def create_app(self):
@@ -146,7 +153,12 @@ class RideListAPITestCase(testing.TestCase):
         self.assertEquals(r.status_code, 400)
 
 
-
+"""
+RideAPITestCase
+---------------
+Test Cases for the RideAPI class that deals with
+managing and interacting with individual Ride objects
+"""
 class RideAPITestCase(testing.TestCase):
     
     render_templates = False
@@ -200,14 +212,19 @@ class RideAPITestCase(testing.TestCase):
     ride object given its ride_id
     """
     def test_get_ride_success(self):
+        # create ride objects to db
         dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
+        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
         r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
         r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
-        r1_dict = r1.as_dict()                             # store dict versions
+        
+        # store dict versions
+        r1_dict = r1.as_dict()                             
         r2_dict = r2.as_dict()                     
         r3_dict = r3.as_dict()
-        r1_dict[u'id'] = 1                                  # assign correct id vals
+        
+        # assign correct id vals
+        r1_dict[u'id'] = 1                                  
         r2_dict[u'id'] = 2
         r3_dict[u'id'] = 3
         r1_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
@@ -216,6 +233,8 @@ class RideAPITestCase(testing.TestCase):
         r1_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
+        
+        # add Ride objects to db
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
@@ -233,45 +252,12 @@ class RideAPITestCase(testing.TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'ride': r3_dict})
 
-
-"""
-SteerClearAPITestCase
-------------------
-TestCase for testing all api routes
-"""
-class SteerClearAPITestCase(testing.TestCase):
-
-    render_templates = False
-
-    def create_app(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
-        return app
-
     """
-    setUp
-    -----
-    called before each test function. Sets up flask app test
-    instance and creates new test database
-    """
-    def setUp(self):
-        db.create_all()
-
-    """
-    tearDown
-    --------
-    called after each test function. breaks down test fixtures
-    """
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
-    """
-    test_rides_delete_bad_ride_id
+    test_delete_ride_bad_ride_id
     -----------------------------
     Test that api returns 404 to a ride id that doesn't exist
     """
-    def test_rides_delete_bad_ride_id(self):
+    def test_delete_ride_bad_ride_id(self):
         # check that bad ride_id delete request returns 404
         response = self.client.delete(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
@@ -285,23 +271,28 @@ class SteerClearAPITestCase(testing.TestCase):
         self.assertEquals(response.status_code, 404)
 
     """
-    test_rides_delete_success
+    test_delete_ride_success
     -------------------------
     Tests that deleting a ride works
     """
-    def test_rides_delete_success(self):
+    def test_delete_ride_success(self):
+        # create Ride objects
         dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
+        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
         r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
         r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
-        r2_dict = r2.as_dict()                             # store dict versions
+        # store dict versions
+        r2_dict = r2.as_dict()                             
         r3_dict = r3.as_dict()
+        
+        # add Ride objects to db
         db.session.add(r1)
         db.session.add(r2)
         db.session.add(r3)
         db.session.commit()
 
-        r2_dict['id'] = 2                                  # assign correct id vals
+        # assign correct id vals
+        r2_dict['id'] = 2                                 
         r3_dict['id'] = 3
 
         # test can delete a ride
@@ -330,6 +321,39 @@ class SteerClearAPITestCase(testing.TestCase):
         self.assertEquals(Ride.query.get(1), None)
         self.assertEquals(Ride.query.get(2), None)
         self.assertEquals(Ride.query.get(3), None)
+
+
+"""
+SteerClearAPITestCase
+------------------
+TestCase for testing all api routes
+"""
+class ETATestCase(testing.TestCase):
+
+    render_templates = False
+
+    def create_app(self):
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
+        return app
+
+    """
+    setUp
+    -----
+    called before each test function. Sets up flask app test
+    instance and creates new test database
+    """
+    def setUp(self):
+        db.create_all()
+
+    """
+    tearDown
+    --------
+    called after each test function. breaks down test fixtures
+    """
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
 
     @myvcr.use_cassette()
     @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
