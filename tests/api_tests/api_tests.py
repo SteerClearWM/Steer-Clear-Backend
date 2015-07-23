@@ -10,7 +10,7 @@ from testfixtures import replace, test_datetime
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
 
-class SteerClearRideListAPITestCase(testing.TestCase):
+class RideListAPITestCase(testing.TestCase):
     render_templates = False
 
     def create_app(self):
@@ -146,13 +146,9 @@ class SteerClearRideListAPITestCase(testing.TestCase):
         self.assertEquals(r.status_code, 400)
 
 
-"""
-SteerClearAPITestCase
-------------------
-TestCase for testing all api routes
-"""
-class SteerClearAPITestCase(testing.TestCase):
 
+class RideAPITestCase(testing.TestCase):
+    
     render_templates = False
 
     def create_app(self):
@@ -176,15 +172,15 @@ class SteerClearAPITestCase(testing.TestCase):
     """
     def tearDown(self):
         db.session.remove()
-        db.drop_all()
+        db.drop_all() 
 
     """
-    test_list_ride_bad_ride_id
+    test_get_ride_bad_ride_id
     --------------------------
     Tests that trying to get a specific ride with
     a bad ride id returns 404
     """
-    def test_list_ride_bad_ride_id(self):
+    def test_get_ride_bad_ride_id(self):
         # check that bad ride_id get request returns 404
         response = self.client.get(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
@@ -198,12 +194,12 @@ class SteerClearAPITestCase(testing.TestCase):
         self.assertEquals(response.status_code, 404)
 
     """
-    test_list_ride_success
+    test_get_ride_success
     ----------------------
     Tests that api successfully gets a specified
     ride object given its ride_id
     """
-    def test_list_ride_success(self):
+    def test_get_ride_success(self):
         dtime = datetime(1,1,1)
         r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
         r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
@@ -236,6 +232,39 @@ class SteerClearAPITestCase(testing.TestCase):
         response = self.client.get(url_for('api.ride', ride_id=3))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'ride': r3_dict})
+
+
+"""
+SteerClearAPITestCase
+------------------
+TestCase for testing all api routes
+"""
+class SteerClearAPITestCase(testing.TestCase):
+
+    render_templates = False
+
+    def create_app(self):
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
+        return app
+
+    """
+    setUp
+    -----
+    called before each test function. Sets up flask app test
+    instance and creates new test database
+    """
+    def setUp(self):
+        db.create_all()
+
+    """
+    tearDown
+    --------
+    called after each test function. breaks down test fixtures
+    """
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
 
     """
     test_rides_delete_bad_ride_id
