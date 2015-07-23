@@ -6,6 +6,7 @@ from flask import url_for
 import json, vcr
 from datetime import datetime, timedelta
 from testfixtures import replace, test_datetime
+from tests.base import base
 
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
@@ -16,32 +17,7 @@ RideListAPITestCase
 Test cases for the RideListAPI class that deals with managing and
 interacting with the list of ride requests
 """
-class RideListAPITestCase(testing.TestCase):
-    
-    render_templates = False
-
-    def create_app(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
-        return app
-
-    """
-    setUp
-    -----
-    called before each test function. Sets up flask app test
-    instance and creates new test database
-    """
-    def setUp(self):
-        db.create_all()
-
-    """
-    tearDown
-    --------
-    called after each test function. breaks down test fixtures
-    """
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
+class RideListAPITestCase(base.SteerClearBaseTestCase):
 
     """
     test_get_ride_list_empty_list
@@ -159,32 +135,7 @@ RideAPITestCase
 Test Cases for the RideAPI class that deals with
 managing and interacting with individual Ride objects
 """
-class RideAPITestCase(testing.TestCase):
-    
-    render_templates = False
-
-    def create_app(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
-        return app
-
-    """
-    setUp
-    -----
-    called before each test function. Sets up flask app test
-    instance and creates new test database
-    """
-    def setUp(self):
-        db.create_all()
-
-    """
-    tearDown
-    --------
-    called after each test function. breaks down test fixtures
-    """
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all() 
+class RideAPITestCase(base.SteerClearBaseTestCase):
 
     """
     test_get_ride_bad_ride_id
@@ -328,32 +279,7 @@ SteerClearAPITestCase
 ------------------
 TestCase for testing all api routes
 """
-class ETATestCase(testing.TestCase):
-
-    render_templates = False
-
-    def create_app(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
-        return app
-
-    """
-    setUp
-    -----
-    called before each test function. Sets up flask app test
-    instance and creates new test database
-    """
-    def setUp(self):
-        db.create_all()
-
-    """
-    tearDown
-    --------
-    called after each test function. breaks down test fixtures
-    """
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
+class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
