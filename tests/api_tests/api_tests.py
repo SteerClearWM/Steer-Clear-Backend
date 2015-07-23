@@ -10,6 +10,83 @@ from testfixtures import replace, test_datetime
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
 
+class SteerClearRideListAPITestCase(testing.TestCase):
+    render_templates = False
+
+    def create_app(self):
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_SQLALCHEMY_DATABASE_URI']
+        return app
+
+    """
+    setUp
+    -----
+    called before each test function. Sets up flask app test
+    instance and creates new test database
+    """
+    def setUp(self):
+        db.create_all()
+
+    """
+    tearDown
+    --------
+    called after each test function. breaks down test fixtures
+    """
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+
+    """
+    test_get_ride_list_empty_list
+    ---------------
+    Tests that listing all of the rides in the queue is correct.
+    """
+    def test_get_ride_list_empty_list(self):
+        response = self.client.get(url_for('api.rides'))
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(json.loads(response.get_data()), {"rides": []})
+
+    """
+    test_get_ride_list_not_empty_list
+    -------------------------
+    Tests that api can return the rides list correctly when
+    the queue is not empty
+    """
+    def test_get_ride_list_not_empty_list(self):
+        # create ride objects
+        dtime = datetime(1,1,1)
+        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
+        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
+        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
+        
+        # store dict versions
+        r1_dict = r1.as_dict()
+        r2_dict = r2.as_dict()                     
+        r3_dict = r3.as_dict()
+        
+        # assign correct id and time vals
+        r1_dict['id'] = 1                                
+        r2_dict['id'] = 2
+        r3_dict['id'] = 3
+        r1_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r2_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r3_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r1_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r2_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        r3_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
+        
+        # add Ride objects to db
+        db.session.add(r1)
+        db.session.add(r2)
+        db.session.add(r3)
+        db.session.commit()
+
+        # test response
+        response = self.client.get(url_for('api.rides'))
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
+
+
 """
 SteerClearAPITestCase
 ------------------
@@ -41,48 +118,6 @@ class SteerClearAPITestCase(testing.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
-
-    """
-    test_list_rides
-    ---------------
-    Tests that listing all of the rides in the queue is correct.
-    """
-    def test_list_rides_empty(self):
-        response = self.client.get(url_for('api.rides'))
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {"rides": []})
-
-    """
-    test_list_rides_not_empty
-    -------------------------
-    Tests that api can return the rides list correctly when
-    the queue is not empty
-    """
-    def test_list_rides_not_empty(self):
-        dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime) # add ride objects to db
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
-        r1_dict = r1.as_dict()                             # store dict versions
-        r2_dict = r2.as_dict()                     
-        r3_dict = r3.as_dict()
-        r1_dict['id'] = 1                                  # assign correct id vals
-        r2_dict['id'] = 2
-        r3_dict['id'] = 3
-        r1_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
-        r2_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
-        r3_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
-        r1_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
-        r2_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
-        r3_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
-        db.session.add(r1)
-        db.session.add(r2)
-        db.session.add(r3)
-        db.session.commit()
-
-        response = self.client.get(url_for('api.rides'))
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
 
     """
     test_list_ride_bad_ride_id
