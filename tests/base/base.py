@@ -1,6 +1,7 @@
 from flask import url_for
 from flask.ext import testing
 from steerclear import app, db
+from steerclear.models import User
 
 """
 SteerClearLoginTestCase
@@ -39,3 +40,17 @@ class SteerClearBaseTestCase(testing.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
+    """
+    _login
+    ------
+    Helper function that creates a user and then logins as that user
+    """
+    def _login(self):
+        user = User(username='ryan', password='1234')
+        db.session.add(user)
+        db.session.commit()
+        self.client.post(url_for('login.login'), data={
+                u'username': u'ryan',
+                u'password': u'1234'
+            })
