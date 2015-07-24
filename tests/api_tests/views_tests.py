@@ -83,6 +83,12 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
 
+    """
+    test_post_ride_list_requires_login
+    ----------------------------------
+    Tests that the user must be logged in in order to
+    create a new ride request
+    """
     def test_post_ride_list_requires_login(self):
         self._logout()
         response = self.client.post(url_for('api.rides'), data={})
