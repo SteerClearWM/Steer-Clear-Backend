@@ -1,6 +1,5 @@
 from steerclear import app
 from steerclear.forms import RideForm
-from steerclear.models import *
 import unittest, flask
 
 """
