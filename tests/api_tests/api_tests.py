@@ -22,6 +22,12 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         super(RideListAPITestCase, self).setUp()
         self._login()
 
+    """
+    test_get_ride_list_requires_login
+    ---------------------------------
+    Tests that getting the list of ride requests
+    requires that the user be logged in
+    """
     def test_get_ride_list_requires_login(self):
         self._logout()
         response = self.client.get(url_for('api.rides'))
@@ -76,6 +82,11 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
+
+    def test_post_ride_list_requires_login(self):
+        self._logout()
+        response = self.client.post(url_for('api.rides'), data={})
+        self.assertEquals(response.status_code, 401)
 
     """
     test_post_ride_list
