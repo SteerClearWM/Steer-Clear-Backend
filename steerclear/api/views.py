@@ -84,6 +84,10 @@ HTTP commands for interfacing with a single Ride object
 uri: /rides/<ride_id>
 """
 class RideAPI(Resource):
+
+    # Require that user must be logged in
+    method_decorators = [login_required]
+
     """
     Return the Ride object with the corresponding id as
     a json object or 404

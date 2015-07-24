@@ -18,6 +18,12 @@ interacting with the list of ride requests
 """
 class RideListAPITestCase(base.SteerClearBaseTestCase):
 
+    """
+    setUp
+    -----
+    Overrides base test case setUp(). makes sure
+    The user is logged in before each test is run
+    """
     def setUp(self):
         super(RideListAPITestCase, self).setUp()
         self._login()
@@ -163,6 +169,26 @@ managing and interacting with individual Ride objects
 class RideAPITestCase(base.SteerClearBaseTestCase):
 
     """
+    setUp
+    -----
+    Overrides super class setUp(). Makes sure the user
+    is logged in before each test is run
+    """
+    def setUp(self):
+        super(RideAPITestCase, self).setUp()
+        self._login()
+
+    """
+    test_get_ride_requires_login
+    ----------------------------
+    Tests that user must be logged in to access a ride request
+    """
+    def test_get_ride_requires_login(self):
+        self._logout()
+        response = self.client.get(url_for('api.ride', ride_id=0))
+        self.assertEquals(response.status_code, 401)
+
+    """
     test_get_ride_bad_ride_id
     --------------------------
     Tests that trying to get a specific ride with
@@ -227,6 +253,16 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.get(url_for('api.ride', ride_id=3))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(json.loads(response.get_data()), {'ride': r3_dict})
+
+    """
+    test_delete_ride_requires_login
+    -------------------------------
+    Tests that a user must be logged in to delete a ride request
+    """
+    def test_delete_ride_requires_login(self):
+        self._logout()
+        response = self.client.delete(url_for('api.ride', ride_id=0))
+        self.assertEquals(response.status_code, 401)
 
     """
     test_delete_ride_bad_ride_id
