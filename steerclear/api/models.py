@@ -25,7 +25,7 @@ class Ride(db.Model):
         self.dropoff_time = dropoff_time
 
     def __repr__(self):
-        return "<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD)>" % \
+        return "<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD %r)>" % \
                 (
                     self.id,
                     self.num_passengers, 
