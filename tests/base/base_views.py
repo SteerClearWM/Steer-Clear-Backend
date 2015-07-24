@@ -54,3 +54,11 @@ class SteerClearBaseTestCase(testing.TestCase):
                 u'username': u'ryan',
                 u'password': u'1234'
             })
+
+    """
+    _logout
+    -------
+    Helper function that logs the current user out
+    """
+    def _logout(self):
+        return self.client.get(url_for('login.logout'))

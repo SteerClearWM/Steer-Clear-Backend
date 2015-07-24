@@ -18,6 +18,15 @@ interacting with the list of ride requests
 """
 class RideListAPITestCase(base.SteerClearBaseTestCase):
 
+    def setUp(self):
+        super(RideListAPITestCase, self).setUp()
+        self._login()
+
+    def test_get_ride_list_requires_login(self):
+        self._logout()
+        response = self.client.get(url_for('api.rides'))
+        self.assertEquals(response.status_code, 401)
+
     """
     test_get_ride_list_empty_list
     ---------------

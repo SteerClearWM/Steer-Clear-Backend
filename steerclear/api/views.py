@@ -1,5 +1,6 @@
 from flask import Blueprint, request, json
 from flask_restful import Resource, Api, fields, marshal, abort
+from flask.ext.login import login_required
 from models import *
 from forms import *
 from eta import time_between_locations
@@ -30,6 +31,9 @@ HTTP commands for interfacing with a list of
 ride objects. uri: /rides
 """
 class RideListAPI(Resource):
+
+    # Require that users be logged in in order to access the RideListAPI
+    method_decorators = [login_required]
 
     """
     Return the list of Ride objects in the queue
