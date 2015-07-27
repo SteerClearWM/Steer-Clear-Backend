@@ -40,18 +40,18 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertContext('action', url_for('login.login'))
 
     """
-    test_login_failure_incorrect_username
+    test_login_failure_incorrect_email
     -------------------------------------
-    Tests that login fails if the user supplies the wrong username
+    Tests that login fails if the user supplies the wrong email
     """
-    def test_login_failure_incorrect_username(self):
+    def test_login_failure_incorrect_email(self):
         # test with no Users in db
         response = self.client.post(url_for('login.login'), data=self.payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
 
-        # test with user that has different username but same password
-        user = User(username='kyle', password='1234')
+        # test with user that has different email but same password
+        user = User(email='kyle', password='1234')
         db.session.add(user)
         db.session.commit()
         response = self.client.post(url_for('login.login'), data=self.payload)
@@ -70,8 +70,8 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
 
-        # test with user that has same username but different password
-        user = User(username='ryan', password='4321')
+        # test with user that has same email but different password
+        user = User(email='ryan', password='4321')
         db.session.add(user)
         db.session.commit()
         response = self.client.post(url_for('login.login'), data=self.payload)
@@ -85,7 +85,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     Tests that a user can login successfully
     """
     def test_login_success(self):
-        user = User(username='ryan', password='1234')
+        user = User(email='ryan', password='1234')
         db.session.add(user)
         db.session.commit()
         response = self.client.post(url_for('login.login'), data=self.payload)
@@ -107,7 +107,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_logout_success(self):
         # login a user
-        user = User(username='ryan', password='1234')
+        user = User(email='ryan', password='1234')
         db.session.add(user)
         db.session.commit()
         self.client.post(url_for('login.login'), data=self.payload)
@@ -134,14 +134,14 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertContext('action', url_for('login.register'))
 
     """
-    test_register_failure_username_exists
+    test_register_failure_email_exists
     -------------------------------------
     Tests that trying to register a new user with
-    a username that already exists fails
+    a email that already exists fails
     """
-    def test_register_failure_username_exists(self):
+    def test_register_failure_email_exists(self):
         # create a user
-        user = User(username='ryan', password='1234')
+        user = User(email='ryan', password='1234')
         db.session.add(user)
         db.session.commit()
 
@@ -161,10 +161,10 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         response = self.client.post(url_for('login.register'), data=self.payload)
         self.assertRedirects(response, url_for('login.login'))
 
-        # find new user in db and check that it has correct username/password
-        user = User.query.filter_by(username=self.payload[u'email']).first()
+        # find new user in db and check that it has correct email/password
+        user = User.query.filter_by(email=self.payload[u'email']).first()
         self.assertIsNotNone(user)
-        self.assertEquals(user.username, self.payload[u'email'])
+        self.assertEquals(user.email, self.payload[u'email'])
         self.assertEquals(user.password, self.payload[u'password'])
 
         # make sure we can log in as new user

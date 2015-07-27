@@ -47,7 +47,7 @@ class SteerClearBaseTestCase(testing.TestCase):
     Helper function that creates a user and then logins as that user
     """
     def _login(self):
-        user = User(username='ryan', password='1234')
+        user = User(email='ryan', password='1234')
         db.session.add(user)
         db.session.commit()
         self.client.post(url_for('login.login'), data={

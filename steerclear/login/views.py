@@ -24,7 +24,7 @@ login
 -----
 main endpoint for logging users in and out
 GET - returns the login page
-POST - logs user in if valid username and password
+POST - logs user in if valid email and password
        and redirects to index page else returns the login template
 :TODO: factor in password hashing + salt. add
        more helpful error messages
@@ -33,7 +33,7 @@ POST - logs user in if valid username and password
 def login():
     form = UserForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user and user.password == form.password.data:
             login_user(user)
             return redirect(url_for('driver_portal.index'))
@@ -56,8 +56,8 @@ register
 --------
 Main endpoint for registering new users in the system
 GET - returns the register user template
-POST - takes a username/password form and creates a new user.
-       If a user already exists with the same username, flash an error message
+POST - takes a email/password form and creates a new user.
+       If a user already exists with the same email, flash an error message
        and return the register screen again. On success, redirect user to login page
 """
 @login_bp.route('/register', methods=['GET', 'POST'])
@@ -66,7 +66,7 @@ def register():
     form = UserForm()
     if form.validate_on_submit():
         # attempt to create a new User in the db
-        new_user = User(username=form.email.data, password=form.password.data)
+        new_user = User(email=form.email.data, password=form.password.data)
         try:
             db.session.add(new_user)
             db.session.commit()
