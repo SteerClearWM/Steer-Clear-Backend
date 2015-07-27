@@ -3,7 +3,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 #initialize flask app with correct configurations
 app = Flask(__name__)
-app.config.from_object('steerclear.settings.windows_settings')
+app.config.from_object('steerclear.settings.default_settings')
 app.config.from_envvar('STEERCLEAR_SETTINGS')
 db = SQLAlchemy(app)
 
