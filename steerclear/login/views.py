@@ -33,7 +33,7 @@ POST - logs user in if valid username and password
 def login():
     form = UserForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(username=form.email.data).first()
         if user and user.password == form.password.data:
             login_user(user)
             return redirect(url_for('driver_portal.index'))
@@ -66,7 +66,7 @@ def register():
     form = UserForm()
     if form.validate_on_submit():
         # attempt to create a new User in the db
-        new_user = User(username=form.username.data, password=form.password.data)
+        new_user = User(username=form.email.data, password=form.password.data)
         try:
             db.session.add(new_user)
             db.session.commit()

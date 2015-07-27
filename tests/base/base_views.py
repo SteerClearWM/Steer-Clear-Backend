@@ -51,7 +51,7 @@ class SteerClearBaseTestCase(testing.TestCase):
         db.session.add(user)
         db.session.commit()
         self.client.post(url_for('login.login'), data={
-                u'username': u'ryan',
+                u'email': u'ryan',
                 u'password': u'1234'
             })
 

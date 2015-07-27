@@ -23,7 +23,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     def setUp(self):
         super(SteerClearLoginTestCase, self).setUp()
         self.payload = {
-            u'username': u'ryan',
+            u'email': u'ryan',
             u'password': u'1234',
         }
 
@@ -162,9 +162,9 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertRedirects(response, url_for('login.login'))
 
         # find new user in db and check that it has correct username/password
-        user = User.query.filter_by(username=self.payload[u'username']).first()
+        user = User.query.filter_by(username=self.payload[u'email']).first()
         self.assertIsNotNone(user)
-        self.assertEquals(user.username, self.payload[u'username'])
+        self.assertEquals(user.username, self.payload[u'email'])
         self.assertEquals(user.password, self.payload[u'password'])
 
         # make sure we can log in as new user

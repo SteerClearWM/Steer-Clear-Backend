@@ -2,9 +2,9 @@ from steerclear import app
 from steerclear.forms import UserForm
 import unittest, flask
 
-# username string min and max lengths
-USERNAME_MIN_LENGTH = 1
-USERNAME_MAX_LENGTH = 119
+# email string min and max lengths
+EMAIL_MIN_LENGTH = 1
+EMAIL_MAX_LENGTH = 119
 
 # password string min and max lengths
 PASSWORD_MIN_LENGTH = 1
@@ -34,7 +34,7 @@ class UserFormTestCase(unittest.TestCase):
 
     def setUp(self):
         self.payload = {
-            u"username": u"ryan",
+            u"email": u"ryan",
             u"password": u"1234",
         }
 
@@ -62,36 +62,36 @@ class UserFormTestCase(unittest.TestCase):
             self.assertFalse(result)
 
     """
-    test_username_min_length
+    test_email_min_length
     ------------------------
     Tests that a UserForm validates the minimum length
-    for the username field correctly
+    for the email field correctly
     """
-    def test_username_min_length(self):
+    def test_email_min_length(self):
         payload = self.payload.copy()
-        payload[u'username'] = 'x' * USERNAME_MIN_LENGTH
+        payload[u'email'] = 'x' * EMAIL_MIN_LENGTH
         result = self.submit_form(payload)
         self.assertTrue(result)
 
         payload = self.payload.copy()
-        payload[u'username'] = 'x' * (USERNAME_MIN_LENGTH-1)
+        payload[u'email'] = 'x' * (EMAIL_MIN_LENGTH-1)
         result = self.submit_form(payload)
         self.assertFalse(result)
 
     """
-    test_username_max_length
+    test_email_max_length
     ------------------------
     Tests that a UserForm validates the maximum length
-    for the username field correctly
+    for the email field correctly
     """
-    def test_username_max_length(self):
+    def test_email_max_length(self):
         payload = self.payload.copy()
-        payload[u'username'] = 'x' * USERNAME_MAX_LENGTH
+        payload[u'email'] = 'x' * EMAIL_MAX_LENGTH
         result = self.submit_form(payload)
         self.assertTrue(result)
 
         payload = self.payload.copy()
-        payload[u'username'] = 'x' * (USERNAME_MAX_LENGTH+1)
+        payload[u'email'] = 'x' * (EMAIL_MAX_LENGTH+1)
         result = self.submit_form(payload)
         self.assertFalse(result)
 
