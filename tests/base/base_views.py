@@ -62,3 +62,14 @@ class SteerClearBaseTestCase(testing.TestCase):
     """
     def _logout(self):
         return self.client.get(url_for('login.logout'))
+
+    """
+    _create_user
+    ------------
+    Helper function that creates and returns a new User object in the db
+    """
+    def _create_user(self, email='ryan', password='1234'):
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+        return user

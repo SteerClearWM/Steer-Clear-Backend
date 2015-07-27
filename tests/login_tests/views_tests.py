@@ -51,9 +51,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertTrue(response.status_code, 200)
 
         # test with user that has different email but same password
-        user = User(email='kyle', password='1234')
-        db.session.add(user)
-        db.session.commit()
+        self._create_user(email='kyle', password='1234')
         response = self.client.post(url_for('login.login'), data=self.payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
@@ -71,9 +69,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertTrue(response.status_code, 200)
 
         # test with user that has same email but different password
-        user = User(email='ryan', password='4321')
-        db.session.add(user)
-        db.session.commit()
+        self._create_user(email='ryan', password='4321')
         response = self.client.post(url_for('login.login'), data=self.payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
@@ -85,9 +81,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     Tests that a user can login successfully
     """
     def test_login_success(self):
-        user = User(email='ryan', password='1234')
-        db.session.add(user)
-        db.session.commit()
+        self._create_user(email='ryan', password='1234')
         response = self.client.post(url_for('login.login'), data=self.payload)
         self.assertRedirects(response, url_for('driver_portal.index'))
 
@@ -107,9 +101,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_logout_success(self):
         # login a user
-        user = User(email='ryan', password='1234')
-        db.session.add(user)
-        db.session.commit()
+        self._create_user(email='ryan', password='1234')
         self.client.post(url_for('login.login'), data=self.payload)
 
         # logout user
@@ -141,9 +133,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_register_failure_email_exists(self):
         # create a user
-        user = User(email='ryan', password='1234')
-        db.session.add(user)
-        db.session.commit()
+        self._create_user(email='ryan', password='1234')
 
         # check that POST request failed
         response = self.client.post(url_for('login.register'), data=self.payload)
