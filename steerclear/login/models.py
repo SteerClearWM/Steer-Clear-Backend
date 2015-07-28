@@ -1,6 +1,12 @@
 from steerclear import db
 from flask.ext import login
 from sqlalchemy_utils.types.phone_number import PhoneNumberType
+from sqlalchemy_utils import force_auto_coercion
+
+# This is needed so that if we create a User object
+# by passing it a string as a phone number, it will
+# coerce the string to a phone number object
+force_auto_coercion()
 
 class User(db.Model, login.UserMixin):
     id = db.Column(db.Integer, primary_key=True)
