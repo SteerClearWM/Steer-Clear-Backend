@@ -96,7 +96,7 @@ You can register a new user (assuming the user does not already exist) by making
 ### POST /register
 * Creates a new user. 
 * Takes a form with a **email** and **password** field. 
-* If the user already exists return the register page again 
+* If the user already exists return the register page again and a 409 status code
 * **TODO** add error message
 
 ## Driver Portal
