@@ -72,7 +72,7 @@ def register():
             db.session.commit()
         except exc.IntegrityError:
             # user already exists
-            return render_template('login.html', action=url_for('.register'))
+            return render_template('login.html', action=url_for('.register')), 409
         return redirect(url_for('.login'))
     return render_template('login.html', action=url_for('.register'))
 

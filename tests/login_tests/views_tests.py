@@ -137,7 +137,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
 
         # check that POST request failed
         response = self.client.post(url_for('login.register'), data=self.payload)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 409)
         self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
         self.assertContext('action', url_for('login.register'))
 
