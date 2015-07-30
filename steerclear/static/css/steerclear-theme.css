@@ -15,8 +15,29 @@ body {
  	background-size: 100%;
 }
 
+
 .rides {
 	background-color: #ffffff;
 	opacity: .2;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	border-radius:5px;
+	border-style: solid;
+	border-color: #ffffff;
+	border-width: 3px;
 }
+
+.header-logo {
+	margin-top: 2px;
+	height: 135px;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+    width: auto\9;
+}
+
+
+
 
