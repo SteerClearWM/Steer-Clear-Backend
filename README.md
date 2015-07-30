@@ -26,6 +26,8 @@ Install requirements
 
 `$ pip install -r requirements.txt`
 
+**NOTE:** You need the default_settings.py config file for backend to work. Get from one of the repo overseers
+
 Activate OS specific environment variables settings
 
     #Linux/Mac
