@@ -26,6 +26,3 @@ from steerclear.login.views import login_bp
 app.register_blueprint(api_bp)
 app.register_blueprint(driver_portal_bp)
 app.register_blueprint(login_bp)
-
-# :TODO: generate actual secret key
-app.secret_key = 'secret'
