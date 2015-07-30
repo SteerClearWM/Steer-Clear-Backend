@@ -15,6 +15,4 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
         console.log (data.rides)
 	})
 
-
-
 }]);

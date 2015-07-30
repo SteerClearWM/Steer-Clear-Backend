@@ -11,6 +11,8 @@
 
 body {
  	background-color: #00486a;
+ 	background-image: url('../assets/background.png');
+ 	background-size: 100%;
 }
 
 .rides {
