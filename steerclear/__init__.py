@@ -12,7 +12,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 from steerclear.sms import sms
-twilio_client = sms.SteerClearTwilioClient(
+sms_client = sms.SteerClearSMSClient(
             app.config['TWILIO_ACCOUNT_SID'], 
             app.config['TWILIO_AUTH_TOKEN'],
             app.config['TWILIO_NUMBER']

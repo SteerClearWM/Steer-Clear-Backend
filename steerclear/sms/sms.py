@@ -1,24 +1,24 @@
 import twilio
 
 """
-SteerClearTwilioClient
+SteerClearSMSClient
 ----------------------
 Subclass of TwilioRestClient allowing for a simple interface
 to interact with the twilio api while still remaining decoupled
 from the Flask app
 """
-class SteerClearTwilioClient(twilio.rest.TwilioRestClient):
+class SteerClearSMSClient(twilio.rest.TwilioRestClient):
 
     """
     __init__
     --------
-    Create new SteerClearTwilioClient instance. calls super classes'
+    Create new SteerClearSMSClient instance. calls super classes'
     __init__() method, passing in the account_sid and auth_token and
     saves the passed in twilio_number
     """
     def __init__(self, account_sid, auth_token, twilio_number):
-        super(SteerClearTwilioClient, self).__init__(account_sid, auth_token)
-        self.twilio_number = twilio_number
+        super(SteerClearSMSClient, self).__init__(account_sid, auth_token)
+        self.my_number = twilio_number
 
     """
     notify_user
@@ -32,7 +32,7 @@ class SteerClearTwilioClient(twilio.rest.TwilioRestClient):
             message = self.messages.create(
                 body=message,
                 to=user_number,
-                from_=self.twilio_number
+                from_=self.my_number
             )
         except twilio.TwilioRestException as e:
             print e
