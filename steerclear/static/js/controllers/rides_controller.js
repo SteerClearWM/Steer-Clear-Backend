@@ -12,6 +12,7 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
 
 	RidesService.getRides().then(function(data){
 		$scope.rides = data.rides
+        console.log (data.rides)
 	})
 
 
