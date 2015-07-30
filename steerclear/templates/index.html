@@ -20,7 +20,7 @@
 
   </head>
 
-  <body>
+  <body class="body" ng-app="SteerClear">
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -31,7 +31,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Steer Clear</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -43,14 +43,10 @@
       </div>
     </nav>
 
-    <div class="container">
+    <div class="container" ng-controller="RidesController">
 
-          <ul class="list-group">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
+          <ul class="list-group" ng-repeat="ride in rides">
+            <li class="list-group-item rides">{[{ride.id}]}</li>
           </ul>
 
     </div><!-- /.container -->
@@ -59,8 +55,15 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/api.js"></script>
+
+    <!-- AngularJs -->
+    <script src="static/js/angular.min.js"></script>
+    <script src="static/js/steer_clear.js"></script>
+    <script src="static/js/controllers/rides_controller.js"></script>
+    <script src="static/js/services/rides_service.js"></script>
   </body>
 </html>

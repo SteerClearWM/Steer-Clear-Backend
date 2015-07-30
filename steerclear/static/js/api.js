@@ -35,21 +35,21 @@ $("document").ready(function() {
 // in the queue. *callback* is the function that recieves the
 // result of the request
 function get_rides(callback) {
-    $.get("rides", callback);
+    $.get("api/rides", callback);
 }
 
 // takes the ride id of the rid object you
 // wish to get and makes a GET request
 // and attempts to get the ride object
 function get_ride(ride_id, callback) {
-    $.get("rides" + "/" + ride_id, callback);
+    $.get("api/rides" + "/" + ride_id, callback);
 }
 
 // Takes a json object with the ride information
 // and a callback function and makes a POST request
 // and attempts to creat a new ride object
 function create_ride(ride_info, callback) {
-    $.post("rides", ride_info, callback, "json");
+    $.post("api/rides", ride_info, callback, "json");
 }
 
 // Takes the id of the ride object you want to delete
@@ -57,7 +57,7 @@ function create_ride(ride_info, callback) {
 // attempts to delete the ride
 function delete_ride(ride_id, callback) {
     $.ajax({
-        url: "rides" + "/" + ride_id,
+        url: "api/rides" + "/" + ride_id,
         type: "DELETE",
         success: callback,
     });

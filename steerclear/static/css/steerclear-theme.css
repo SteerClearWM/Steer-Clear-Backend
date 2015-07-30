@@ -1,3 +1,20 @@
+/*
+	Corynne's Color Palette
+
+	lighter-blue: #266380;
+	steer-clear-blue: #00486a;
+	darker-blue: #00283A;
+
+	alternate-blue: #1a3a69;
+	white: ffffff;
+*/
+
 body {
-  padding-top: 70px;
+ 	background-color: #00486a;
 }
+
+.rides {
+	background-color: #ffffff;
+	opacity: .2;
+}
+
