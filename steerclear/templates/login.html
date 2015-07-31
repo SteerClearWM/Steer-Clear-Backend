@@ -7,27 +7,34 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="shortcun icon" href="static/assets/logo_dark.png">
 
     <title>Signin Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="/static/css/steerclear-theme.css">
+
     <!-- Custom styles for this template -->
     <!-- <link href="signin.css" rel="stylesheet"> -->
 
   </head>
 
-  <body>
+  <body class="body">
 
     <div class="container">
 
       <form class="form-signin" action="http://127.0.0.1:5000{{action}}" method="POST">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="text" name="email" id="email" class="form-control" placeholder="Email" required autofocus>
-        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <img src="static/assets/logo.png" class="center-block header-logo-large"></img>
+        <!-- <h2 class="form-signin-heading">Please sign in</h2> -->
+        <div class="inputs">
+          <input type="text" name="email" id="email" class="form-control login-email" placeholder="Email" required autofocus>
+         <input type="password" name="password" id="password" class="form-control login-password" placeholder="Password" required>
+        </div>
+        <div class="button-container">
+          <button class="btn btn-lg btn-block login-button" type="submit">Sign in</button>
+        </div>
       </form>
 
     </div> <!-- /container -->

@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="shortcun icon" href="static/assets/logo_dark.png">
 
     <title>Starter Template for Bootstrap</title>
 
@@ -22,12 +22,14 @@
 
   <body class="body" ng-app="SteerClear">
 
-    <img src="static/assets/logo.png" class="center-block header-logo"></img>
+    <img src="static/assets/logo.png" class="center-block header-logo-small"></img>
 
     <div class="container" ng-controller="RidesController">
 
           <ul class="list-group">
-            <li class="list-group-item rides" ng-repeat="ride in rides">{[{ride.id}]}</li>
+            <li class="list-group-item rides" ng-repeat="ride in rides">
+                {[{ride.id}]}
+            </li>
           </ul>
 
     </div><!-- /.container -->

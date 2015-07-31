@@ -9,7 +9,8 @@
 	white: ffffff;
 */
 
-body {
+
+.body {
  	background-color: #00486a;
  	background-image: url('../assets/background.png');
  	background-size: 100%;
@@ -21,15 +22,56 @@ body {
 	opacity: .2;
 	margin-top: 8px;
 	margin-bottom: 8px;
-	border-radius:5px;
+	border-radius: 5px;
 	border-style: solid;
 	border-color: #ffffff;
 	border-width: 3px;
 }
 
-.header-logo {
+.header-logo-large {
+	margin-top: 10px;
+	height: 300px;
+}
+
+.header-logo-small {
 	margin-top: 2px;
 	height: 135px;
+	margin-bottom: 10px;
+}
+
+.inputs {
+	text-align: center;
+}
+
+.login-email {
+	background-color: #ffffff;
+	opacity: .2;
+	display: inline-block;
+	width: 40%;
+	margin-right: 1px;
+	margin-top: 14px;
+}
+
+.login-password {
+	background-color: #ffffff;
+	opacity: .2;
+	display: inline-block;
+	width: 40%;
+	margin-left: 1px;
+	margin-top: 14px;
+}
+
+.button-container {
+	text-align: center;
+}
+
+.login-button {
+	background-color: #ffffff;
+	opacity: .2;
+	display: inline-block;
+	width: 42%;
+	margin-top: 18px;
+	height: 50px;
 }
 
 img {
