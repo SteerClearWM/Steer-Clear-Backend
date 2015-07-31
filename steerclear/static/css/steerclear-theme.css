@@ -28,6 +28,14 @@
 	border-width: 3px;
 }
 
+.rides:hover{
+	opacity: .3;
+}
+
+.rides:active{
+	opacity: .4;
+}
+
 .header-logo-large {
 	margin-top: 10px;
 	height: 300px;

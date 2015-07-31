@@ -27,8 +27,8 @@
     <div class="container" ng-controller="RidesController">
 
           <ul class="list-group">
-            <li class="list-group-item rides" ng-repeat="ride in rides">
-                {[{ride.id}]}
+            <li class="list-group-item rides" ng-repeat="ride in rides" ng-click="deleteRide(ride)">
+                {[{ride.id}]}: <reverse-geocode lat="{[{ride.start_latitude}]}" lng="{[{ride.start_longitude}]}" /></reverse-geocode>
             </li>
           </ul>
 
@@ -43,10 +43,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
 
+    <!-- Google Maps -->
+    <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+
     <!-- AngularJs -->
     <script src="static/js/angular.min.js"></script>
     <script src="static/js/steer_clear.js"></script>
     <script src="static/js/controllers/rides_controller.js"></script>
     <script src="static/js/services/rides_service.js"></script>
+    <script src="static/js/directives/angular-reverse-geocode.js"></script>
   </body>
 </html>

@@ -8,11 +8,24 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
         "end_longitude": -76.719691
     };
 
-    RidesService.createRide(ride)
+    // RidesService.createRide(ride)
 
-	RidesService.getRides().then(function(data){
-		$scope.rides = data.rides
-        console.log (data.rides)
-	})
+	init = function() {
+        RidesService.getRides().then(function(data){
+    		$scope.rides = data.rides;
+            for (var i =0; i < $scope.rides.length; i++){
+                ride.address = "address";
+                console.log(ride)
+            };
+	    }); 
+    };
+
+    init();
+
+    $scope.deleteRide = function ( ride ) {
+        del_index = $scope.rides.indexOf(ride);
+        $scope.rides.splice(del_index,1);
+        RidesService.deleteRide(ride.id);
+    };
 
 }]);
