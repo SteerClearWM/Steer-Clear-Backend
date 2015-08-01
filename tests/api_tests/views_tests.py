@@ -120,7 +120,14 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
         self.assertEquals(response.json, {u"ride": payload})
+        self.assertEquals(Ride.query.get(1).user, self.user)
 
+    """
+    test_post_ride_list_bad_form_data
+    ---------------------------------
+    Tests that trying to create a new ride fails if
+    required fields are not in form
+    """
     def test_post_ride_list_bad_form_data(self):
         payload = {
             u"num_passengers": 3,

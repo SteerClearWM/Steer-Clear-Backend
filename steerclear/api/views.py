@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_restful import Resource, Api, fields, marshal, abort
-from flask.ext.login import login_required
+from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 from sqlalchemy import exc
 
@@ -70,7 +70,8 @@ class RideListAPI(Resource):
             end_longitude=form.end_longitude.data,
             pickup_time=pickup_time,
             travel_time=travel_time,
-            dropoff_time=dropoff_time
+            dropoff_time=dropoff_time,
+            user=current_user
         )
         
         try:
