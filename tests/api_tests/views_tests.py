@@ -121,6 +121,18 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 201)
         self.assertEquals(response.json, {u"ride": payload})
 
+    def test_post_ride_list_bad_form_data(self):
+        payload = {
+            u"num_passengers": 3,
+            u"start_latitude": 37.273485,
+            u"start_longitude": -76.719628,
+            u"end_latitude": 37.280893,
+            u"end_longitude": -76.719691,
+            u"pickup_time": u'Mon, 01 Jan 0001 00:00:00 -0000',
+            u"travel_time": 171,
+            u"dropoff_time": u'Mon, 01 Jan 0001 00:00:00 -0000',
+          }
+
         bad_payload = payload.copy()
         bad_payload.pop('num_passengers', None)
         bad_payload.pop('id', None)
