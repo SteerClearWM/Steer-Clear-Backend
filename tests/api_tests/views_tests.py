@@ -204,7 +204,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.get(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
-        ride = self._create_ride()
+        ride = self._create_ride(self.user)
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.get(url_for('api.ride', ride_id=2))
@@ -218,9 +218,9 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_get_ride_success(self):
         # create ride objects to db
-        r1 = self._create_ride()
-        r2 = self._create_ride()
-        r3 = self._create_ride()
+        r1 = self._create_ride(self.user)
+        r2 = self._create_ride(self.user)
+        r3 = self._create_ride(self.user)
         
         # store dict versions
         r1_dict = r1.as_dict()                             
@@ -267,7 +267,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.delete(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
-        ride = self._create_ride()
+        ride = self._create_ride(self.user)
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.delete(url_for('api.ride', ride_id=2))
@@ -280,9 +280,9 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_delete_ride_success(self):
         # create Ride objects
-        r1 = self._create_ride()
-        r2 = self._create_ride()
-        r3 = self._create_ride()
+        r1 = self._create_ride(self.user)
+        r2 = self._create_ride(self.user)
+        r3 = self._create_ride(self.user)
 
         # store dict versions
         r2_dict = r2.as_dict()                             
