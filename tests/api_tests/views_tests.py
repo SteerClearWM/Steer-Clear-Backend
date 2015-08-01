@@ -6,7 +6,7 @@ from tests.base import base
 from testfixtures import replace, test_datetime
 from flask import url_for
 from datetime import datetime, timedelta
-import json, vcr
+import vcr
 
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
@@ -48,7 +48,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     def test_get_ride_list_empty_list(self):
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {"rides": []})
+        self.assertEquals(response.json, {"rides": []})
 
     """
     test_get_ride_list_not_empty_list
@@ -78,7 +78,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         # test response
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
+        self.assertEquals(response.json, {'rides': [r1_dict, r2_dict, r3_dict]})
 
     """
     test_post_ride_list_requires_login
@@ -118,7 +118,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.post(url_for('api.rides'), data=payload)
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
-        self.assertEquals(json.loads(response.get_data()), {u"ride": payload})
+        self.assertEquals(response.json, {u"ride": payload})
 
         bad_payload = payload.copy()
         bad_payload.pop('num_passengers', None)
@@ -223,15 +223,15 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
 
         response = self.client.get(url_for('api.ride', ride_id=1))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'ride': r1_dict})
+        self.assertEquals(response.json, {'ride': r1_dict})
 
         response = self.client.get(url_for('api.ride', ride_id=2))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'ride': r2_dict})
+        self.assertEquals(response.json, {'ride': r2_dict})
 
         response = self.client.get(url_for('api.ride', ride_id=3))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'ride': r3_dict})
+        self.assertEquals(response.json, {'ride': r3_dict})
 
     """
     test_delete_ride_requires_login
