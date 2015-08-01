@@ -16,6 +16,8 @@ class Ride(db.Model):
     travel_time = db.Column(db.Integer)
     dropoff_time = db.Column(types.DateTime)
 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
     def __repr__(self):
         return "<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD %r)>" % \
                 (

@@ -14,6 +14,8 @@ class User(db.Model, login.UserMixin):
     password = db.Column(db.String(120))
     phone_number = db.Column(PhoneNumberType, unique=True)
 
+    rides = db.relationship('Ride', backref='user', lazy='dynamic')
+
     def __repr__(self):
         return "User(ID %r, Email %r, Password %r, Phone %r)" % (
             self.id,
