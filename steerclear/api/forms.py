@@ -15,3 +15,7 @@ class RideForm(Form):
     start_longitude = FloatField('start_longitude', [DataRequired()])
     end_latitude = FloatField('end_latitude', [DataRequired()])
     end_longitude = FloatField('end_longitude', [DataRequired()])
+
+
+class NotificationForm(Form):
+	ride_id = IntegerField('ride_id', [DataRequired(), NumberRange(min=1)])

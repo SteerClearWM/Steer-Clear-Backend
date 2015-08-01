@@ -118,6 +118,27 @@ class RideAPI(Resource):
             abort(404)
         return "", 204
 
+
+class NotificationAPI(Resource):
+    
+    method_decorators = [login_required]
+
+    def post(self):
+        form = NotificationForm()
+        if not form.validate_on_submit():
+            abort(400)
+        
+        ride = Ride.query.get(form.ride_id.data)
+        if ride is None:
+            abort(400)
+        if ride.user is None:
+            abort(500)
+
+        message = sms_client(ride.user.phone_number, message="Your Ride is Here!") 
+        if message is None:
+            abort(400)
+        return '', 201
+
 # route urls to resources
 api.add_resource(RideListAPI, '/rides', endpoint='rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
