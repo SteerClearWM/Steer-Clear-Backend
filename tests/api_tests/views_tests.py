@@ -190,9 +190,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.get(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
-        dtime = datetime(1,1,1)
-        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime))
-        db.session.commit()
+        ride = self._create_ride()
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.get(url_for('api.ride', ride_id=2))
@@ -255,9 +253,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.delete(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
-        dtime = datetime(1,1,1)
-        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime))
-        db.session.commit()
+        ride = self._create_ride()
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.delete(url_for('api.ride', ride_id=2))
