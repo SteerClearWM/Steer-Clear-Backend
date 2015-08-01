@@ -64,10 +64,10 @@ class RideListAPI(Resource):
         pickup_time, travel_time, dropoff_time = time_data
         new_ride = Ride(
             num_passengers=form.num_passengers.data,
-            start_latitude=pickup_loc[0],
-            start_longitude=pickup_loc[1],
-            end_latitude=dropoff_loc[0],
-            end_longitude=dropoff_loc[1],
+            start_latitude=form.start_latitude.data,
+            start_longitude=form.start_longitude.data,
+            end_latitude=form.end_latitude.data,
+            end_longitude=form.end_longitude.data,
             pickup_time=pickup_time,
             travel_time=travel_time,
             dropoff_time=dropoff_time
