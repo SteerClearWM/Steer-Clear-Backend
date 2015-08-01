@@ -27,8 +27,8 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideListAPITestCase, self).setUp()
-        user = self._create_user()
-        self._login(user)
+        self.user = self._create_user()
+        self._login(self.user)
 
     """
     test_get_ride_list_requires_login
@@ -180,8 +180,8 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideAPITestCase, self).setUp()
-        user = self._create_user()
-        self._login(user)
+        self.user = self._create_user()
+        self._login(self.user)
 
     """
     test_get_ride_requires_login
