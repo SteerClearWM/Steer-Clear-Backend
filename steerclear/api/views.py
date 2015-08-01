@@ -1,11 +1,13 @@
 from flask import Blueprint, request, json
 from flask_restful import Resource, Api, fields, marshal, abort
 from flask.ext.login import login_required
-from models import *
-from forms import *
-from steerclear.utils.eta import time_between_locations
 from datetime import datetime, timedelta
 from sqlalchemy import exc
+
+from steerclear.utils.eta import time_between_locations
+from steerclear import sms_client
+from models import *
+from forms import *
 
 # set up api blueprint
 api_bp = Blueprint('api', __name__, url_prefix='/api')
