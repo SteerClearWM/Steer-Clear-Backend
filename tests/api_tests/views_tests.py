@@ -1,11 +1,12 @@
 from steerclear import app, db
 from steerclear.models import Ride
 from steerclear.api.views import calculate_time_data
-from flask import url_for
-import json, vcr
-from datetime import datetime, timedelta
-from testfixtures import replace, test_datetime
 from tests.base import base
+
+from testfixtures import replace, test_datetime
+from flask import url_for
+from datetime import datetime, timedelta
+import json, vcr
 
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
