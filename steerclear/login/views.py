@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, render_template, url_for, redirect
-from flask.ext.login import login_user, logout_user, login_required
+from flask.ext.login import login_user, logout_user, login_required, current_user
 from flask_restful import abort
 from sqlalchemy import exc
 from steerclear import login_manager
@@ -79,4 +79,4 @@ def register():
 @login_bp.route('/test_login')
 @login_required
 def test_login():
-    return "Congrats, you are logged in"
+    return "Congrats, you are logged in as user " + str(current_user)

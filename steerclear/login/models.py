@@ -19,5 +19,5 @@ class User(db.Model, login.UserMixin):
             self.id,
             self.email,
             self.password,
-            self.phone_number.e164
+            self.phone_number
         )
