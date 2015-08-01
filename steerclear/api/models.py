@@ -39,5 +39,14 @@ class Ride(db.Model):
                 )
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
+        return {
+            'id': self.id,
+            'num_passengers': self.num_passengers,
+            'start_latitude': self.start_latitude,
+            'start_longitude': self.start_longitude,
+            'end_latitude': self.end_latitude,
+            'end_longitude': self.end_longitude,
+            'pickup_time': self.pickup_time,
+            'travel_time': self.travel_time,
+            'dropoff_time': self.dropoff_time,
+        }
