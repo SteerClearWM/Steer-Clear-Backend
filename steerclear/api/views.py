@@ -1,4 +1,4 @@
-from flask import Blueprint, request, json
+from flask import Blueprint, request
 from flask_restful import Resource, Api, fields, marshal, abort
 from flask.ext.login import login_required
 from datetime import datetime, timedelta
@@ -92,7 +92,7 @@ class RideAPI(Resource):
 
     """
     Return the Ride object with the corresponding id as
-    a json object or 404
+     object or 404
     """
     def get(self, ride_id):
         ride = Ride.query.get(ride_id)                  # query db for Ride
