@@ -1,4 +1,4 @@
-from steerclear.sms import sms
+from steerclear.utils import sms
 from steerclear import app
 import unittest, vcr
 

@@ -11,7 +11,7 @@ from flask.ext.login import LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-from steerclear.sms import sms
+from steerclear.utils import sms
 sms_client = sms.SteerClearSMSClient(
             app.config['TWILIO_ACCOUNT_SID'], 
             app.config['TWILIO_AUTH_TOKEN'],
