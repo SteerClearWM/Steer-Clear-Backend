@@ -16,16 +16,6 @@ class Ride(db.Model):
     travel_time = db.Column(db.Integer)
     dropoff_time = db.Column(types.DateTime)
 
-    def __init__(self, num_passengers, start_latitude, start_longitude, end_latitude, end_longitude, pickup_time, travel_time, dropoff_time):
-        self.num_passengers = num_passengers
-        self.start_latitude = start_latitude
-        self.start_longitude = start_longitude
-        self.end_latitude = end_latitude
-        self.end_longitude = end_longitude
-        self.pickup_time = pickup_time
-        self.travel_time = travel_time
-        self.dropoff_time = dropoff_time
-
     def __repr__(self):
         return "<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD %r)>" % \
                 (
