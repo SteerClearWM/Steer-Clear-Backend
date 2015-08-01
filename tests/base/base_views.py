@@ -1,7 +1,9 @@
 from flask import url_for
 from flask.ext import testing
 from steerclear import app, db
-from steerclear.models import User
+from steerclear.models import User, Ride
+
+from datetime import datetime
 
 """
 SteerClearLoginTestCase
@@ -70,6 +72,18 @@ class SteerClearBaseTestCase(testing.TestCase):
     """
     def _create_user(self, email='ryan', password='1234'):
         user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+        return user
+
+    def _create_ride(self, num_passengers=0, start_latitude=1.0, start_longitude=1.1, end_latitude=2.0, end_longitude=2.1, pickup_time=datetime(1,1,1), travel_time=datetime(1,1,1), dropoff_time=datetime(1,1,1)):
+        ride = Ride(
+            num_passengers=num_passengers,
+            start_latitude=start_latitude,
+            start_longitude=start_longitude,
+            end_latitude=end_latitude,
+            end_longitude=end_longitude
+        )
         db.session.add(user)
         db.session.commit()
         return user
