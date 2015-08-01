@@ -64,8 +64,10 @@ class RideListAPI(Resource):
         pickup_time, travel_time, dropoff_time = time_data
         new_ride = Ride(
             form.num_passengers.data,
-            pickup_loc,
-            dropoff_loc,
+            pickup_loc[0],
+            pickup_loc[1],
+            dropoff_loc[0],
+            dropoff_loc[1],
             pickup_time,
             travel_time,
             dropoff_time
