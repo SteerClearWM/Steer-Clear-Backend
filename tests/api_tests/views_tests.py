@@ -59,9 +59,9 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_get_ride_list_not_empty_list(self):
         # create ride objects
-        r1 = self._create_ride()
-        r2 = self._create_ride()
-        r3 = self._create_ride()
+        r1 = self._create_ride(self.user)
+        r2 = self._create_ride(self.user)
+        r3 = self._create_ride(self.user)
         
         # store dict versions
         r1_dict = r1.as_dict()
