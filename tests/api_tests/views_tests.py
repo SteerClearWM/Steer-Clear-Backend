@@ -266,23 +266,13 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_delete_ride_success(self):
         # create Ride objects
-        dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
+        r1 = self._create_ride()
+        r2 = self._create_ride()
+        r3 = self._create_ride()
+
         # store dict versions
         r2_dict = r2.as_dict()                             
         r3_dict = r3.as_dict()
-        
-        # add Ride objects to db
-        db.session.add(r1)
-        db.session.add(r2)
-        db.session.add(r3)
-        db.session.commit()
-
-        # assign correct id vals
-        r2_dict['id'] = 2                                 
-        r3_dict['id'] = 3
 
         # test can delete a ride
         response = self.client.delete(url_for('api.ride', ride_id=1))
@@ -347,8 +337,7 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_data_with_last_ride(self):
-        db.session.add(Ride(1, (0.0, 0.0), (37.272042, -76.714027), None, None, datetime(2015,6,13,1,2,3)))
-        db.session.commit()
+        ride = self._create_ride(1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 252)
@@ -361,8 +350,7 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_start_loc(self):
-        db.session.add(Ride(1, (0.0, 0.0), (0.0, 0.0), None, None, datetime(2015,6,13,1,2,3)))
-        db.session.commit()
+        self._create_ride(1, 0.0, 0.0, 0.0, 0.0, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
         result = calculate_time_data(pickup_loc, dropoff_loc)
@@ -370,8 +358,7 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_pickup_loc(self):
-        db.session.add(Ride(1, (0.0, 0.0), (37.272042, -76.714027), None, None, datetime(2015,6,13,1,2,3)))
-        db.session.commit()
+        self._create_ride(1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (0.0, 0.0)
         dropoff_loc = (37.280893, -76.719691)
         result = calculate_time_data(pickup_loc, dropoff_loc)
@@ -379,8 +366,7 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_dropoff_loc(self):
-        db.session.add(Ride(1, (0.0, 0.0), (37.272042, -76.714027), None, None, datetime(2015,6,13,1,2,3)))
-        db.session.commit()
+        self._create_ride(1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.280893, -76.719691)
         dropoff_loc = (0.0, 0.0)
         result = calculate_time_data(pickup_loc, dropoff_loc)
