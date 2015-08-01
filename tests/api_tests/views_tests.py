@@ -206,10 +206,9 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_get_ride_success(self):
         # create ride objects to db
-        dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
+        r1 = self._create_ride()
+        r2 = self._create_ride()
+        r3 = self._create_ride()
         
         # store dict versions
         r1_dict = r1.as_dict()                             
@@ -217,21 +216,12 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         r3_dict = r3.as_dict()
         
         # assign correct id vals
-        r1_dict[u'id'] = 1                                  
-        r2_dict[u'id'] = 2
-        r3_dict[u'id'] = 3
         r1_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r1_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
-        
-        # add Ride objects to db
-        db.session.add(r1)
-        db.session.add(r2)
-        db.session.add(r3)
-        db.session.commit()
 
         response = self.client.get(url_for('api.ride', ride_id=1))
         self.assertEquals(response.status_code, 200)
