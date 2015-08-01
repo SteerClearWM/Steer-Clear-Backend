@@ -3,7 +3,7 @@ from flask_restful import Resource, Api, fields, marshal, abort
 from flask.ext.login import login_required
 from models import *
 from forms import *
-from eta import time_between_locations
+from steerclear.utils.eta import time_between_locations
 from datetime import datetime, timedelta
 from sqlalchemy import exc
 

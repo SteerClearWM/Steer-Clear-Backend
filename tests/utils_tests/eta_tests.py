@@ -1,4 +1,4 @@
-from steerclear.api.eta import *
+from steerclear.utils.eta import *
 from steerclear.models import Ride
 import unittest, json, urllib, vcr, requests, os
 
