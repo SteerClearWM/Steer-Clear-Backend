@@ -351,7 +351,8 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_data_with_last_ride(self):
-        ride = self._create_ride(1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        user = self._create_user()
+        ride = self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 252)
@@ -364,7 +365,8 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_start_loc(self):
-        self._create_ride(1, 0.0, 0.0, 0.0, 0.0, None, None, datetime(2015,6,13,1,2,3))
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 0.0, 0.0, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
         result = calculate_time_data(pickup_loc, dropoff_loc)
@@ -372,7 +374,8 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_pickup_loc(self):
-        self._create_ride(1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (0.0, 0.0)
         dropoff_loc = (37.280893, -76.719691)
         result = calculate_time_data(pickup_loc, dropoff_loc)
@@ -380,7 +383,8 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_dropoff_loc(self):
-        self._create_ride(1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.280893, -76.719691)
         dropoff_loc = (0.0, 0.0)
         result = calculate_time_data(pickup_loc, dropoff_loc)

@@ -21,7 +21,8 @@ class RideModelTestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideModelTestCase, self).setUp()
-        self.default_ride = self._create_ride()
+        self.user = self._create_user()
+        self.default_ride = self._create_ride(self.user)
 
     """
     test_as_dict
