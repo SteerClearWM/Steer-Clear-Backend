@@ -58,10 +58,9 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_get_ride_list_not_empty_list(self):
         # create ride objects
-        dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
+        r1 = self._create_ride()
+        r2 = self._create_ride()
+        r3 = self._create_ride()
         
         # store dict versions
         r1_dict = r1.as_dict()
@@ -69,21 +68,12 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         r3_dict = r3.as_dict()
         
         # assign correct id and time vals
-        r1_dict['id'] = 1                                
-        r2_dict['id'] = 2
-        r3_dict['id'] = 3
         r1_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r1_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
-        
-        # add Ride objects to db
-        db.session.add(r1)
-        db.session.add(r2)
-        db.session.add(r3)
-        db.session.commit()
 
         # test response
         response = self.client.get(url_for('api.rides'))
