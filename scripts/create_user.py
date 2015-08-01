@@ -9,11 +9,11 @@ from sqlalchemy import exc
 
 def create_user():
 	# prompt for input
-	username = raw_input('Enter Username: ')
+	email = raw_input('Enter email: ')
 	password = raw_input('Enter Password: ')
 	
 	# create user
-	user = User(username=username, password=password)
+	user = User(email=email, password=password)
 	try:
 		# attempt to add user to db
 		db.session.add(user)
