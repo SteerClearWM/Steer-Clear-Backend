@@ -232,7 +232,7 @@ Sample Response:
 
 
 ## Notifications
-API endpoint for sending sms notifications to Users
+API endpoint for sending sms notifications to Users. At the moment, sms messages will only be sent successfully to Users who have verified their phone number with the SteerClear Twilio account
 
 ### POST /api/notifications
 * Sends an sms message to a User
