@@ -323,6 +323,38 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(Ride.query.get(3), None)
 
 
+
+# vcr object used to record twilio api requests
+smsvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/sms_tests/')
+
+class NotificationAPITestCase(base.SteerClearBaseTestCase):
+
+    """
+    setUp
+    -----
+    Overrides super class setUp(). Makes sure the user
+    is logged in before each test is run
+    """
+    def setUp(self):
+        super(NotificationAPITestCase, self).setUp()
+        self.user = self._create_user()
+        self._login(self.user)
+
+    def test_post_notifications_requires_login(self):
+        self._logout()
+        response = self.client.post(url_for('api.notifications'), data={})
+        self.assertEquals(response.status_code, 401)
+
+    def test_post_notifications_bad_ride_id(self):
+        response = self.client.post(url_for('api.notifications'), data={'ride_id': 1})
+        self.assertEquals(response.status_code, 400)
+
+        ride = self._create_ride(self.user)
+
+        response = self.client.post(url_for('api.notifications'), data={'ride_id': 2})
+        self.assertEquals(response.status_code, 400)
+
+
 """
 SteerClearAPITestCase
 ------------------
