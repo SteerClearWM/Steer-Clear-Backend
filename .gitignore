@@ -57,4 +57,4 @@ docs/_build/
 target/
 
 default_settings.py
-tests/fixtures/vcr_cassettes/sms_tests/test_notify_user_bad_phone_number
+test_notify_user_bad_phone_number
