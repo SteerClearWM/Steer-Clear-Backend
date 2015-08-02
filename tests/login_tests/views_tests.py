@@ -4,8 +4,6 @@ from tests.base import base
 from steerclear import app, db
 from steerclear.models import User
 
-import phonenumbers
-
 # name of templates used by the login module
 LOGIN_TEMPLATE_NAME = 'login.html'
 REGISTER_TEMPLATE_NAME = 'login.html'
