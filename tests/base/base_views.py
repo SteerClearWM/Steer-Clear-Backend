@@ -68,7 +68,7 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------------
     Helper function that creates and returns a new User object in the db
     """
-    def _create_user(self, email='ryan', password='1234', phone='+12223334444'):
+    def _create_user(self, email='ryan', password='1234', phone='+17572214000'):
         user = User(email=email, password=password, phone=phone)
         db.session.add(user)
         db.session.commit()

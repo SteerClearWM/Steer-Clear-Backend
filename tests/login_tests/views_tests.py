@@ -27,7 +27,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.payload = {
             u'email': u'ryan',
             u'password': u'1234',
-            u'phone': '+12223334444'
+            u'phone': '+17572214000'
         }
 
     """
