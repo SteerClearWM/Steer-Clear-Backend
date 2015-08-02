@@ -131,7 +131,7 @@ class NotificationAPI(Resource):
         ride = Ride.query.get(form.ride_id.data)
         if ride is None:
             abort(400)
-        if ride.user is None:
+        if ride.user is None or ride.user.phone is None:
             abort(500)
 
         message = sms_client.notify_user(ride.user.phone.e164, message="Your Ride is Here!") 
