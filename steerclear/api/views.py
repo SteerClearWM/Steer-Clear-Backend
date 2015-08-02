@@ -134,7 +134,7 @@ class NotificationAPI(Resource):
         if ride.user is None:
             abort(500)
 
-        message = sms_client(ride.user.phone, message="Your Ride is Here!") 
+        message = sms_client.notify_user(ride.user.phone.e164, message="Your Ride is Here!") 
         if message is None:
             abort(400)
         return '', 201
@@ -142,6 +142,7 @@ class NotificationAPI(Resource):
 # route urls to resources
 api.add_resource(RideListAPI, '/rides', endpoint='rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
+api.add_resource(NotificationAPI, '/notifications', endpoint='notifications')
 
 def calculate_time_data(pickup_loc, dropoff_loc):
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
