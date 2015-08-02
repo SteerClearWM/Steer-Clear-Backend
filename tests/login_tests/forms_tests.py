@@ -27,10 +27,10 @@ class UserFormTestCase(unittest.TestCase):
     *payload* is a dictionary of name/value pairs
               of the form data that is being submitted
     """
-    def submit_form(self, payload):
+    def submit_form(self, form, payload):
         with app.test_request_context():
-            form = UserForm(data=payload)
-            return form.validate()
+            myform = form(data=payload)
+            return myform.validate()
 
     def setUp(self):
         self.payload = {
@@ -45,7 +45,7 @@ class UserFormTestCase(unittest.TestCase):
     Tests that a UserForm can be validated correctly
     """
     def test_ride_form_correct_submit(self):
-        result = self.submit_form(self.payload)
+        result = self.submit_form(UserForm, self.payload)
         self.assertTrue(result)
 
     """
@@ -59,7 +59,7 @@ class UserFormTestCase(unittest.TestCase):
         for key in payload.keys():
             bad_payload = payload.copy()
             bad_payload.pop(key, None)
-            result = self.submit_form(bad_payload)
+            result = self.submit_form(UserForm, bad_payload)
             self.assertFalse(result)
 
     """
@@ -71,12 +71,12 @@ class UserFormTestCase(unittest.TestCase):
     def test_email_min_length(self):
         payload = self.payload.copy()
         payload[u'email'] = 'x' * EMAIL_MIN_LENGTH
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertTrue(result)
 
         payload = self.payload.copy()
         payload[u'email'] = 'x' * (EMAIL_MIN_LENGTH-1)
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertFalse(result)
 
     """
@@ -88,12 +88,12 @@ class UserFormTestCase(unittest.TestCase):
     def test_email_max_length(self):
         payload = self.payload.copy()
         payload[u'email'] = 'x' * EMAIL_MAX_LENGTH
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertTrue(result)
 
         payload = self.payload.copy()
         payload[u'email'] = 'x' * (EMAIL_MAX_LENGTH+1)
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertFalse(result)
 
     """
@@ -105,12 +105,12 @@ class UserFormTestCase(unittest.TestCase):
     def test_password_min_length(self):
         payload = self.payload.copy()
         payload[u'password'] = 'x' * PASSWORD_MIN_LENGTH
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertTrue(result)
 
         payload = self.payload.copy()
         payload[u'password'] = 'x' * (PASSWORD_MIN_LENGTH-1)
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertFalse(result)
 
     """
@@ -122,12 +122,12 @@ class UserFormTestCase(unittest.TestCase):
     def test_password_max_length(self):
         payload = self.payload.copy()
         payload[u'password'] = 'x' * PASSWORD_MAX_LENGTH
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertTrue(result)
 
         payload = self.payload.copy()
         payload[u'password'] = 'x' * (PASSWORD_MAX_LENGTH+1)
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertFalse(result)
 
     """
@@ -139,7 +139,7 @@ class UserFormTestCase(unittest.TestCase):
     def test_phone_bad_format_too_few_digits(self):
         payload = self.payload.copy()
         payload[u'phone'] = self.payload[u'phone'][:-1]
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertFalse(result)
 
     """
@@ -151,7 +151,7 @@ class UserFormTestCase(unittest.TestCase):
     def test_phone_bad_format_too_many_digits(self):
         payload = self.payload.copy()
         payload[u'phone'] += '1'
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertFalse(result)
 
     """
@@ -163,7 +163,7 @@ class UserFormTestCase(unittest.TestCase):
     def test_phone_bad_format_invalid_number(self):
         payload = self.payload.copy()
         payload[u'phone'] += '+12223334444'
-        result = self.submit_form(payload)
+        result = self.submit_form(UserForm, payload)
         self.assertFalse(result)
 
     """
@@ -177,7 +177,7 @@ class UserFormTestCase(unittest.TestCase):
             for f in formats:
                 payload = self.payload.copy()
                 payload[u'phone'] = f
-                result = self.submit_form(payload)
+                result = self.submit_form(UserForm, payload)
                 self.assertTrue(result)
 
         test([
