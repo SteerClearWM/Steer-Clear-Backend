@@ -134,7 +134,7 @@ class NotificationAPI(Resource):
         if ride.user is None:
             abort(500)
 
-        message = sms_client(ride.user.phone_number, message="Your Ride is Here!") 
+        message = sms_client(ride.user.phone, message="Your Ride is Here!") 
         if message is None:
             abort(400)
         return '', 201
