@@ -5,7 +5,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 try:
 	app.config.from_object('steerclear.settings.default_settings')
-except ImportError:
+except ImportError as e:
+	print e
 	app.config.from_object('steerclear.settings.default_settings_example')
 app.config.from_envvar('STEERCLEAR_SETTINGS')
 db = SQLAlchemy(app)
