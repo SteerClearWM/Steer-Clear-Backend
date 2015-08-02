@@ -11,9 +11,10 @@ def create_user():
 	# prompt for input
 	email = raw_input('Enter email: ')
 	password = raw_input('Enter Password: ')
+	phone = raw_input('Enter Phone Number (e.x. +1xxxyyyzzzz): ')
 	
 	# create user
-	user = User(email=email, password=password)
+	user = User(email=email, password=password, phone=phone)
 	try:
 		# attempt to add user to db
 		db.session.add(user)
