@@ -66,7 +66,11 @@ def register():
     form = UserForm()
     if form.validate_on_submit():
         # attempt to create a new User in the db
-        new_user = User(email=form.email.data, password=form.password.data)
+        new_user = User(
+            email=form.email.data, 
+            password=form.password.data,
+            phone=form.phone.data
+        )
         try:
             db.session.add(new_user)
             db.session.commit()

@@ -36,6 +36,7 @@ class UserFormTestCase(unittest.TestCase):
         self.payload = {
             u"email": u"ryan",
             u"password": u"1234",
+            u'phone': u'+12223334444',
         }
 
     """

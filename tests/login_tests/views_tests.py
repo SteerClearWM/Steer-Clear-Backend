@@ -4,6 +4,8 @@ from tests.base import base
 from steerclear import app, db
 from steerclear.models import User
 
+import phonenumbers
+
 # name of templates used by the login module
 LOGIN_TEMPLATE_NAME = 'login.html'
 REGISTER_TEMPLATE_NAME = 'login.html'
@@ -25,6 +27,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.payload = {
             u'email': u'ryan',
             u'password': u'1234',
+            u'phone': '+12223334444'
         }
 
     """
@@ -156,6 +159,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertIsNotNone(user)
         self.assertEquals(user.email, self.payload[u'email'])
         self.assertEquals(user.password, self.payload[u'password'])
+        self.assertEquals(user.phone.e164, self.payload[u'phone'])
 
         # make sure we can log in as new user
         response = self.client.post(url_for('login.login'), data=self.payload)
