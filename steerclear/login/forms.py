@@ -11,7 +11,7 @@ def validate_phone(form, field):
     except pn.phonenumberutil.NumberParseException:
         raise ValidationError('Field must be valid phone number')
 
-class UserForm(Form):
+class RegisterForm(Form):
     email = TextField('email', [DataRequired(), Length(min=1, max=119)])
     password = PasswordField('password', [DataRequired(), Length(min=1, max=119)])
     phone = StringField('phone', [DataRequired(), validate_phone])

@@ -62,8 +62,8 @@ POST - takes a email/password form and creates a new user.
 """
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    # attempt to validate UserForm
-    form = UserForm()
+    # attempt to validate RegisterForm
+    form = RegisterForm()
     if form.validate_on_submit():
         # attempt to create a new User in the db
         new_user = User(
