@@ -52,7 +52,6 @@ class SteerClearBaseTestCase(testing.TestCase):
         self.client.post(url_for('login.login'), data={
                 u'email': user.email,
                 u'password': user.password,
-                u'phone': user.phone.e164
             })
 
     """
