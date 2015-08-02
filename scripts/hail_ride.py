@@ -20,6 +20,7 @@ def main():
 
     r2 = requests.post('http://localhost:5000/api/rides', data=payload, cookies=r1.cookies)
     if r2.status_code != 201:
+        print "Bad Status Code: %d" % (r2.status_code)
         print "Error: failed to create new ride"
         sys.exit(1)
     print "Successfully hailed new ride"
