@@ -5,6 +5,7 @@ from tests.base import base
 from datetime import datetime
 import json
 
+# format string for Ride.__repr__()
 RIDE_REPR_STRING = '<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD %r)>'
 
 """
@@ -43,6 +44,11 @@ class RideModelTestCase(base.SteerClearBaseTestCase):
         }
         self.assertEquals(self.default_ride.as_dict(), correct_default_dict)
 
+    """
+    test_repr
+    ---------
+    Tests Ride models' __repr__() method
+    """
     def test_repr(self):
         correct_default_repr = RIDE_REPR_STRING % (1, 0, 1.0, 1.1, 2.0, 2.1, datetime(1,1,1), 10, datetime(1,1,1))
         self.assertEquals(self.default_ride.__repr__(), correct_default_repr)

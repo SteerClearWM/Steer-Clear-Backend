@@ -118,22 +118,34 @@ class RideAPI(Resource):
             abort(404)
         return "", 204
 
-
+"""
+NotificationAPI
+---------------
+HTTP commands for sending sms messages to users
+uri: /notifications
+"""
 class NotificationAPI(Resource):
     
+    # Require that user must be logged in
     method_decorators = [login_required]
 
+    """
+    Send an sms message to notify the user
+    """
     def post(self):
+        # validate that required form fields were submitted
         form = NotificationForm()
         if not form.validate_on_submit():
             abort(400)
         
+        # get user who made Ride request
         ride = Ride.query.get(form.ride_id.data)
         if ride is None:
             abort(400)
         if ride.user is None or ride.user.phone is None:
             abort(500)
 
+        # send sms message to user
         message = sms_client.notify_user(ride.user.phone.e164, message="Your Ride is Here!") 
         if message is None:
             abort(400)

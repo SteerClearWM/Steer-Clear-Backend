@@ -323,10 +323,11 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(Ride.query.get(3), None)
 
 
-
-# vcr object used to record twilio api requests
-smsvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/sms_tests/')
-
+"""
+NotificationAPITestCase
+-----------------------
+Test case for testing the notifications api
+"""
 class NotificationAPITestCase(base.SteerClearBaseTestCase):
 
     """
@@ -340,11 +341,22 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
         self.user = self._create_user()
         self._login(self.user)
 
+    """
+    test_post_notifications_requires_login
+    --------------------------------------
+    Tests that the notifications route requires the user to be logged in
+    """
     def test_post_notifications_requires_login(self):
         self._logout()
         response = self.client.post(url_for('api.notifications'), data={})
         self.assertEquals(response.status_code, 401)
 
+    """
+    test_post_notifications_bad_ride_id
+    -----------------------------------
+    Tests that the notifications route fails if the
+    request ride_id does not exist
+    """
     def test_post_notifications_bad_ride_id(self):
         response = self.client.post(url_for('api.notifications'), data={'ride_id': 1})
         self.assertEquals(response.status_code, 400)

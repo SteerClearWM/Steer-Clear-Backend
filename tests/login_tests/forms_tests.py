@@ -192,6 +192,11 @@ class RegisterFormTestCase(unittest.TestCase):
         ])
 
 
+"""
+LoginFormTestCase
+-----------------
+Test case for LoginForm
+"""
 class LoginFormTestCase(unittest.TestCase):
 
     """
