@@ -129,3 +129,64 @@ class UserFormTestCase(unittest.TestCase):
         payload[u'password'] = 'x' * (PASSWORD_MAX_LENGTH+1)
         result = self.submit_form(payload)
         self.assertFalse(result)
+
+    """
+    test_phone_bad_format_too_few_digits
+    ------------------------------------
+    Tests that UserForm fails to validate if phone number
+    field has too few digits to be a phone number
+    """
+    def test_phone_bad_format_too_few_digits(self):
+        payload = self.payload.copy()
+        payload[u'phone'] = self.payload[u'phone'][:-1]
+        result = self.submit_form(payload)
+        self.assertFalse(result)
+
+    """
+    test_phone_bad_format_too_many_digits
+    -------------------------------------
+    Tests that UserForm fails to validate if phone field
+    has too many digits to be a correct phone number
+    """
+    def test_phone_bad_format_too_many_digits(self):
+        payload = self.payload.copy()
+        payload[u'phone'] += '1'
+        result = self.submit_form(payload)
+        self.assertFalse(result)
+
+    """
+    test_phone_bad_format_invalid_number
+    ------------------------------------
+    Tests that UserForm fails to validate if
+    phone number is not a valid number
+    """
+    def test_phone_bad_format_invalid_number(self):
+        payload = self.payload.copy()
+        payload[u'phone'] += '+12223334444'
+        result = self.submit_form(payload)
+        self.assertFalse(result)
+
+    """
+    test_phone_weird_formats
+    ------------------------
+    Tests that the UserForm can handly weirdly
+    formatted numbers correctly
+    """
+    def test_phone_weird_formats(self):
+        def test(formats):
+            for f in formats:
+                payload = self.payload.copy()
+                payload[u'phone'] = f
+                result = self.submit_form(payload)
+                self.assertTrue(result)
+
+        test([
+            u'+1(757)2214000', 
+            u'+1(757) 2214000',
+            u'+1757-2214000',
+            u'+1757-221-4000',
+            u'+1757221-4000',
+            u'+1(757) 221-4000',
+            u'+1(757)221-4000',
+            u'+1757 221-4000'
+        ])
