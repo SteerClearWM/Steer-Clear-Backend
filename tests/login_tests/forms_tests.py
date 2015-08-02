@@ -1,5 +1,5 @@
 from steerclear import app
-from steerclear.forms import UserForm
+from steerclear.forms import UserForm, LoginForm
 import unittest, flask
 
 # email string min and max lengths
@@ -190,3 +190,50 @@ class UserFormTestCase(unittest.TestCase):
             u'+1(757)221-4000',
             u'+1757 221-4000'
         ])
+
+
+class LoginFormTestCase(unittest.TestCase):
+
+    """
+    submit_form
+    -----------
+    helper method to submit a UserForm by faking
+    a request context. Returns True is the form
+    validated and False if not.
+
+    *payload* is a dictionary of name/value pairs
+              of the form data that is being submitted
+    """
+    def submit_form(self, form, payload):
+        with app.test_request_context():
+            myform = form(data=payload)
+            return myform.validate()
+
+    def setUp(self):
+        self.payload = {
+            u"email": u"ryan",
+            u"password": u"1234",
+        }
+
+    """
+    test_login_form_correct_submit
+    -----------------------------
+    Tests that a LoginForm can be validated correctly
+    """
+    def test_login_form_correct_submit(self):
+        result = self.submit_form(LoginForm, self.payload)
+        self.assertTrue(result)
+
+    """
+    test_data_required_fields
+    -------------------------
+    tests that a UserForm is not valid unless
+    all fields are included in the form data
+    """
+    def test_data_required_fields(self):
+        payload = self.payload
+        for key in payload.keys():
+            bad_payload = payload.copy()
+            bad_payload.pop(key, None)
+            result = self.submit_form(UserForm, bad_payload)
+            self.assertFalse(result)

@@ -15,3 +15,8 @@ class UserForm(Form):
     email = TextField('email', [DataRequired(), Length(min=1, max=119)])
     password = PasswordField('password', [DataRequired(), Length(min=1, max=119)])
     phone = StringField('phone', [DataRequired(), validate_phone])
+
+
+class LoginForm(Form):
+    email = TextField('email', [DataRequired(), Length(min=1, max=119)])
+    password = PasswordField('password', [DataRequired(), Length(min=1, max=119)])
