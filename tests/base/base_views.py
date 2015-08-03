@@ -1,7 +1,9 @@
 from flask import url_for
 from flask.ext import testing
 from steerclear import app, db
-from steerclear.models import User
+from steerclear.models import User, Ride
+
+from datetime import datetime
 
 """
 SteerClearLoginTestCase
@@ -46,13 +48,10 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------
     Helper function that creates a user and then logins as that user
     """
-    def _login(self):
-        user = User(email='ryan', password='1234')
-        db.session.add(user)
-        db.session.commit()
+    def _login(self, user):
         self.client.post(url_for('login.login'), data={
-                u'email': u'ryan',
-                u'password': u'1234'
+                u'email': user.email,
+                u'password': user.password,
             })
 
     """
@@ -68,8 +67,29 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------------
     Helper function that creates and returns a new User object in the db
     """
-    def _create_user(self, email='ryan', password='1234'):
-        user = User(email=email, password=password)
+    def _create_user(self, email='ryan', password='1234', phone='+17572214000'):
+        user = User(email=email, password=password, phone=phone)
         db.session.add(user)
         db.session.commit()
         return user
+
+    """
+    _create_ride
+    ------------
+    Helper function that creates and returns a new Ride object in the db
+    """
+    def _create_ride(self, user, num_passengers=0, start_latitude=1.0, start_longitude=1.1, end_latitude=2.0, end_longitude=2.1, pickup_time=datetime(1,1,1), travel_time=10, dropoff_time=datetime(1,1,1)):
+        ride = Ride(
+            num_passengers=num_passengers,
+            start_latitude=start_latitude,
+            start_longitude=start_longitude,
+            end_latitude=end_latitude,
+            end_longitude=end_longitude,
+            pickup_time=pickup_time,
+            travel_time=travel_time,
+            dropoff_time=dropoff_time,
+            user=user
+        )
+        db.session.add(ride)
+        db.session.commit()
+        return ride

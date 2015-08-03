@@ -1,11 +1,13 @@
-from flask import Blueprint, request, json
+from flask import Blueprint, request
 from flask_restful import Resource, Api, fields, marshal, abort
-from flask.ext.login import login_required
-from models import *
-from forms import *
-from eta import time_between_locations
+from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 from sqlalchemy import exc
+
+from steerclear.utils.eta import time_between_locations
+from steerclear import sms_client
+from models import *
+from forms import *
 
 # set up api blueprint
 api_bp = Blueprint('api', __name__, url_prefix='/api')
@@ -61,12 +63,15 @@ class RideListAPI(Resource):
         # create new Ride object
         pickup_time, travel_time, dropoff_time = time_data
         new_ride = Ride(
-            form.num_passengers.data,
-            pickup_loc,
-            dropoff_loc,
-            pickup_time,
-            travel_time,
-            dropoff_time
+            num_passengers=form.num_passengers.data,
+            start_latitude=form.start_latitude.data,
+            start_longitude=form.start_longitude.data,
+            end_latitude=form.end_latitude.data,
+            end_longitude=form.end_longitude.data,
+            pickup_time=pickup_time,
+            travel_time=travel_time,
+            dropoff_time=dropoff_time,
+            user=current_user
         )
         
         try:
@@ -90,7 +95,7 @@ class RideAPI(Resource):
 
     """
     Return the Ride object with the corresponding id as
-    a json object or 404
+     object or 404
     """
     def get(self, ride_id):
         ride = Ride.query.get(ride_id)                  # query db for Ride
@@ -113,9 +118,43 @@ class RideAPI(Resource):
             abort(404)
         return "", 204
 
+"""
+NotificationAPI
+---------------
+HTTP commands for sending sms messages to users
+uri: /notifications
+"""
+class NotificationAPI(Resource):
+    
+    # Require that user must be logged in
+    method_decorators = [login_required]
+
+    """
+    Send an sms message to notify the user
+    """
+    def post(self):
+        # validate that required form fields were submitted
+        form = NotificationForm()
+        if not form.validate_on_submit():
+            abort(400)
+        
+        # get user who made Ride request
+        ride = Ride.query.get(form.ride_id.data)
+        if ride is None:
+            abort(400)
+        if ride.user is None or ride.user.phone is None:
+            abort(500)
+
+        # send sms message to user
+        message = sms_client.notify_user(ride.user.phone.e164, message="Your Ride is Here!") 
+        if message is None:
+            abort(400)
+        return '', 201
+
 # route urls to resources
 api.add_resource(RideListAPI, '/rides', endpoint='rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
+api.add_resource(NotificationAPI, '/notifications', endpoint='notifications')
 
 def calculate_time_data(pickup_loc, dropoff_loc):
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()

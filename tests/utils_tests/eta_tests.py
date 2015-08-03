@@ -1,6 +1,5 @@
-from steerclear.api.eta import *
-from steerclear.models import Ride
-import unittest, json, urllib, vcr, requests, os
+from steerclear.utils.eta import *
+import unittest, urllib, vcr
 
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
@@ -181,7 +180,7 @@ class ETATestCase(unittest.TestCase):
     test_time_between_locations
     -----------------------
     Tests that time_between_rides will return the right
-    pickup_time_sec and travel_time_sec given two ride requests
+    pickup_time_sec and travel_time_sec given two rid
     """
     @myvcr.use_cassette()
     def test_time_between_locations(self):
@@ -194,7 +193,7 @@ class ETATestCase(unittest.TestCase):
     test_time_between_locations_bad_latlong
     -----------------------------------
     Tests that time_between_rides will return None
-    given a bad lat/long field for one of the ride requests
+    given a bad lat/long field for one of the rid
     """
     @myvcr.use_cassette()
     def test_time_between_locations_bad_latlong(self):

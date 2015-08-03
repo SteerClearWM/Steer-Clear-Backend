@@ -36,7 +36,8 @@ class SteerClearTestCase(base.SteerClearBaseTestCase):
     Tests that only logged in users can access the index page
     """
     def test_get_index(self):
-        self._login()
+        user = self._create_user()
+        self._login(user)
         response = self.client.get(url_for('driver_portal.index'))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('index.html')

@@ -48,6 +48,8 @@ Run app
 
 App will now be accesible through `localhost:5000`
 
+**NOTE:** You need the default_settings.py config file for backend to work. Get from one of the repo overseers. Alternatively, you can create your own default settings file and fill in the corresponding values using the example default settings file
+
 ##Testing
 
 To run tests use **nosetests**
@@ -62,14 +64,21 @@ There a few helpful scripts for doing things such as creating a new user or ride
 * **NOTE: THIS WILL DELETE ALL DATA CURRENTLY IN THE DATABASE**
 * **TODO:** Change to use database migration
 
-### /scripts/hail_ride.sh
-* Creates a new ride request object
+### /scripts/hail_ride.py
+* Creates a new ride request object by making http requests to the server
+* **server must be running**
+
+### /scripts/notify_user.py
+* Send a notification to a Ride requests' User by making http requests to the server
 * **server must be running**
 
 ### /scripts/create_user.py
 * Creates a new User
 * Prompts for username/password input
 * Displays message if user already exists
+
+### /scripts/create_ride.py
+* Creates a new Ride request
 
 ## Login
 At the Moment, login is done with a username and password. We will be switching to just using an email address and a per session random cookie for login later.
@@ -95,7 +104,8 @@ You can register a new user (assuming the user does not already exist) by making
 
 ### POST /register
 * Creates a new user. 
-* Takes a form with a **email** and **password** field. 
+* Takes a form with a **email** and **password** and a **phone** field.
+* **phone** field must be a valid phone number string (i.e. +1xxxyyyzzzz) 
 * If the user already exists return the register page again and a 409 status code
 * **TODO** add error message
 
@@ -219,4 +229,14 @@ Sample Response:
   * **dropoff_time**: estimated time for arriving at the dropoff location. see note below for string format
 
   * **NOTE**: the **pickup_time** and **dropoff_time** fields are datetime objects representing UTC times that are formatted as strings using the following format string **"%a, %d %b %Y %H:%M:%S GMT"**. Where **%a** is the weekday's abreviated name (i.e. Mon), **%d** is the day of the month as a zero-padded decimal number (i.e. 09 and 22), **%b** is the month's abreviated name (i.e. Sep), **%Y** is the four digit year value (i.e. 2015), **%H** is the hour zero-padded hour value (i.e. 02 or 20), **%M** is the zero-padded minute value (i.e. 05 or 52), and **%S** is the zero-padded seconds value (i.e. 06 or 33).
+
+
+## Notifications
+API endpoint for sending sms notifications to Users. At the moment, sms messages will only be sent successfully to Users who have verified their phone number with the SteerClear Twilio account
+
+### POST /api/notifications
+* Sends an sms message to a User
+* takes a **ride_id** field which is the integer of the Ride object you wish to notify. (The User who made the Ride object is stored in the Ride object so we get which User to notify from the Ride object)
+* On success, returns 201 status code
+* On Failure, returns 400 or 500
 

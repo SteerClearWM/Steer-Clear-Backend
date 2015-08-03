@@ -16,13 +16,7 @@ class Ride(db.Model):
     travel_time = db.Column(db.Integer)
     dropoff_time = db.Column(types.DateTime)
 
-    def __init__(self, num_passengers, pickup, dropoff, pickup_time, travel_time, dropoff_time):
-        self.num_passengers = num_passengers
-        self.start_latitude, self.start_longitude = pickup
-        self.end_latitude, self.end_longitude = dropoff
-        self.pickup_time = pickup_time
-        self.travel_time = travel_time
-        self.dropoff_time = dropoff_time
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return "<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD %r)>" % \
@@ -39,5 +33,14 @@ class Ride(db.Model):
                 )
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
+        return {
+            'id': self.id,
+            'num_passengers': self.num_passengers,
+            'start_latitude': self.start_latitude,
+            'start_longitude': self.start_longitude,
+            'end_latitude': self.end_latitude,
+            'end_longitude': self.end_longitude,
+            'pickup_time': self.pickup_time,
+            'travel_time': self.travel_time,
+            'dropoff_time': self.dropoff_time,
+        }

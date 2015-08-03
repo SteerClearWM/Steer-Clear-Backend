@@ -22,7 +22,13 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(SteerClearLoginTestCase, self).setUp()
-        self.payload = {
+        self.register_payload = {
+            u'email': u'ryan',
+            u'password': u'1234',
+            u'phone': '+17572214000'
+        }
+
+        self.login_payload = {
             u'email': u'ryan',
             u'password': u'1234',
         }
@@ -46,13 +52,13 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_login_failure_incorrect_email(self):
         # test with no Users in db
-        response = self.client.post(url_for('login.login'), data=self.payload)
+        response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
 
         # test with user that has different email but same password
         self._create_user(email='kyle', password='1234')
-        response = self.client.post(url_for('login.login'), data=self.payload)
+        response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
         self.assertContext('action', url_for('login.login'))
@@ -64,13 +70,13 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_login_failure_incorrect_password(self):
         # test with no Users in db
-        response = self.client.post(url_for('login.login'), data=self.payload)
+        response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
 
         # test with user that has same email but different password
         self._create_user(email='ryan', password='4321')
-        response = self.client.post(url_for('login.login'), data=self.payload)
+        response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertTrue(response.status_code, 200)
         self.assertContext('action', url_for('login.login'))
@@ -82,7 +88,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_login_success(self):
         self._create_user(email='ryan', password='1234')
-        response = self.client.post(url_for('login.login'), data=self.payload)
+        response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertRedirects(response, url_for('driver_portal.index'))
 
     """
@@ -102,7 +108,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     def test_logout_success(self):
         # login a user
         self._create_user(email='ryan', password='1234')
-        self.client.post(url_for('login.login'), data=self.payload)
+        self.client.post(url_for('login.login'), data=self.login_payload)
 
         # logout user
         response = self.client.get(url_for('login.logout'))
@@ -136,7 +142,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self._create_user(email='ryan', password='1234')
 
         # check that POST request failed
-        response = self.client.post(url_for('login.register'), data=self.payload)
+        response = self.client.post(url_for('login.register'), data=self.register_payload)
         self.assertEquals(response.status_code, 409)
         self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
         self.assertContext('action', url_for('login.register'))
@@ -148,15 +154,16 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_register_success(self):
         # create user and check for success in response
-        response = self.client.post(url_for('login.register'), data=self.payload)
+        response = self.client.post(url_for('login.register'), data=self.register_payload)
         self.assertRedirects(response, url_for('login.login'))
 
         # find new user in db and check that it has correct email/password
-        user = User.query.filter_by(email=self.payload[u'email']).first()
+        user = User.query.filter_by(email=self.register_payload[u'email']).first()
         self.assertIsNotNone(user)
-        self.assertEquals(user.email, self.payload[u'email'])
-        self.assertEquals(user.password, self.payload[u'password'])
+        self.assertEquals(user.email, self.register_payload[u'email'])
+        self.assertEquals(user.password, self.register_payload[u'password'])
+        self.assertEquals(user.phone.e164, self.register_payload[u'phone'])
 
         # make sure we can log in as new user
-        response = self.client.post(url_for('login.login'), data=self.payload)
+        response = self.client.post(url_for('login.login'), data=self.register_payload)
         self.assertRedirects(response, url_for('driver_portal.index'))
