@@ -27,8 +27,11 @@
     <div class="container" ng-controller="RidesController">
 
           <ul class="list-group">
-            <li class="list-group-item rides" ng-repeat="ride in rides" ng-click="deleteRide(ride)">
-                {[{ride.id}]}: <reverse-geocode lat="{[{ride.start_latitude}]}" lng="{[{ride.start_longitude}]}" /></reverse-geocode>
+            <li class="list-group-item rides group-btn" ng-repeat="ride in rides" ng-click="deleteRide(ride)">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Delete</button>
+                </span>
+                <div class="ride-text">{[{ride.id}]}</div>
             </li>
           </ul>
 
@@ -51,6 +54,5 @@
     <script src="static/js/steer_clear.js"></script>
     <script src="static/js/controllers/rides_controller.js"></script>
     <script src="static/js/services/rides_service.js"></script>
-    <script src="static/js/directives/angular-reverse-geocode.js"></script>
   </body>
 </html>

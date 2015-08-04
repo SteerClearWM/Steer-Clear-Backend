@@ -10,13 +10,19 @@
 */
 
 
+@font-face {
+    font-family: antipasto;
+    src: url(../fonts/antipasto.otf);
+}
+
 .body {
+	font-family: antipasto;
  	background-color: #00486a;
  	background-image: url('../assets/background.png');
  	background-size: 100%;
 }
 
-
+/*Rides Rows*/
 .rides {
 	background-color: #ffffff;
 	opacity: .2;
@@ -26,6 +32,8 @@
 	border-style: solid;
 	border-color: #ffffff;
 	border-width: 3px;
+	white-space: nowrap;
+	height: 40px;
 }
 
 .rides:hover{
@@ -34,6 +42,14 @@
 
 .rides:active{
 	opacity: .4;
+}
+
+li.group-btn {
+  padding: 0;
+}
+
+li.group-btn:hover {
+	opacity: .6;
 }
 
 .header-logo-large {
@@ -80,6 +96,13 @@
 	width: 42%;
 	margin-top: 18px;
 	height: 50px;
+	border: 2px solid #ffffff;
+}
+
+.label {
+	background-color: #ffffff;
+	opacity: 1;
+	color: #ffffff;
 }
 
 img {
@@ -87,6 +110,11 @@ img {
 	height: auto;
     width: auto\9;
 }
+
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
 
 
 
