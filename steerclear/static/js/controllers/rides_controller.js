@@ -12,20 +12,22 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
 
 	init = function() {
         RidesService.getRides().then(function(data){
-    		$scope.rides = data.rides;
-            for (var i =0; i < $scope.rides.length; i++){
-                ride.address = "address";
-                console.log(ride)
+            for (var i =0; i < data.rides.length; i++){
+                data.rides[i].start_address = ride.start_address ? ride.start_address : "Start Address Not Found";
+                data.rides[i].end_address = ride.end_address ? ride.end_address : "End Address Not Found";
             };
+            $scope.rides = data.rides;
 	    }); 
     };
 
     init();
 
     $scope.deleteRide = function ( ride ) {
-        del_index = $scope.rides.indexOf(ride);
-        $scope.rides.splice(del_index,1);
-        RidesService.deleteRide(ride.id);
+        if (confirm("Are you sure you want to delete this ride?")){
+            del_index = $scope.rides.indexOf(ride);
+            $scope.rides.splice(del_index,1);
+            RidesService.deleteRide(ride.id);
+        }
     };
 
 }]);

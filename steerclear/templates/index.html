@@ -27,11 +27,11 @@
     <div class="container" ng-controller="RidesController">
 
           <ul class="list-group">
-            <li class="list-group-item rides group-btn" ng-repeat="ride in rides" ng-click="deleteRide(ride)">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Delete</button>
-                </span>
-                <div class="ride-text">{[{ride.id}]}</div>
+            <li class="list-group-item rides group-btn" ng-repeat="ride in rides track by $index">
+                <span class="glyphicon glyphicon-remove remove-icon" ng-click="deleteRide(ride)"></span>
+                <span class="ride-text">{[{ride.start_address + ": " +ride.id}]}</span>
+                <span class="glyphicon glyphicon-check check-icon pull-right" ng-click=""></span>
+                <span class="glyphicon glyphicon-phone phone-icon pull-right" ng-click=""></span>
             </li>
           </ul>
 
