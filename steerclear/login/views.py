@@ -18,6 +18,7 @@ from flask.ext.principal import (
     AnonymousIdentity, 
     identity_changed, 
     identity_loaded, 
+    Permission,
     RoleNeed, 
     UserNeed
 )
@@ -33,6 +34,8 @@ login_bp = Blueprint('login', __name__)
 principal = Principal()
 principal.init_app(app)
 
+student_permission = Permission(RoleNeed('student'))
+
 """
 user_loader
 -----------
@@ -43,6 +46,12 @@ this needs to be implemented for flask-login extension to work
 def user_loader(user_id):
     return User.query.get(int(user_id))
 
+"""
+identity_loaded
+---------------
+Signal used by flask-principal. called when
+loading the user Identity for the request. 
+"""
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):
     # Set the identity user object
@@ -79,6 +88,7 @@ def login():
             # Tell Flask-Principal the identity changed
             identity_changed.send(current_app._get_current_object(),
                                   identity=Identity(user.id))
+
             return redirect(url_for('driver_portal.index'))
     return render_template('login.html', action=url_for('.login'))
 
@@ -117,11 +127,18 @@ def register():
     # attempt to validate RegisterForm
     form = RegisterForm()
     if form.validate_on_submit():
+        
+        # Find StudentRole. SHOULD EXIST ON STARTUP. IF NOT, THEN SERVER ERROR
+        student_role = Role.query.filter_by(name='student').first()
+        if student_role is None:
+            abort(500)
+
         # attempt to create a new User in the db
         new_user = User(
             email=form.email.data, 
             password=form.password.data,
-            phone=form.phone.data
+            phone=form.phone.data,
+            roles=[student_role]
         )
         try:
             db.session.add(new_user)
@@ -131,6 +148,12 @@ def register():
             return render_template('login.html', action=url_for('.register')), 409
         return redirect(url_for('.login'))
     return render_template('login.html', action=url_for('.register'))
+
+@login_bp.route('/test_student_permission')
+@login_required
+@student_permission.require(http_exception=403)
+def test_student_permission():
+    return "Congrats, you are a student"
 
 @login_bp.route('/test_login')
 @login_required
