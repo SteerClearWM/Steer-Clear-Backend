@@ -1,13 +1,37 @@
-from flask import Blueprint, flash, render_template, url_for, redirect
-from flask.ext.login import login_user, logout_user, login_required, current_user
+from flask import (
+    Blueprint, 
+    render_template, 
+    url_for, 
+    redirect, 
+    current_app,
+    session
+)
+from flask.ext.login import (
+    login_user, 
+    logout_user, 
+    login_required, 
+    current_user
+)
+from flask.ext.principal import (
+    Principal,
+    Identity, 
+    AnonymousIdentity, 
+    identity_changed, 
+    identity_loaded, 
+    RoleNeed, 
+    UserNeed
+)
 from flask_restful import abort
 from sqlalchemy import exc
-from steerclear import login_manager
+from steerclear import login_manager, app
 from forms import *
 from models import *
 
 # setup login blueprint
 login_bp = Blueprint('login', __name__)
+
+principal = Principal()
+principal.init_app(app)
 
 """
 user_loader
@@ -18,6 +42,21 @@ this needs to be implemented for flask-login extension to work
 @login_manager.user_loader
 def user_loader(user_id):
     return User.query.get(int(user_id))
+
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    # Set the identity user object
+    identity.user = current_user
+
+    # Add the UserNeed to the identity
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+
+    # Assuming the User model has a list of roles, update the
+    # identity with the roles that the user provides
+    if hasattr(current_user, 'roles'):
+        for role in current_user.roles:
+            identity.provides.add(RoleNeed(role.name))
 
 """
 login
@@ -36,6 +75,10 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.password == form.password.data:
             login_user(user)
+
+            # Tell Flask-Principal the identity changed
+            identity_changed.send(current_app._get_current_object(),
+                                  identity=Identity(user.id))
             return redirect(url_for('driver_portal.index'))
     return render_template('login.html', action=url_for('.login'))
 
@@ -49,6 +92,15 @@ return 401. Once user is logged out, redirect to login page
 @login_required
 def logout():
     logout_user()
+
+    # Remove session keys set by Flask-Principal
+    for key in ('identity.name', 'identity.auth_type'):
+        session.pop(key, None)
+
+    # Tell Flask-Principal the user is anonymous
+    identity_changed.send(current_app._get_current_object(),
+                          identity=AnonymousIdentity())
+
     return redirect(url_for('.login'))
 
 """
