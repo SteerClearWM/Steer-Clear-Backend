@@ -31,13 +31,13 @@ app.register_blueprint(api_bp)
 app.register_blueprint(driver_portal_bp)
 app.register_blueprint(login_bp)
 
-from steerclear.models import Role
+# from steerclear.models import Role
 
-if Role.query.filter_by(name='student').first() is None:
-	role = Role(name='student', description='Student Role')
-	db.session.add(role)
-	db.session.commit()
-if Role.query.filter_by(name='admin').first() is None:
-	role = Role(name='admin', description='Admin Role')
-	db.session.add(role)
-	db.session.commit()
+# if Role.query.filter_by(name='student').first() is None:
+# 	role = Role(name='student', description='Student Role')
+# 	db.session.add(role)
+# 	db.session.commit()
+# if Role.query.filter_by(name='admin').first() is None:
+# 	role = Role(name='admin', description='Admin Role')
+# 	db.session.add(role)
+# 	db.session.commit()

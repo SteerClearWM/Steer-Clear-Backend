@@ -15,6 +15,13 @@ class Role(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __repr__(self):
+        return "Role(ID %r, Name %r, Description %r" % (
+                self.id,
+                self.name,
+                self.description
+            )
+
 class User(db.Model, login.UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
