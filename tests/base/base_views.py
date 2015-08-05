@@ -33,7 +33,7 @@ class SteerClearBaseTestCase(testing.TestCase):
     """
     def setUp(self):
         db.create_all()
-        self._create_roles()
+        self._create_default_roles()
 
     """
     tearDown
@@ -68,8 +68,11 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------------
     Helper function that creates and returns a new User object in the db
     """
-    def _create_user(self, email='ryan', password='1234', phone='+17572214000'):
-        user = User(email=email, password=password, phone=phone)
+    def _create_user(self, email='ryan', password='1234', phone='+17572214000', role=None):
+        if role is None:
+            role = Role.query.filter_by(name='student').first()
+
+        user = User(email=email, password=password, phone=phone, roles=[role])
         db.session.add(user)
         db.session.commit()
         return user
@@ -95,14 +98,26 @@ class SteerClearBaseTestCase(testing.TestCase):
         db.session.commit()
         return ride
 
-    def _create_roles(self):
+    """
+    _create_role
+    ------------
+    Creates a new Role in the db
+    """
+    def _create_role(self, name, description):
+        role = Role(name=name, description=description)
+        db.session.add(role)
+        db.session.commit()
+        return role
+
+    """
+    _create_default_roles
+    ---------------------
+    Creates the default student and admin Roles
+    """
+    def _create_default_roles(self):
         # create student Role
         if Role.query.filter_by(name='student').first() is None:
-            role = Role(name='student', description='Student Role')
-            db.session.add(role)
-            db.session.commit()
+            self._create_role('student', 'Student Role')
         # create admin Role
         if Role.query.filter_by(name='admin').first() is None:
-            role = Role(name='admin', description='Admin Role')
-            db.session.add(role)
-            db.session.commit()
+            self._create_role('admin', 'Admin Role')

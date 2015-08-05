@@ -126,8 +126,12 @@ uri: /notifications
 """
 class NotificationAPI(Resource):
     
-    # Require that user must be logged in
-    method_decorators = [login_required, student_permission.require()]
+    # Require that user must be logged in and
+    # that the user is a student or admin
+    method_decorators = [
+        student_permission.require(http_exception=403),
+        login_required
+    ]
 
     """
     Send an sms message to notify the user
