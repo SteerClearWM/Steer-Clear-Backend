@@ -1,7 +1,7 @@
 from flask import url_for
 from flask.ext import testing
 from steerclear import app, db
-from steerclear.models import User, Ride
+from steerclear.models import User, Ride, Role
 
 from datetime import datetime
 
@@ -33,6 +33,7 @@ class SteerClearBaseTestCase(testing.TestCase):
     """
     def setUp(self):
         db.create_all()
+        self._create_roles()
 
     """
     tearDown
@@ -93,3 +94,15 @@ class SteerClearBaseTestCase(testing.TestCase):
         db.session.add(ride)
         db.session.commit()
         return ride
+
+    def _create_roles(self):
+        # create student Role
+        if Role.query.filter_by(name='student').first() is None:
+            role = Role(name='student', description='Student Role')
+            db.session.add(role)
+            db.session.commit()
+        # create admin Role
+        if Role.query.filter_by(name='admin').first() is None:
+            role = Role(name='admin', description='Admin Role')
+            db.session.add(role)
+            db.session.commit()
