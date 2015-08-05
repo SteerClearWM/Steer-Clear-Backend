@@ -1,5 +1,5 @@
-from flask import Blueprint, flash, render_template, url_for, redirect
-from flask.ext.login import login_user, logout_user, login_required
+from flask import Blueprint, flash, render_template, url_for, redirect, request
+from flask.ext.login import login_user, logout_user, login_required, current_user
 from flask_restful import abort
 from sqlalchemy import exc
 from steerclear import login_manager
@@ -31,7 +31,7 @@ POST - logs user in if valid email and password
 """
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    form = UserForm()
+    form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.password == form.password.data:
@@ -62,11 +62,18 @@ POST - takes a email/password form and creates a new user.
 """
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    # attempt to validate UserForm
-    form = UserForm()
+    if request.method == 'GET':
+        return render_template('login.html', action=url_for('.register'))
+
+    # attempt to validate RegisterForm
+    form = RegisterForm()
     if form.validate_on_submit():
         # attempt to create a new User in the db
-        new_user = User(email=form.email.data, password=form.password.data)
+        new_user = User(
+            email=form.email.data, 
+            password=form.password.data,
+            phone=form.phone.data
+        )
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -74,9 +81,9 @@ def register():
             # user already exists
             return render_template('login.html', action=url_for('.register')), 409
         return redirect(url_for('.login'))
-    return render_template('login.html', action=url_for('.register'))
+    return render_template('login.html', action=url_for('.register')), 400
 
 @login_bp.route('/test_login')
 @login_required
 def test_login():
-    return "Congrats, you are logged in"
+    return "Congrats, you are logged in as user " + str(current_user)

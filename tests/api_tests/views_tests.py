@@ -1,11 +1,12 @@
 from steerclear import app, db
 from steerclear.models import Ride
 from steerclear.api.views import calculate_time_data
-from flask import url_for
-import json, vcr
-from datetime import datetime, timedelta
-from testfixtures import replace, test_datetime
 from tests.base import base
+
+from testfixtures import replace, test_datetime
+from flask import url_for
+from datetime import datetime, timedelta
+import vcr
 
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
@@ -26,7 +27,8 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideListAPITestCase, self).setUp()
-        self._login()
+        self.user = self._create_user()
+        self._login(self.user)
 
     """
     test_get_ride_list_requires_login
@@ -47,7 +49,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     def test_get_ride_list_empty_list(self):
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {"rides": []})
+        self.assertEquals(response.json, {"rides": []})
 
     """
     test_get_ride_list_not_empty_list
@@ -57,10 +59,9 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_get_ride_list_not_empty_list(self):
         # create ride objects
-        dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
+        r1 = self._create_ride(self.user)
+        r2 = self._create_ride(self.user)
+        r3 = self._create_ride(self.user)
         
         # store dict versions
         r1_dict = r1.as_dict()
@@ -68,26 +69,17 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         r3_dict = r3.as_dict()
         
         # assign correct id and time vals
-        r1_dict['id'] = 1                                
-        r2_dict['id'] = 2
-        r3_dict['id'] = 3
         r1_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict['pickup_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r1_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict['dropoff_time'] = 'Mon, 01 Jan 0001 00:00:00 -0000'
-        
-        # add Ride objects to db
-        db.session.add(r1)
-        db.session.add(r2)
-        db.session.add(r3)
-        db.session.commit()
 
         # test response
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'rides': [r1_dict, r2_dict, r3_dict]})
+        self.assertEquals(response.json, {'rides': [r1_dict, r2_dict, r3_dict]})
 
     """
     test_post_ride_list_requires_login
@@ -127,7 +119,26 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.post(url_for('api.rides'), data=payload)
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
-        self.assertEquals(json.loads(response.get_data()), {u"ride": payload})
+        self.assertEquals(response.json, {u"ride": payload})
+        self.assertEquals(Ride.query.get(1).user, self.user)
+
+    """
+    test_post_ride_list_bad_form_data
+    ---------------------------------
+    Tests that trying to create a new ride fails if
+    required fields are not in form
+    """
+    def test_post_ride_list_bad_form_data(self):
+        payload = {
+            u"num_passengers": 3,
+            u"start_latitude": 37.273485,
+            u"start_longitude": -76.719628,
+            u"end_latitude": 37.280893,
+            u"end_longitude": -76.719691,
+            u"pickup_time": u'Mon, 01 Jan 0001 00:00:00 -0000',
+            u"travel_time": 171,
+            u"dropoff_time": u'Mon, 01 Jan 0001 00:00:00 -0000',
+          }
 
         bad_payload = payload.copy()
         bad_payload.pop('num_passengers', None)
@@ -176,7 +187,8 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideAPITestCase, self).setUp()
-        self._login()
+        self.user = self._create_user()
+        self._login(self.user)
 
     """
     test_get_ride_requires_login
@@ -199,9 +211,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.get(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
-        dtime = datetime(1,1,1)
-        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime))
-        db.session.commit()
+        ride = self._create_ride(self.user)
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.get(url_for('api.ride', ride_id=2))
@@ -215,10 +225,9 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_get_ride_success(self):
         # create ride objects to db
-        dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
+        r1 = self._create_ride(self.user)
+        r2 = self._create_ride(self.user)
+        r3 = self._create_ride(self.user)
         
         # store dict versions
         r1_dict = r1.as_dict()                             
@@ -226,33 +235,24 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         r3_dict = r3.as_dict()
         
         # assign correct id vals
-        r1_dict[u'id'] = 1                                  
-        r2_dict[u'id'] = 2
-        r3_dict[u'id'] = 3
         r1_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict[u'pickup_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r1_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r2_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
         r3_dict[u'dropoff_time'] = u'Mon, 01 Jan 0001 00:00:00 -0000'
-        
-        # add Ride objects to db
-        db.session.add(r1)
-        db.session.add(r2)
-        db.session.add(r3)
-        db.session.commit()
 
         response = self.client.get(url_for('api.ride', ride_id=1))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'ride': r1_dict})
+        self.assertEquals(response.json, {'ride': r1_dict})
 
         response = self.client.get(url_for('api.ride', ride_id=2))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'ride': r2_dict})
+        self.assertEquals(response.json, {'ride': r2_dict})
 
         response = self.client.get(url_for('api.ride', ride_id=3))
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(json.loads(response.get_data()), {'ride': r3_dict})
+        self.assertEquals(response.json, {'ride': r3_dict})
 
     """
     test_delete_ride_requires_login
@@ -274,9 +274,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.delete(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
-        dtime = datetime(1,1,1)
-        db.session.add(Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime))
-        db.session.commit()
+        ride = self._create_ride(self.user)
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.delete(url_for('api.ride', ride_id=2))
@@ -289,23 +287,13 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def test_delete_ride_success(self):
         # create Ride objects
-        dtime = datetime(1,1,1)
-        r1 = Ride(1, (2.2, 3.3), (4.4, 5.5), dtime, 0, dtime)
-        r2 = Ride(2, (3.3, 4.4), (5.5, 6.6), dtime, 0, dtime)
-        r3 = Ride(3, (4.4, 5.5), (6.6, 7.7), dtime, 0, dtime)
+        r1 = self._create_ride(self.user)
+        r2 = self._create_ride(self.user)
+        r3 = self._create_ride(self.user)
+
         # store dict versions
         r2_dict = r2.as_dict()                             
         r3_dict = r3.as_dict()
-        
-        # add Ride objects to db
-        db.session.add(r1)
-        db.session.add(r2)
-        db.session.add(r3)
-        db.session.commit()
-
-        # assign correct id vals
-        r2_dict['id'] = 2                                 
-        r3_dict['id'] = 3
 
         # test can delete a ride
         response = self.client.delete(url_for('api.ride', ride_id=1))
@@ -333,6 +321,50 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(Ride.query.get(1), None)
         self.assertEquals(Ride.query.get(2), None)
         self.assertEquals(Ride.query.get(3), None)
+
+
+"""
+NotificationAPITestCase
+-----------------------
+Test case for testing the notifications api
+"""
+class NotificationAPITestCase(base.SteerClearBaseTestCase):
+
+    """
+    setUp
+    -----
+    Overrides super class setUp(). Makes sure the user
+    is logged in before each test is run
+    """
+    def setUp(self):
+        super(NotificationAPITestCase, self).setUp()
+        self.user = self._create_user()
+        self._login(self.user)
+
+    """
+    test_post_notifications_requires_login
+    --------------------------------------
+    Tests that the notifications route requires the user to be logged in
+    """
+    def test_post_notifications_requires_login(self):
+        self._logout()
+        response = self.client.post(url_for('api.notifications'), data={})
+        self.assertEquals(response.status_code, 401)
+
+    """
+    test_post_notifications_bad_ride_id
+    -----------------------------------
+    Tests that the notifications route fails if the
+    request ride_id does not exist
+    """
+    def test_post_notifications_bad_ride_id(self):
+        response = self.client.post(url_for('api.notifications'), data={'ride_id': 1})
+        self.assertEquals(response.status_code, 400)
+
+        ride = self._create_ride(self.user)
+
+        response = self.client.post(url_for('api.notifications'), data={'ride_id': 2})
+        self.assertEquals(response.status_code, 400)
 
 
 """
@@ -370,8 +402,8 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_data_with_last_ride(self):
-        db.session.add(Ride(1, (0.0, 0.0), (37.272042, -76.714027), None, None, datetime(2015,6,13,1,2,3)))
-        db.session.commit()
+        user = self._create_user()
+        ride = self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 252)
@@ -384,8 +416,8 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_start_loc(self):
-        db.session.add(Ride(1, (0.0, 0.0), (0.0, 0.0), None, None, datetime(2015,6,13,1,2,3)))
-        db.session.commit()
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 0.0, 0.0, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
         result = calculate_time_data(pickup_loc, dropoff_loc)
@@ -393,8 +425,8 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_pickup_loc(self):
-        db.session.add(Ride(1, (0.0, 0.0), (37.272042, -76.714027), None, None, datetime(2015,6,13,1,2,3)))
-        db.session.commit()
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (0.0, 0.0)
         dropoff_loc = (37.280893, -76.719691)
         result = calculate_time_data(pickup_loc, dropoff_loc)
@@ -402,8 +434,8 @@ class ETATestCase(base.SteerClearBaseTestCase):
 
     @myvcr.use_cassette()
     def test_calculate_time_delta_with_last_ride_bad_dropoff_loc(self):
-        db.session.add(Ride(1, (0.0, 0.0), (37.272042, -76.714027), None, None, datetime(2015,6,13,1,2,3)))
-        db.session.commit()
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.280893, -76.719691)
         dropoff_loc = (0.0, 0.0)
         result = calculate_time_data(pickup_loc, dropoff_loc)
