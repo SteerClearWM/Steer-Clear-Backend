@@ -31,17 +31,29 @@ from models import *
 # setup login blueprint
 login_bp = Blueprint('login', __name__)
 
+# setup flask-principal
 principal = Principal()
 principal.init_app(app)
 
+# Create 2 permissions. 1 for admins and 1 for students
+admin_permission = Permission(RoleNeed('admin'))
 student_permission = Permission(RoleNeed('student'))
 
+"""
+create_roles
+------------
+Function called before app processes first request.
+Creates the admin and student Roles if they do
+not already exist
+"""
 @app.before_first_request
 def create_roles():
+    # create student Role
     if Role.query.filter_by(name='student').first() is None:
         role = Role(name='student', description='Student Role')
         db.session.add(role)
         db.session.commit()
+    # create admin Role
     if Role.query.filter_by(name='admin').first() is None:
         role = Role(name='admin', description='Admin Role')
         db.session.add(role)
