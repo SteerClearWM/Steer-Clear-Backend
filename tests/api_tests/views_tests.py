@@ -349,7 +349,7 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
     def test_post_notifications_requires_login(self):
         self._logout()
         response = self.client.post(url_for('api.notifications'), data={})
-        self.assertEquals(response.status_code, 401)
+        self.assertEquals(response.status_code, 401)        
 
     """
     test_post_notifications_bad_ride_id

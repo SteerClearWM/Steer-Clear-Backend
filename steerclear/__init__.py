@@ -11,10 +11,16 @@ except ImportError as e:
 app.config.from_envvar('STEERCLEAR_SETTINGS')
 db = SQLAlchemy(app)
 
+# setup login manager for flask-login
 from flask.ext.login import LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+from flask.ext.principal import Permission, RoleNeed
+admin_permission = Permission(RoleNeed('admin'))
+student_permission = Permission(RoleNeed('student'))
+
+# setup sms client for twilio api
 from steerclear.utils import sms
 sms_client = sms.SteerClearSMSClient(
             app.config['TWILIO_ACCOUNT_SID'], 
@@ -30,14 +36,3 @@ from steerclear.login.views import login_bp
 app.register_blueprint(api_bp)
 app.register_blueprint(driver_portal_bp)
 app.register_blueprint(login_bp)
-
-# from steerclear.models import Role
-
-# if Role.query.filter_by(name='student').first() is None:
-# 	role = Role(name='student', description='Student Role')
-# 	db.session.add(role)
-# 	db.session.commit()
-# if Role.query.filter_by(name='admin').first() is None:
-# 	role = Role(name='admin', description='Admin Role')
-# 	db.session.add(role)
-# 	db.session.commit()

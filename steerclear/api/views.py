@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
-from steerclear import sms_client
+from steerclear import sms_client, student_permission
 from models import *
 from forms import *
 
@@ -127,7 +127,7 @@ uri: /notifications
 class NotificationAPI(Resource):
     
     # Require that user must be logged in
-    method_decorators = [login_required]
+    method_decorators = [login_required, student_permission.require()]
 
     """
     Send an sms message to notify the user
