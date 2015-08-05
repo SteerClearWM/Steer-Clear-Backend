@@ -148,6 +148,40 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertContext('action', url_for('login.register'))
 
     """
+    test_register_failure_form_failure
+    ----------------------------------
+    Tests that posting to notifications fails if
+    not all fields of the form are submitted
+    """
+    def test_register_failure_form_failure(self):
+        # create a user
+        self._create_user(email='ryan', password='1234')
+
+        # check that POST request failed
+        bad_payload = self.register_payload.copy()
+        bad_payload.pop('email')
+        response = self.client.post(url_for('login.register'), data=bad_payload)
+        self.assertEquals(response.status_code, 400)
+        self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
+        self.assertContext('action', url_for('login.register'))
+
+        # check that POST request failed
+        bad_payload = self.register_payload.copy()
+        bad_payload.pop('password')
+        response = self.client.post(url_for('login.register'), data=bad_payload)
+        self.assertEquals(response.status_code, 400)
+        self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
+        self.assertContext('action', url_for('login.register'))
+
+        # check that POST request failed
+        bad_payload = self.register_payload.copy()
+        bad_payload.pop('phone')
+        response = self.client.post(url_for('login.register'), data=bad_payload)
+        self.assertEquals(response.status_code, 400)
+        self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
+        self.assertContext('action', url_for('login.register'))
+
+    """
     test_register_success
     ---------------------
     Tests that we can register a new user successfully

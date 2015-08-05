@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, render_template, url_for, redirect
+from flask import Blueprint, flash, render_template, url_for, redirect, request
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from flask_restful import abort
 from sqlalchemy import exc
@@ -62,6 +62,9 @@ POST - takes a email/password form and creates a new user.
 """
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'GET':
+        return render_template('login.html', action=url_for('.register'))
+
     # attempt to validate RegisterForm
     form = RegisterForm()
     if form.validate_on_submit():
@@ -78,7 +81,7 @@ def register():
             # user already exists
             return render_template('login.html', action=url_for('.register')), 409
         return redirect(url_for('.login'))
-    return render_template('login.html', action=url_for('.register'))
+    return render_template('login.html', action=url_for('.register')), 400
 
 @login_bp.route('/test_login')
 @login_required
