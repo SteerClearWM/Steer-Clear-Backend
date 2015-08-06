@@ -24,7 +24,7 @@ from flask.ext.principal import (
 )
 from flask_restful import abort
 from sqlalchemy import exc
-from steerclear import login_manager, app
+from steerclear import login_manager, app, admin_permission, student_permission
 from forms import *
 from models import *
 
@@ -34,10 +34,6 @@ login_bp = Blueprint('login', __name__)
 # setup flask-principal
 principal = Principal()
 principal.init_app(app)
-
-# Create 2 permissions. 1 for admins and 1 for students
-admin_permission = Permission(RoleNeed('admin'))
-student_permission = Permission(RoleNeed('student'))
 
 """
 create_roles
