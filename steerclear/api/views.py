@@ -90,8 +90,12 @@ uri: /rides/<ride_id>
 """
 class RideAPI(Resource):
 
-    # Require that user must be logged in
-    method_decorators = [login_required]
+    # Require that user must be logged in and
+    # that the user is a student or admin
+    method_decorators = [
+        student_permission.require(http_exception=403),
+        login_required
+    ]
 
     """
     Return the Ride object with the corresponding id as

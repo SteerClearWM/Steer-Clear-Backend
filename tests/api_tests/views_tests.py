@@ -201,6 +201,25 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 401)
 
     """
+    test_get_ride_requires_student_permission
+    ---------------------------------------------------
+    Tests that trying to access the get Ride API requires
+    the User to be a student
+    """
+    def test_get_ride_requires_student_permission(self):
+        # logout current user
+        self._logout()
+
+        # create new User with new foo Role and login
+        foo_role = self._create_role('foo', 'Foo Role')
+        user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
+        self._login(user)
+
+        # try to access ride api without proper permission
+        response = self.client.get(url_for('api.ride', ride_id=1), data={})
+        self.assertEquals(response.status_code, 403) 
+
+    """
     test_get_ride_bad_ride_id
     --------------------------
     Tests that trying to get a specific ride with
@@ -263,6 +282,25 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self._logout()
         response = self.client.delete(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 401)
+
+    """
+    test_delete_ride_requires_student_permission
+    ---------------------------------------------------
+    Tests that trying to access the delete Ride API requires
+    the User to be a student
+    """
+    def test_delete_ride_requires_student_permission(self):
+        # logout current user
+        self._logout()
+
+        # create new User with new foo Role and login
+        foo_role = self._create_role('foo', 'Foo Role')
+        user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
+        self._login(user)
+
+        # try to access ride api without proper permission
+        response = self.client.delete(url_for('api.ride', ride_id=1), data={})
+        self.assertEquals(response.status_code, 403) 
 
     """
     test_delete_ride_bad_ride_id
@@ -351,6 +389,12 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.post(url_for('api.notifications'), data={})
         self.assertEquals(response.status_code, 401)
 
+    """
+    test_post_notifications_requires_student_permission
+    ---------------------------------------------------
+    Tests that trying to access the notifications API requires
+    the User to be a student
+    """
     def test_post_notifications_requires_student_permission(self):
         # logout current user
         self._logout()
