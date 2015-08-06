@@ -170,9 +170,9 @@ def register():
 
 @login_bp.route('/test_student_permission')
 @login_required
-@student_permission.require(http_exception=403)
 def test_student_permission():
-    return "Congrats, you are a student"
+    with student_permission.require(http_exception=403):
+        return "Congrats, you are a student"
 
 @login_bp.route('/test_login')
 @login_required

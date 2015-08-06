@@ -48,6 +48,7 @@ class RideListAPI(Resource):
     """
     Create a new Ride object and place it in the queue
     """
+    @student_permission.require(http_exception=403)
     def post(self):
         form = RideForm()                       # validate RideForm or 404
         if not form.validate_on_submit():

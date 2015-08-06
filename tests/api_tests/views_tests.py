@@ -93,6 +93,25 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 401)
 
     """
+    test_post_ride_list_requires_student_permission
+    ---------------------------------------------------
+    Tests that trying to access the POST RideList API requires
+    the User to be a student
+    """
+    def test_post_ride_list_requires_student_permission(self):
+        # logout current user
+        self._logout()
+
+        # create new User with new foo Role and login
+        foo_role = self._create_role('foo', 'Foo Role')
+        user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
+        self._login(user)
+
+        # try to access ride api without proper permission
+        response = self.client.post(url_for('api.rides'), data={})
+        self.assertEquals(response.status_code, 403) 
+
+    """
     test_post_ride_list
     -------------
     Tests that adding a new ride request works. Sends POST ride
