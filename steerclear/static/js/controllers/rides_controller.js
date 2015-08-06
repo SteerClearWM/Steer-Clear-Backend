@@ -1,6 +1,6 @@
 app.controller('RidesController', ['$scope', 'RidesService', function($scope, RidesService){
 
-	var ride = {
+    var ride = {
         "num_passengers": 4,
         "start_latitude": 37.273485,
         "start_longitude": -76.719628,
@@ -10,14 +10,14 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
 
     // RidesService.createRide(ride)
 
-	init = function() {
-        RidesService.getRides().then(function(data){
-            for (var i =0; i < data.rides.length; i++){
-                data.rides[i].start_address = ride.start_address ? ride.start_address : "Start Address Not Found";
-                data.rides[i].end_address = ride.end_address ? ride.end_address : "End Address Not Found";
-            };
-            $scope.rides = data.rides;
-	    }); 
+		init = function() {
+	      RidesService.getRides().then(function(data){
+	          for (var i =0; i < data.rides.length; i++){
+	              data.rides[i].start_address = ride.start_address ? ride.start_address : "Start Address Not Found";
+	              data.rides[i].end_address = ride.end_address ? ride.end_address : "End Address Not Found";
+	          };
+	          $scope.rides = data.rides;
+	    	});
     };
 
     init();
