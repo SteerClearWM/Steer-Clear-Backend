@@ -29,19 +29,33 @@
 /*Rides Rows*/
 
 .rides {
-	background-color: rgba(255, 255, 255, 0.15);
-	margin-top: 8px;
-	margin-bottom: 8px;
+	background-color: rgba(255, 255, 255, 0.15) !important;
+	margin-top: 12px;
 	border-radius: 5px;
 	border-style: solid;
 	border-color: rgba(255, 255, 255, 0.4);
 	border-width: 1px;
 	white-space: nowrap;
+  cursor: initial !important;
 }
 
-.remove-icon {
-	margin-right: 15px;
+.row-button {
+  margin-top: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.row-button:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.button-icon {
 	color: rgba(255, 255, 255, 0.4);
+}
+
+.btn:focus {
+  outline: none;
 }
 
 .check-icon {
@@ -54,10 +68,6 @@
 	margin-top: 2px;
 	margin-right: 20px;
 	color: rgba(255, 255, 255, 0.4);
-}
-
-.remove-icon:hover {
-	color: rgba(255, 255, 255, 0.6);
 }
 
 .ride-text {
@@ -131,7 +141,7 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
     -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
-
-
-
-
+/*Prevent early loading on angularjs*/
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}

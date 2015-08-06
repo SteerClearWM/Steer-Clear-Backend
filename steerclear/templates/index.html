@@ -26,14 +26,28 @@
 
     <div class="container" ng-controller="RidesController">
 
-          <ul class="list-group">
-            <li class="list-group-item rides group-btn" ng-repeat="ride in rides track by $index">
-                <span class="glyphicon glyphicon-remove remove-icon" ng-click="deleteRide(ride)"></span>
-                <span class="ride-text">{[{ride.start_address + ": " +ride.id}]}</span>
-                <span class="glyphicon glyphicon-check check-icon pull-right" ng-click=""></span>
-                <span class="glyphicon glyphicon-phone phone-icon pull-right" ng-click=""></span>
-            </li>
-          </ul>
+          <!-- <ul class="list-group ng-cloak">
+              <li class="list-group-item rides group-btn" ng-repeat="ride in rides track by $index"> -->
+                  <!-- <span class="glyphicon glyphicon-remove remove-icon" ng-click="deleteRide(ride)"></span>
+                  <span class="ride-text">{[{ride.start_address + ": " +ride.id}]}</span>
+                  <span class="glyphicon glyphicon-check check-icon pull-right" ng-click=""></span>
+                  <span class="glyphicon glyphicon-phone phone-icon pull-right" ng-click=""></span> -->
+                  <div class="input-group" ng-repeat="ride in rides track by $index">
+                      <span class="input-group-btn">
+                          <button class="btn row-button" type="button">
+                              <span class="glyphicon glyphicon-remove button-icon" ng-click="deleteRide(ride)"></span>
+                          </button>
+                      </span>
+                      <input class="form-control rides" ng-placeholder="ride.message" disabled></input>
+                      <span class="input-group-btn">
+                          <button class="btn row-button" type="button">
+                              <span class="glyphicon glyphicon-check button-icon" ng-click="deleteRide(ride)"></span>
+                          </button>
+                          <button class="btn row-button" type="button">
+                              <span class="glyphicon glyphicon-phone button-icon" ng-click="deleteRide(ride)"></span>
+                          </button>
+                      </span>
+                  </div>
 
     </div><!-- /.container -->
 
@@ -54,5 +68,6 @@
     <script src="static/js/steer_clear.js"></script>
     <script src="static/js/controllers/rides_controller.js"></script>
     <script src="static/js/services/rides_service.js"></script>
+    <script src="static/js/directives/ng-placeholder.js"></script>
   </body>
 </html>
