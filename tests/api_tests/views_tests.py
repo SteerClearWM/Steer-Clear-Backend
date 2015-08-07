@@ -414,8 +414,6 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(NotificationAPITestCase, self).setUp()
-        self.user = self._create_user()
-        self._login(self.user)
 
     """
     test_post_notifications_requires_login
@@ -423,7 +421,6 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
     Tests that the notifications route requires the user to be logged in
     """
     def test_post_notifications_requires_login(self):
-        self._logout()
         response = self.client.post(url_for('api.notifications'), data={})
         self.assertEquals(response.status_code, 401)
 
@@ -434,20 +431,13 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_post_notifications_requires_student_permission(self):
-        # logout current user
-        self._logout()
-
-        # create new User with new foo Role and login
-        foo_role = self._create_role('foo', 'Foo Role')
-        user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
-        self._login(user)
+        self._login(self.foo_user)
 
         # try to access notifications api without proper permission
         response = self.client.post(url_for('api.notifications'), data={})
         self.assertEquals(response.status_code, 403) 
 
-        user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
-        self._login(user)
+        self._login(self.student_user)
 
         response = self.client.post(url_for('api.notifications'), data={})
         self.assertNotEquals(response.status_code, 403)       
@@ -459,10 +449,11 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
     request ride_id does not exist
     """
     def test_post_notifications_bad_ride_id(self):
+        self._login(self.student_user)
         response = self.client.post(url_for('api.notifications'), data={'ride_id': 1})
         self.assertEquals(response.status_code, 400)
 
-        ride = self._create_ride(self.user)
+        ride = self._create_ride(self.student_user)
 
         response = self.client.post(url_for('api.notifications'), data={'ride_id': 2})
         self.assertEquals(response.status_code, 400)
