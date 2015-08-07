@@ -124,3 +124,20 @@ class SteerClearBaseTestCase(testing.TestCase):
         if Role.query.filter_by(name='admin').first() is None:
             admin_role = self._create_role('admin', 'Admin Role')
         return student_role, admin_role
+
+    def _test_url_requires_role(self, method, url, role):
+        r = Role.query.filter_by(name=role).first()
+
+        foo_role = self._create_role('foo', 'Foo Role')
+        user = self._create_user(email='foo', role=foo_role)
+        self._login(user)
+
+        response = method(url)
+        self.assertEquals(response.status_code, 403)
+
+        user = self._create_user(email='correct', role=r)
+        self._login(user)
+
+        response = method(url)
+        self.assertNotEquals(response.status_code, 403)
+
