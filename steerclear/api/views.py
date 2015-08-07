@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
-from steerclear import sms_client, student_permission
+from steerclear import sms_client, student_permission, admin_permission, student_or_admin_permission
 from models import *
 from forms import *
 
@@ -40,6 +40,7 @@ class RideListAPI(Resource):
     """
     Return the list of Ride objects in the queue
     """
+    @admin_permission.require(http_exception=403)
     def get(self):
         rides = Ride.query.all()                            # query db for Rides
         rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
@@ -48,7 +49,7 @@ class RideListAPI(Resource):
     """
     Create a new Ride object and place it in the queue
     """
-    @student_permission.require(http_exception=403)
+    @student_or_admin_permission.require(http_exception=403)
     def post(self):
         form = RideForm()                       # validate RideForm or 404
         if not form.validate_on_submit():

@@ -38,27 +38,18 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 401)
 
-    # """
-    # test_get_ride_list_requires_student_permission
-    # ---------------------------------------------------
-    # Tests that trying to access the GET RideList API requires
-    # the User to be a student
-    # """
-    # def test_get_ride_list_requires_student_permission(self):
-    #     # create new User with new foo Role and login
-    #     foo_role = self._create_role('foo', 'Foo Role')
-    #     user = self._create_user(email='foo', phone='+12223334444', role=foo_role)
-    #     self._login(user)
-
-    #     # try to access ride api without proper permission
-    #     response = self.client.get(url_for('api.rides'), data={})
-    #     self.assertEquals(response.status_code, 403)
-
-    #     user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
-    #     self._login(user)
-
-    #     response = self.client.get(url_for('api.rides'), data={})
-    #     self.assertNotEquals(response.status_code, 403)
+    """
+    test_get_ride_list_requires_admin_permission
+    ---------------------------------------------------
+    Tests that trying to access the GET RideList API requires
+    the User to be a admin
+    """
+    def test_get_ride_list_requires_admin_permission(self):
+        self._test_url_requires_roles(
+            self.client.get,
+            url_for('api.rides'),
+            [self.admin_role]
+        )
 
     """
     test_get_ride_list_empty_list
@@ -66,7 +57,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     Tests that listing all of the rides in the queue is correct.
     """
     def test_get_ride_list_empty_list(self):
-        self._login(self.student_user)
+        self._login(self.admin_user)
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.json, {"rides": []})
@@ -78,11 +69,11 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     the queue is not empty
     """
     def test_get_ride_list_not_empty_list(self):
-        self._login(self.student_user)
+        self._login(self.admin_user)
         # create ride objects
-        r1 = self._create_ride(self.student_user)
-        r2 = self._create_ride(self.student_user)
-        r3 = self._create_ride(self.student_user)
+        r1 = self._create_ride(self.admin_user)
+        r2 = self._create_ride(self.admin_user)
+        r3 = self._create_ride(self.admin_user)
         
         # store dict versions
         r1_dict = r1.as_dict()
@@ -113,16 +104,16 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 401)  
 
     """
-    test_post_ride_list_requires_student_permission
+    test_post_ride_list_requires_student_or_admin_permission
     ---------------------------------------------------
     Tests that trying to access the POST RideList API requires
-    the User to be a student
+    the User to be student or an admin
     """
-    def test_post_ride_list_requires_student_permission(self):
+    def test_post_ride_list_requires_student_or_admin_permission(self):
         self._test_url_requires_roles(
             self.client.post,
             url_for('api.rides'),
-            [self.student_role]
+            [self.student_role, self.admin_role]
         )
 
     """

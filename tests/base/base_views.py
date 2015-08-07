@@ -147,17 +147,19 @@ class SteerClearBaseTestCase(testing.TestCase):
     and unavailable to all other users
     """
     def _test_url_requires_roles(self, method, url, roles):
-        # for every role in the roles we wish to test have permission to url
-        for role in roles:
-            # for every user
-            for user in self.users:
-                # login the user and make request to url
-                self._login(user)
-                response = method(url)
+        # for every user
+        for user in self.users:
+            # login the user and make request to url
+            self._login(user)
+            response = method(url)
 
-                if role in user.roles:
+            # check to see if user has any role that should have permission for url
+            for role in user.roles:
+                if role in roles:
                     # if the user should have permission, make sure response code is not 403
                     self.assertNotEquals(response.status_code, 403)
+                    break
                 else:
                     # if the user shouldn't have permission, make sure status code is 403
                     self.assertEquals(response.status_code, 403)
+                    break
