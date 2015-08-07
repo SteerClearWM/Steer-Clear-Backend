@@ -36,6 +36,11 @@ class SteerClearBaseTestCase(testing.TestCase):
         roles = self._create_default_roles()
         self.student_role = roles[0]
         self.admin_role = roles[1]
+        self.foo_role = roles[2]
+
+        self.student_user = self._create_user(email='student', phone='+12223334444', role=self.student_role)
+        self.admin_user = self._create_user(email='admin', phone='+13334445555', role=self.admin_role)
+        self.foo_user = self._create_user(email='foo', phone='+14445556666', role=self.foo_role)
 
     """
     tearDown
@@ -119,6 +124,7 @@ class SteerClearBaseTestCase(testing.TestCase):
     def _create_default_roles(self):
         student_role = Role.query.filter_by(name='student').first()
         admin_role = Role.query.filter_by(name='admin').first()
+        foo_role = Role.query.filter_by(name='foo').first()
 
         # create student Role
         if student_role is None:
@@ -126,7 +132,10 @@ class SteerClearBaseTestCase(testing.TestCase):
         # create admin Role
         if admin_role is None:
             admin_role = self._create_role('admin', 'Admin Role')
-        return student_role, admin_role
+        # create foo Role
+        if foo_role is None:
+            foo_role = self._create_role('foo', 'Foo Role')
+        return student_role, admin_role, foo_role
 
     def _test_url_requires_role(self, method, url, role):
         r = Role.query.filter_by(name=role).first()

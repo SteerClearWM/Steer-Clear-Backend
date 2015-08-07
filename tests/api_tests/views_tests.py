@@ -27,7 +27,6 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideListAPITestCase, self).setUp()
-        self.student_user = self._create_user()
 
     """
     test_get_ride_list_requires_login
@@ -120,17 +119,19 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_post_ride_list_requires_student_permission(self):
-        # create new User with new foo Role and login
-        foo_role = self._create_role('foo', 'Foo Role')
-        user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
-        self._login(user)
+        # # create new User with new foo Role and login
+        # foo_role = self._create_role('foo', 'Foo Role')
+        # user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
+        # self._login(user)
+        self._login(self.foo_user)
 
         # try to access ride api without proper permission
         response = self.client.post(url_for('api.rides'), data={})
         self.assertEquals(response.status_code, 403)
 
-        user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
-        self._login(user)
+        # user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
+        # self._login(user)
+        self._login(self.student_user)
 
         response = self.client.post(url_for('api.rides'), data={})
         self.assertNotEquals(response.status_code, 403)
