@@ -119,16 +119,11 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_post_ride_list_requires_student_permission(self):
-        self._login(self.foo_user)
-
-        # try to access ride api without proper permission
-        response = self.client.post(url_for('api.rides'), data={})
-        self.assertEquals(response.status_code, 403)
-
-        self._login(self.student_user)
-
-        response = self.client.post(url_for('api.rides'), data={})
-        self.assertNotEquals(response.status_code, 403)
+        self._test_url_requires_roles(
+            self.client.post,
+            url_for('api.rides'),
+            [self.student_role]
+        )
 
     """
     test_post_ride_list
@@ -244,16 +239,11 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_get_ride_requires_student_permission(self):
-        self._login(self.foo_user)
-
-        # try to access ride api without proper permission
-        response = self.client.get(url_for('api.ride', ride_id=1), data={})
-        self.assertEquals(response.status_code, 403)
-
-        self._login(self.student_user)
-
-        response = self.client.get(url_for('api.ride', ride_id=1), data={})
-        self.assertNotEquals(response.status_code, 403)
+        self._test_url_requires_roles(
+            self.client.get, 
+            url_for('api.ride', ride_id=1),
+            [self.student_role]
+        )
 
     """
     test_get_ride_bad_ride_id
@@ -327,16 +317,11 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_delete_ride_requires_student_permission(self):
-        self._login(self.foo_user)
-
-        # try to access ride api without proper permission
-        response = self.client.delete(url_for('api.ride', ride_id=1), data={})
-        self.assertEquals(response.status_code, 403)
-
-        self._login(self.student_user)
-
-        response = self.client.delete(url_for('api.ride', ride_id=1), data={})
-        self.assertNotEquals(response.status_code, 403)
+        self._test_url_requires_roles(
+            self.client.delete,
+            url_for('api.ride', ride_id=1),
+            [self.student_role]
+        )
 
     """
     test_delete_ride_bad_ride_id
@@ -431,16 +416,11 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_post_notifications_requires_student_permission(self):
-        self._login(self.foo_user)
-
-        # try to access notifications api without proper permission
-        response = self.client.post(url_for('api.notifications'), data={})
-        self.assertEquals(response.status_code, 403) 
-
-        self._login(self.student_user)
-
-        response = self.client.post(url_for('api.notifications'), data={})
-        self.assertNotEquals(response.status_code, 403)       
+        self._test_url_requires_roles(
+            self.client.post,
+            url_for('api.notifications'),
+            [self.student_role]
+        )    
 
     """
     test_post_notifications_bad_ride_id

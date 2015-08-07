@@ -33,14 +33,16 @@ class SteerClearBaseTestCase(testing.TestCase):
     """
     def setUp(self):
         db.create_all()
-        roles = self._create_default_roles()
-        self.student_role = roles[0]
-        self.admin_role = roles[1]
-        self.foo_role = roles[2]
+        self.roles = self._create_default_roles()
+        self.student_role = self.roles[0]
+        self.admin_role = self.roles[1]
+        self.foo_role = self.roles[2]
 
         self.student_user = self._create_user(email='student', phone='+12223334444', role=self.student_role)
         self.admin_user = self._create_user(email='admin', phone='+13334445555', role=self.admin_role)
         self.foo_user = self._create_user(email='foo', phone='+14445556666', role=self.foo_role)
+
+        self.users = [self.student_user, self.admin_user, self.foo_user]
 
     """
     tearDown
@@ -137,19 +139,25 @@ class SteerClearBaseTestCase(testing.TestCase):
             foo_role = self._create_role('foo', 'Foo Role')
         return student_role, admin_role, foo_role
 
-    def _test_url_requires_role(self, method, url, role):
-        r = Role.query.filter_by(name=role).first()
+    """
+    _test_url_requires_roles
+    ------------------------
+    Tests that the :url: accessed via the http :method:
+    is available to all users with any role in :roles:
+    and unavailable to all other users
+    """
+    def _test_url_requires_roles(self, method, url, roles):
+        # for every role in the roles we wish to test have permission to url
+        for role in roles:
+            # for every user
+            for user in self.users:
+                # login the user and make request to url
+                self._login(user)
+                response = method(url)
 
-        foo_role = self._create_role('foo', 'Foo Role')
-        user = self._create_user(email='foo', role=foo_role)
-        self._login(user)
-
-        response = method(url)
-        self.assertEquals(response.status_code, 403)
-
-        user = self._create_user(email='correct', role=r)
-        self._login(user)
-
-        response = method(url)
-        self.assertNotEquals(response.status_code, 403)
-
+                if role in user.roles:
+                    # if the user should have permission, make sure response code is not 403
+                    self.assertNotEquals(response.status_code, 403)
+                else:
+                    # if the user shouldn't have permission, make sure status code is 403
+                    self.assertEquals(response.status_code, 403)
