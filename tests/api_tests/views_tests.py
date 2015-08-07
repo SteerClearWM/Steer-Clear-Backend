@@ -119,18 +119,12 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_post_ride_list_requires_student_permission(self):
-        # # create new User with new foo Role and login
-        # foo_role = self._create_role('foo', 'Foo Role')
-        # user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
-        # self._login(user)
         self._login(self.foo_user)
 
         # try to access ride api without proper permission
         response = self.client.post(url_for('api.rides'), data={})
         self.assertEquals(response.status_code, 403)
 
-        # user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
-        # self._login(user)
         self._login(self.student_user)
 
         response = self.client.post(url_for('api.rides'), data={})
@@ -233,8 +227,6 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideAPITestCase, self).setUp()
-        self.user = self._create_user()
-        self._login(self.user)
 
     """
     test_get_ride_requires_login
@@ -242,7 +234,6 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     Tests that user must be logged in to access a ride request
     """
     def test_get_ride_requires_login(self):
-        self._logout()
         response = self.client.get(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 401)
 
@@ -253,20 +244,13 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_get_ride_requires_student_permission(self):
-        # logout current user
-        self._logout()
-
-        # create new User with new foo Role and login
-        foo_role = self._create_role('foo', 'Foo Role')
-        user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
-        self._login(user)
+        self._login(self.foo_user)
 
         # try to access ride api without proper permission
         response = self.client.get(url_for('api.ride', ride_id=1), data={})
         self.assertEquals(response.status_code, 403)
 
-        user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
-        self._login(user)
+        self._login(self.student_user)
 
         response = self.client.get(url_for('api.ride', ride_id=1), data={})
         self.assertNotEquals(response.status_code, 403)
@@ -278,11 +262,12 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     a bad ride id returns 404
     """
     def test_get_ride_bad_ride_id(self):
+        self._login(self.student_user)
         # check that bad ride_id get request returns 404
         response = self.client.get(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
-        ride = self._create_ride(self.user)
+        ride = self._create_ride(self.student_user)
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.get(url_for('api.ride', ride_id=2))
@@ -295,10 +280,11 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     ride object given its ride_id
     """
     def test_get_ride_success(self):
+        self._login(self.student_user)
         # create ride objects to db
-        r1 = self._create_ride(self.user)
-        r2 = self._create_ride(self.user)
-        r3 = self._create_ride(self.user)
+        r1 = self._create_ride(self.student_user)
+        r2 = self._create_ride(self.student_user)
+        r3 = self._create_ride(self.student_user)
         
         # store dict versions
         r1_dict = r1.as_dict()                             
@@ -331,7 +317,6 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     Tests that a user must be logged in to delete a ride request
     """
     def test_delete_ride_requires_login(self):
-        self._logout()
         response = self.client.delete(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 401)
 
@@ -342,25 +327,16 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_delete_ride_requires_student_permission(self):
-        # logout current user
-        self._logout()
-
-        # create new User with new foo Role and login
-        foo_role = self._create_role('foo', 'Foo Role')
-        user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
-        self._login(user)
+        self._login(self.foo_user)
 
         # try to access ride api without proper permission
         response = self.client.delete(url_for('api.ride', ride_id=1), data={})
         self.assertEquals(response.status_code, 403)
 
-        user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
-        self._login(user)
+        self._login(self.student_user)
 
         response = self.client.delete(url_for('api.ride', ride_id=1), data={})
         self.assertNotEquals(response.status_code, 403)
-
-
 
     """
     test_delete_ride_bad_ride_id
@@ -368,11 +344,12 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     Test that api returns 404 to a ride id that doesn't exist
     """
     def test_delete_ride_bad_ride_id(self):
+        self._login(self.student_user)
         # check that bad ride_id delete request returns 404
         response = self.client.delete(url_for('api.ride', ride_id=0))
         self.assertEquals(response.status_code, 404)
 
-        ride = self._create_ride(self.user)
+        ride = self._create_ride(self.student_user)
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.delete(url_for('api.ride', ride_id=2))
@@ -384,10 +361,11 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     Tests that deleting a ride works
     """
     def test_delete_ride_success(self):
+        self._login(self.student_user)
         # create Ride objects
-        r1 = self._create_ride(self.user)
-        r2 = self._create_ride(self.user)
-        r3 = self._create_ride(self.user)
+        r1 = self._create_ride(self.student_user)
+        r2 = self._create_ride(self.student_user)
+        r3 = self._create_ride(self.student_user)
 
         # store dict versions
         r2_dict = r2.as_dict()                             
