@@ -27,8 +27,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideListAPITestCase, self).setUp()
-        self.user = self._create_user()
-        self._login(self.user)
+        self.student_user = self._create_user()
 
     """
     test_get_ride_list_requires_login
@@ -37,7 +36,6 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     requires that the user be logged in
     """
     def test_get_ride_list_requires_login(self):
-        self._logout()
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 401)
 
@@ -69,6 +67,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     Tests that listing all of the rides in the queue is correct.
     """
     def test_get_ride_list_empty_list(self):
+        self._login(self.student_user)
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.json, {"rides": []})
@@ -80,10 +79,11 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     the queue is not empty
     """
     def test_get_ride_list_not_empty_list(self):
+        self._login(self.student_user)
         # create ride objects
-        r1 = self._create_ride(self.user)
-        r2 = self._create_ride(self.user)
-        r3 = self._create_ride(self.user)
+        r1 = self._create_ride(self.student_user)
+        r2 = self._create_ride(self.student_user)
+        r3 = self._create_ride(self.student_user)
         
         # store dict versions
         r1_dict = r1.as_dict()
@@ -110,7 +110,6 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     create a new ride request
     """
     def test_post_ride_list_requires_login(self):
-        self._logout()
         response = self.client.post(url_for('api.rides'), data={})
         self.assertEquals(response.status_code, 401)  
 
@@ -121,9 +120,6 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_post_ride_list_requires_student_permission(self):
-        # logout current user
-        self._logout()
-
         # create new User with new foo Role and login
         foo_role = self._create_role('foo', 'Foo Role')
         user = self._create_user(email='kyle', phone='+12223334444', role=foo_role)
@@ -149,6 +145,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     @myvcr.use_cassette()
     @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
     def test_post_ride_list(self):
+        self._login(self.student_user)
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
         expected_dropoff_time = expected_pickup_time + timedelta(0, 171)
         expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
@@ -167,7 +164,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
         self.assertEquals(response.json, {u"ride": payload})
-        self.assertEquals(Ride.query.get(1).user, self.user)
+        self.assertEquals(Ride.query.get(1).user, self.student_user)
 
     """
     test_post_ride_list_bad_form_data
@@ -176,6 +173,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     required fields are not in form
     """
     def test_post_ride_list_bad_form_data(self):
+        self._login(self.student_user)
         payload = {
             u"num_passengers": 3,
             u"start_latitude": 37.273485,
