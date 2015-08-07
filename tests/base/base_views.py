@@ -117,11 +117,14 @@ class SteerClearBaseTestCase(testing.TestCase):
     Creates the default student and admin Roles
     """
     def _create_default_roles(self):
+        student_role = Role.query.filter_by(name='student').first()
+        admin_role = Role.query.filter_by(name='admin').first()
+
         # create student Role
-        if Role.query.filter_by(name='student').first() is None:
+        if student_role is None:
             student_role = self._create_role('student', 'Student Role')
         # create admin Role
-        if Role.query.filter_by(name='admin').first() is None:
+        if admin_role is None:
             admin_role = self._create_role('admin', 'Admin Role')
         return student_role, admin_role
 
