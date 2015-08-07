@@ -33,7 +33,9 @@ class SteerClearBaseTestCase(testing.TestCase):
     """
     def setUp(self):
         db.create_all()
-        self._create_default_roles()
+        roles = self._create_default_roles()
+        self.student_role = roles[0]
+        self.admin_role = roles[1]
 
     """
     tearDown
@@ -117,7 +119,8 @@ class SteerClearBaseTestCase(testing.TestCase):
     def _create_default_roles(self):
         # create student Role
         if Role.query.filter_by(name='student').first() is None:
-            self._create_role('student', 'Student Role')
+            student_role = self._create_role('student', 'Student Role')
         # create admin Role
         if Role.query.filter_by(name='admin').first() is None:
-            self._create_role('admin', 'Admin Role')
+            admin_role = self._create_role('admin', 'Admin Role')
+        return student_role, admin_role
