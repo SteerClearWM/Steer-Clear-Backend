@@ -41,6 +41,28 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 401)
 
+    # """
+    # test_get_ride_list_requires_student_permission
+    # ---------------------------------------------------
+    # Tests that trying to access the GET RideList API requires
+    # the User to be a student
+    # """
+    # def test_get_ride_list_requires_student_permission(self):
+    #     # create new User with new foo Role and login
+    #     foo_role = self._create_role('foo', 'Foo Role')
+    #     user = self._create_user(email='foo', phone='+12223334444', role=foo_role)
+    #     self._login(user)
+
+    #     # try to access ride api without proper permission
+    #     response = self.client.get(url_for('api.rides'), data={})
+    #     self.assertEquals(response.status_code, 403)
+
+    #     user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
+    #     self._login(user)
+
+    #     response = self.client.get(url_for('api.rides'), data={})
+    #     self.assertNotEquals(response.status_code, 403)
+
     """
     test_get_ride_list_empty_list
     ---------------
@@ -90,20 +112,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     def test_post_ride_list_requires_login(self):
         self._logout()
         response = self.client.post(url_for('api.rides'), data={})
-        self.assertEquals(response.status_code, 401)
-
-    """
-    test_post_ride_list_requires_student_permission
-    ---------------------------------------------------
-    Tests that trying to access the POST RideList API requires
-    the User to be a student
-    """
-    def test_post_ride_list_requires_student_permission(self):
-        self._test_url_requires_role(
-            self.client.post, 
-            url_for('api.rides'), 
-            'student'
-        )  
+        self.assertEquals(response.status_code, 401)  
 
     """
     test_post_ride_list_requires_student_permission
@@ -123,6 +132,12 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         # try to access ride api without proper permission
         response = self.client.post(url_for('api.rides'), data={})
         self.assertEquals(response.status_code, 403)
+
+        user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
+        self._login(user)
+
+        response = self.client.post(url_for('api.rides'), data={})
+        self.assertNotEquals(response.status_code, 403)
 
     """
     test_post_ride_list
@@ -249,7 +264,13 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
 
         # try to access ride api without proper permission
         response = self.client.get(url_for('api.ride', ride_id=1), data={})
-        self.assertEquals(response.status_code, 403) 
+        self.assertEquals(response.status_code, 403)
+
+        user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
+        self._login(user)
+
+        response = self.client.get(url_for('api.ride', ride_id=1), data={})
+        self.assertNotEquals(response.status_code, 403)
 
     """
     test_get_ride_bad_ride_id
@@ -332,7 +353,15 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
 
         # try to access ride api without proper permission
         response = self.client.delete(url_for('api.ride', ride_id=1), data={})
-        self.assertEquals(response.status_code, 403) 
+        self.assertEquals(response.status_code, 403)
+
+        user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
+        self._login(user)
+
+        response = self.client.delete(url_for('api.ride', ride_id=1), data={})
+        self.assertNotEquals(response.status_code, 403)
+
+
 
     """
     test_delete_ride_bad_ride_id
@@ -438,7 +467,13 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
 
         # try to access notifications api without proper permission
         response = self.client.post(url_for('api.notifications'), data={})
-        self.assertEquals(response.status_code, 403)        
+        self.assertEquals(response.status_code, 403) 
+
+        user = self._create_user(email='correct', phone='+13334445555', role=self.student_role)
+        self._login(user)
+
+        response = self.client.post(url_for('api.notifications'), data={})
+        self.assertNotEquals(response.status_code, 403)       
 
     """
     test_post_notifications_bad_ride_id
