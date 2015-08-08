@@ -24,7 +24,8 @@ from flask.ext.principal import (
 )
 from flask_restful import abort
 from sqlalchemy import exc
-from steerclear import login_manager, app, admin_permission, student_permission
+from steerclear import login_manager, app 
+from steerclear.utils.permissions import admin_permission, student_permission
 from forms import *
 from models import *
 

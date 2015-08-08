@@ -5,7 +5,8 @@ from datetime import datetime, timedelta
 from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
-from steerclear import sms_client, student_permission, admin_permission, student_or_admin_permission
+from steerclear import sms_client
+from steerclear.utils.permissions import student_permission, admin_permission, student_or_admin_permission
 from models import *
 from forms import *
 
