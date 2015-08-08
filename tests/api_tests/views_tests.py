@@ -224,12 +224,12 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 401)
 
     """
-    test_get_ride_requires_student_permission
+    test_get_ride_requires_student_or_admin_permission
     ---------------------------------------------------
     Tests that trying to access the get Ride API requires
-    the User to be a student
+    the User to be a student or an admin
     """
-    def test_get_ride_requires_student_permission(self):
+    def test_get_ride_requires_student_or_admin_permission(self):
         # Create ride so that we try to get an existing ride
         self._create_ride(self.student_user)
         self._test_url_requires_roles(
@@ -308,12 +308,13 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 401)
 
     """
-    test_delete_ride_requires_student_permission
+    test_delete_ride_requires_student_or_admin_permission
     ---------------------------------------------------
     Tests that trying to access the delete Ride API requires
-    the User to be a student
+    the User to be a student or an admin
     """
-    def test_delete_ride_requires_student_permission(self):
+    def test_delete_ride_requires_student_or_admin_permission(self):
+        # Create ride so that we try to get an existing ride
         self._create_ride(self.student_user)
         self._test_url_requires_roles(
             self.client.delete,
@@ -412,16 +413,16 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 401)
 
     """
-    test_post_notifications_requires_student_permission
+    test_post_notifications_requires_admin_permission
     ---------------------------------------------------
     Tests that trying to access the notifications API requires
-    the User to be a student
+    the User to be a admin
     """
-    def test_post_notifications_requires_student_permission(self):
+    def test_post_notifications_requires_admin_permission(self):
         self._test_url_requires_roles(
             self.client.post,
             url_for('api.notifications'),
-            [self.student_role, self.admin_role]
+            [self.admin_role]
         )    
 
     """
@@ -431,7 +432,7 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
     request ride_id does not exist
     """
     def test_post_notifications_bad_ride_id(self):
-        self._login(self.student_user)
+        self._login(self.admin_user)
         response = self.client.post(url_for('api.notifications'), data={'ride_id': 1})
         self.assertEquals(response.status_code, 400)
 

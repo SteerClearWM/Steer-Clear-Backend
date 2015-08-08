@@ -159,7 +159,7 @@ class NotificationAPI(Resource):
     # Require that user must be logged in and
     # that the user is a student or admin
     method_decorators = [
-        student_or_admin_permission.require(http_exception=403),
+        admin_permission.require(http_exception=403),
         login_required
     ]
 
