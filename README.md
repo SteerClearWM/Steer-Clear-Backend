@@ -3,6 +3,8 @@ Backend and web app repo for Steer Clear app
 
 ## TODO
 
+* Make sure student users can't access ride queue page
+
 * Replace temp secret key with secure key
 
 * Create custom api exceptions
