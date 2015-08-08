@@ -4,7 +4,8 @@ from flask import (
     url_for, 
     redirect, 
     current_app,
-    session
+    session,
+    request
 )
 from flask.ext.login import (
     login_user, 
@@ -109,6 +110,9 @@ POST - logs user in if valid email and password
 """
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        return render_template('login.html', action=url_for('.login'))
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -120,7 +124,7 @@ def login():
                                   identity=Identity(user.id))
 
             return redirect(url_for('driver_portal.index'))
-    return render_template('login.html', action=url_for('.login'))
+    return render_template('login.html', action=url_for('.login')), 400
 
 """
 logout
@@ -154,6 +158,9 @@ POST - takes a email/password form and creates a new user.
 """
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'GET':
+        return render_template('login.html', action=url_for('.register'))
+
     # attempt to validate RegisterForm
     form = RegisterForm()
     if form.validate_on_submit():
@@ -177,7 +184,7 @@ def register():
             # user already exists
             return render_template('login.html', action=url_for('.register')), 409
         return redirect(url_for('.login'))
-    return render_template('login.html', action=url_for('.register'))
+    return render_template('login.html', action=url_for('.register')), 400
 
 @login_bp.route('/test_student_permission')
 @login_required
