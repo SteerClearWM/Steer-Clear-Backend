@@ -8,10 +8,6 @@ admin_permission = Permission(RoleNeed('admin'))
 # Permission requiring User to be student to access resource
 student_permission = Permission(RoleNeed('student'))
 
-# Permission requiring User to be a student or an admin to access resource
-student_or_admin_permission = Permission(RoleNeed('student'), RoleNeed('admin'))
-
-
 RideNeed = namedtuple('ride', ['method', 'value'])
 AccessRideNeed = partial(RideNeed, 'access')
 

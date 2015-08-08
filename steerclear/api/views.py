@@ -10,7 +10,6 @@ from steerclear import sms_client
 from steerclear.utils.permissions import (
     student_permission, 
     admin_permission, 
-    student_or_admin_permission,
     AccessRidePermission
 )
 
@@ -57,7 +56,6 @@ class RideListAPI(Resource):
     """
     Create a new Ride object and place it in the queue
     """
-    @student_or_admin_permission.require(http_exception=403)
     def post(self):
         form = RideForm()                       # validate RideForm or 404
         if not form.validate_on_submit():
