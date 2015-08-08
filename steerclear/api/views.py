@@ -111,28 +111,41 @@ class RideAPI(Resource):
      object or 404
     """
     def get(self, ride_id):
+        # Check if current user is an admin or has
+        # permission to access the specified Ride resource
         permission = AccessRidePermission(ride_id)
         if not permission.can() and not admin_permission.can():
+            # If user doesn't have permission to access ride resource, abort 403
             abort(403)
+        
         ride = Ride.query.get(ride_id)                  # query db for Ride
         if ride is None:                                # 404 if Ride does not exist
             abort(404)
+        
         return {'ride': marshal(ride.as_dict(), ride_fields)}, 200
 
     """
     Delete a specific Ride object
     """
-    @student_or_admin_permission.require(http_exception=403)
     def delete(self, ride_id):
+        # Check if current user is an admin or has
+        # permission to access the specified Ride resource
+        permission = AccessRidePermission(ride_id)
+        if not permission.can() and not admin_permission.can():
+            # If user doesn't have permission to access ride resource, abort 403
+            abort(403)
+        
         ride = Ride.query.get(ride_id)  # query db for Ride object
         if ride is None:                # 404 if not found
             abort(404)
+        
         try:
             db.session.delete(ride)     # attempt to delete Ride object from db
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
             abort(404)
+        
         return "", 204
 
 """

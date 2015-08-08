@@ -314,6 +314,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     the User to be a student
     """
     def test_delete_ride_requires_student_permission(self):
+        self._create_ride(self.student_user)
         self._test_url_requires_roles(
             self.client.delete,
             url_for('api.ride', ride_id=1),
@@ -328,14 +329,18 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     def test_delete_ride_bad_ride_id(self):
         self._login(self.student_user)
         # check that bad ride_id delete request returns 404
-        response = self.client.delete(url_for('api.ride', ride_id=0))
-        self.assertEquals(response.status_code, 404)
+        response = self.client.delete(url_for('api.ride', ride_id=1))
+        self.assertEquals(response.status_code, 403)
 
         ride = self._create_ride(self.student_user)
 
         # check that bad ride_id with not empty database returns 404
         response = self.client.delete(url_for('api.ride', ride_id=2))
-        self.assertEquals(response.status_code, 404)
+        self.assertEquals(response.status_code, 403)
+
+        # finally check to see that accessing the ride object doesn't fail
+        response = self.client.delete(url_for('api.ride', ride_id=1))
+        self.assertEquals(response.status_code, 204)
 
     """
     test_delete_ride_success
