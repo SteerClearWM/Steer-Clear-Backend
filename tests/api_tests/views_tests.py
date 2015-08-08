@@ -286,6 +286,39 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.json, {'ride': r3_dict})
 
     """
+    test_get_ride_can_only_get_accessible_ride
+    ------------------------------------------
+    Tests that Users can only access the GET RideAPI for
+    Ride requests they have made
+    """
+    def test_get_ride_can_only_get_accessible_ride(self):
+        # create 2 Ride objects by 2 different students
+        self._create_ride(self.student_user)
+        self._create_ride(self.student_user2)
+
+        # login first student
+        self._login(self.student_user)
+
+        # check that first student can access the ride they placed
+        response = self.client.get(url_for('api.ride', ride_id=1))
+        self.assertEquals(response.status_code, 200)
+
+        # check that first student cannot access any rides they didn't place
+        response = self.client.get(url_for('api.ride', ride_id=2))
+        self.assertEquals(response.status_code, 403)
+
+        # login second student
+        self._login(self.student_user2)
+
+        # check that the second student cannot access any rides they didn't place
+        response = self.client.get(url_for('api.ride', ride_id=1))
+        self.assertEquals(response.status_code, 403)
+
+        # check that the second student can access the ride they placed
+        response = self.client.get(url_for('api.ride', ride_id=2))
+        self.assertEquals(response.status_code, 200)
+
+    """
     test_delete_ride_requires_login
     -------------------------------
     Tests that a user must be logged in to delete a ride request

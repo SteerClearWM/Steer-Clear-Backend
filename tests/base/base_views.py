@@ -41,6 +41,7 @@ class SteerClearBaseTestCase(testing.TestCase):
         self.student_user = self._create_user(email='student', phone='+12223334444', role=self.student_role)
         self.admin_user = self._create_user(email='admin', phone='+13334445555', role=self.admin_role)
         self.foo_user = self._create_user(email='foo', phone='+14445556666', role=self.foo_role)
+        self.student_user2 = self._create_user(email='student2', phone='+15556667777', role=self.student_role)
 
         self.users = [self.student_user, self.admin_user, self.foo_user]
 
