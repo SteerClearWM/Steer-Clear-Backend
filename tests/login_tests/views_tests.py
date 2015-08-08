@@ -2,7 +2,7 @@ from flask import url_for
 from flask.ext import testing
 from tests.base import base
 from steerclear import app, db
-from steerclear.models import User
+from steerclear.models import User, Role
 
 # name of templates used by the login module
 LOGIN_TEMPLATE_NAME = 'login.html'
@@ -33,6 +33,8 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             u'password': u'1234',
         }
 
+        self.student_role = Role.query.filter_by(name='student').first()
+
     """
     test_get_login_page
     -------------------
@@ -42,7 +44,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     def test_get_login_page(self):
         response = self.client.get(url_for('login.login'))
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertTrue(response.status_code, 200)
+        self.assertEquals(response.status_code, 200)
         self.assertContext('action', url_for('login.login'))
 
     """
@@ -54,13 +56,13 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         # test with no Users in db
         response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertTrue(response.status_code, 200)
+        self.assertEquals(response.status_code, 400)
 
         # test with user that has different email but same password
         self._create_user(email='kyle', password='1234')
         response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertTrue(response.status_code, 200)
+        self.assertEquals(response.status_code, 400)
         self.assertContext('action', url_for('login.login'))
 
     """
@@ -72,13 +74,13 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         # test with no Users in db
         response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertTrue(response.status_code, 200)
+        self.assertEquals(response.status_code, 400)
 
         # test with user that has same email but different password
         self._create_user(email='ryan', password='4321')
         response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertTrue(response.status_code, 200)
+        self.assertEquals(response.status_code, 400)
         self.assertContext('action', url_for('login.login'))
 
     """
@@ -197,6 +199,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertEquals(user.email, self.register_payload[u'email'])
         self.assertEquals(user.password, self.register_payload[u'password'])
         self.assertEquals(user.phone.e164, self.register_payload[u'phone'])
+        self.assertEquals(user.roles.all(), [self.student_role])
 
         # make sure we can log in as new user
         response = self.client.post(url_for('login.login'), data=self.register_payload)

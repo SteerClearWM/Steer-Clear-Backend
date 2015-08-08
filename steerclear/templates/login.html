@@ -26,15 +26,24 @@
     <div class="container">
 
       <form class="form-signin" action="http://127.0.0.1:5000{{action}}" method="POST">
+<!-- <<<<<<< HEAD -->
         <img src="static/assets/logo.png" class="center-block header-logo-large"></img>
         <!-- <h2 class="form-signin-heading">Please sign in</h2> -->
         <div class="inputs">
           <input type="text" name="email" id="email" class="form-control login-email" placeholder="Email" required autofocus>
           <input type="password" name="password" id="password" class="form-control login-password" placeholder="Password" required>
+          <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" required autofocus>
         </div>
         <div class="button-container">
           <button class="btn btn-lg btn-block login-button" type="submit">LOG IN</button>
         </div>
+<!-- =======
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" name="email" id="email" class="form-control" placeholder="Email" required autofocus>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" required autofocus>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+>>>>>>> master -->
       </form>
 
     </div> <!-- /container -->
