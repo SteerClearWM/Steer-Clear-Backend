@@ -31,13 +31,16 @@ POST - logs user in if valid email and password
 """
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        return render_template('login.html', action=url_for('.login'))
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.password == form.password.data:
             login_user(user)
             return redirect(url_for('driver_portal.index'))
-    return render_template('login.html', action=url_for('.login'))
+    return render_template('login.html', action=url_for('.login')), 400
 
 """
 logout

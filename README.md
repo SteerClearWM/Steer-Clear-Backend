@@ -90,7 +90,7 @@ At the Moment, login is done with a username and password. We will be switching 
 * Route to actually log a user in
 * Takes a form with a **email** and **password** field. 
 * On success, redirects to **index** page.
-* On failure, returns login page again
+* On failure, returns login page again and 400 status code
 
 ### GET /logout
 * **requires user to be logged in**
