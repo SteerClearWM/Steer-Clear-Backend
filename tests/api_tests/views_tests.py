@@ -406,6 +406,42 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(Ride.query.get(2), None)
         self.assertEquals(Ride.query.get(3), None)
 
+    """
+    test_delete_ride_can_only_delete_accessible_ride
+    ------------------------------------------
+    Tests that Users can only access the DELETE RideAPI for
+    Ride requests they have made
+    """
+    def test_delete_ride_can_only_delete_accessible_ride(self):
+        # create 2 Ride objects by 2 different students
+        self._create_ride(self.student_user)
+        self._create_ride(self.student_user2)
+
+        # login first student
+        self._login(self.student_user)
+
+        # check that first student can delete the ride they placed
+        response = self.client.delete(url_for('api.ride', ride_id=1))
+        self.assertEquals(response.status_code, 204)
+
+        # check that first student cannot delete any rides they didn't place
+        response = self.client.delete(url_for('api.ride', ride_id=2))
+        self.assertEquals(response.status_code, 403)
+
+        # create another ride by the first student
+        self._create_ride(self.student_user)
+
+        # login second student
+        self._login(self.student_user2)
+
+        # check that the second student cannot delete any rides they didn't place
+        response = self.client.delete(url_for('api.ride', ride_id=3))
+        self.assertEquals(response.status_code, 403)
+
+        # check that the second student can delete the ride they placed
+        response = self.client.delete(url_for('api.ride', ride_id=2))
+        self.assertEquals(response.status_code, 204)
+
 
 """
 NotificationAPITestCase
