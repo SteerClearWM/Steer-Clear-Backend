@@ -1,13 +1,65 @@
-from flask import Blueprint, flash, render_template, url_for, redirect, request
-from flask.ext.login import login_user, logout_user, login_required, current_user
+from flask import (
+    Blueprint, 
+    render_template, 
+    url_for, 
+    redirect, 
+    current_app,
+    session,
+    request
+)
+from flask.ext.login import (
+    login_user, 
+    logout_user, 
+    login_required, 
+    current_user
+)
+from flask.ext.principal import (
+    Principal,
+    Identity, 
+    AnonymousIdentity, 
+    identity_changed, 
+    identity_loaded, 
+    Permission,
+    RoleNeed, 
+    UserNeed
+)
 from flask_restful import abort
 from sqlalchemy import exc
-from steerclear import login_manager
+from steerclear import login_manager, app 
+from steerclear.utils.permissions import (
+    admin_permission, 
+    student_permission,
+    AccessRideNeed
+)
 from forms import *
 from models import *
 
 # setup login blueprint
 login_bp = Blueprint('login', __name__)
+
+# setup flask-principal
+principal = Principal()
+principal.init_app(app)
+
+"""
+create_roles
+------------
+Function called before app processes first request.
+Creates the admin and student Roles if they do
+not already exist
+"""
+@app.before_first_request
+def create_roles():
+    # create student Role
+    if Role.query.filter_by(name='student').first() is None:
+        role = Role(name='student', description='Student Role')
+        db.session.add(role)
+        db.session.commit()
+    # create admin Role
+    if Role.query.filter_by(name='admin').first() is None:
+        role = Role(name='admin', description='Admin Role')
+        db.session.add(role)
+        db.session.commit()
 
 """
 user_loader
@@ -18,6 +70,33 @@ this needs to be implemented for flask-login extension to work
 @login_manager.user_loader
 def user_loader(user_id):
     return User.query.get(int(user_id))
+
+"""
+identity_loaded
+---------------
+Signal used by flask-principal. called when
+loading the user Identity for the request. 
+"""
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    # Set the identity user object
+    identity.user = current_user
+
+    # Add the UserNeed to the identity
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+
+    # Assuming the User model has a list of roles, update the
+    # identity with the roles that the user provides
+    if hasattr(current_user, 'roles'):
+        for role in current_user.roles:
+            identity.provides.add(RoleNeed(role.name))
+
+    # Assuming the User model has a list of rides the user
+    # has requested, add the needs to the identity
+    if hasattr(current_user, 'rides'):
+        for ride in current_user.rides:
+            identity.provides.add(AccessRideNeed(unicode(ride.id)))
 
 """
 login
@@ -39,6 +118,11 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.password == form.password.data:
             login_user(user)
+
+            # Tell Flask-Principal the identity changed
+            identity_changed.send(current_app._get_current_object(),
+                                  identity=Identity(user.id))
+
             return redirect(url_for('driver_portal.index'))
     return render_template('login.html', action=url_for('.login')), 400
 
@@ -52,6 +136,15 @@ return 401. Once user is logged out, redirect to login page
 @login_required
 def logout():
     logout_user()
+
+    # Remove session keys set by Flask-Principal
+    for key in ('identity.name', 'identity.auth_type'):
+        session.pop(key, None)
+
+    # Tell Flask-Principal the user is anonymous
+    identity_changed.send(current_app._get_current_object(),
+                          identity=AnonymousIdentity())
+
     return redirect(url_for('.login'))
 
 """
@@ -71,11 +164,18 @@ def register():
     # attempt to validate RegisterForm
     form = RegisterForm()
     if form.validate_on_submit():
+        
+        # Find StudentRole. SHOULD EXIST ON STARTUP. IF NOT, THEN SERVER ERROR
+        student_role = Role.query.filter_by(name='student').first()
+        if student_role is None:
+            abort(500)
+
         # attempt to create a new User in the db
         new_user = User(
             email=form.email.data, 
             password=form.password.data,
-            phone=form.phone.data
+            phone=form.phone.data,
+            roles=[student_role]
         )
         try:
             db.session.add(new_user)
@@ -85,6 +185,13 @@ def register():
             return render_template('login.html', action=url_for('.register')), 409
         return redirect(url_for('.login'))
     return render_template('login.html', action=url_for('.register')), 400
+
+@login_bp.route('/test_student_permission')
+@login_required
+def test_student_permission():
+    if not student_permission.can():
+        abort(403)
+    return "Congrats, you are a student"
 
 @login_bp.route('/test_login')
 @login_required

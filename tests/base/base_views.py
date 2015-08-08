@@ -1,7 +1,7 @@
 from flask import url_for
 from flask.ext import testing
 from steerclear import app, db
-from steerclear.models import User, Ride
+from steerclear.models import User, Ride, Role
 
 from datetime import datetime
 
@@ -33,6 +33,17 @@ class SteerClearBaseTestCase(testing.TestCase):
     """
     def setUp(self):
         db.create_all()
+        self.roles = self._create_default_roles()
+        self.student_role = self.roles[0]
+        self.admin_role = self.roles[1]
+        self.foo_role = self.roles[2]
+
+        self.student_user = self._create_user(email='student', phone='+12223334444', role=self.student_role)
+        self.admin_user = self._create_user(email='admin', phone='+13334445555', role=self.admin_role)
+        self.foo_user = self._create_user(email='foo', phone='+14445556666', role=self.foo_role)
+        self.student_user2 = self._create_user(email='student2', phone='+15556667777', role=self.student_role)
+
+        self.users = [self.student_user, self.admin_user, self.foo_user]
 
     """
     tearDown
@@ -67,8 +78,11 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------------
     Helper function that creates and returns a new User object in the db
     """
-    def _create_user(self, email='ryan', password='1234', phone='+17572214000'):
-        user = User(email=email, password=password, phone=phone)
+    def _create_user(self, email='ryan', password='1234', phone='+17572214000', role=None):
+        if role is None:
+            role = Role.query.filter_by(name='student').first()
+
+        user = User(email=email, password=password, phone=phone, roles=[role])
         db.session.add(user)
         db.session.commit()
         return user
@@ -93,3 +107,60 @@ class SteerClearBaseTestCase(testing.TestCase):
         db.session.add(ride)
         db.session.commit()
         return ride
+
+    """
+    _create_role
+    ------------
+    Creates a new Role in the db
+    """
+    def _create_role(self, name, description):
+        role = Role(name=name, description=description)
+        db.session.add(role)
+        db.session.commit()
+        return role
+
+    """
+    _create_default_roles
+    ---------------------
+    Creates the default student and admin Roles
+    """
+    def _create_default_roles(self):
+        student_role = Role.query.filter_by(name='student').first()
+        admin_role = Role.query.filter_by(name='admin').first()
+        foo_role = Role.query.filter_by(name='foo').first()
+
+        # create student Role
+        if student_role is None:
+            student_role = self._create_role('student', 'Student Role')
+        # create admin Role
+        if admin_role is None:
+            admin_role = self._create_role('admin', 'Admin Role')
+        # create foo Role
+        if foo_role is None:
+            foo_role = self._create_role('foo', 'Foo Role')
+        return student_role, admin_role, foo_role
+
+    """
+    _test_url_requires_roles
+    ------------------------
+    Tests that the :url: accessed via the http :method:
+    is available to all users with any role in :roles:
+    and unavailable to all other users
+    """
+    def _test_url_requires_roles(self, method, url, roles):
+        # for every user
+        for user in self.users:
+            # login the user and make request to url
+            self._login(user)
+            response = method(url)
+
+            # check to see if user has any role that should have permission for url
+            for role in user.roles:
+                if role in roles:
+                    # if the user should have permission, make sure response code is not 403
+                    self.assertNotEquals(response.status_code, 403)
+                    break
+                else:
+                    # if the user shouldn't have permission, make sure status code is 403
+                    self.assertEquals(response.status_code, 403)
+                    break

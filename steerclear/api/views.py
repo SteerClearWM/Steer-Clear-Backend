@@ -6,6 +6,13 @@ from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
 from steerclear import sms_client
+
+from steerclear.utils.permissions import (
+    student_permission, 
+    admin_permission, 
+    AccessRidePermission
+)
+
 from models import *
 from forms import *
 
@@ -39,7 +46,10 @@ class RideListAPI(Resource):
 
     """
     Return the list of Ride objects in the queue
+
+    User must be an admin to access route
     """
+    @admin_permission.require(http_exception=403)
     def get(self):
         rides = Ride.query.all()                            # query db for Rides
         rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
@@ -95,27 +105,44 @@ class RideAPI(Resource):
 
     """
     Return the Ride object with the corresponding id as
-     object or 404
+    object or 404
     """
     def get(self, ride_id):
+        # Check if current user is an admin or has
+        # permission to access the specified Ride resource
+        permission = AccessRidePermission(ride_id)
+        if not permission.can() and not admin_permission.can():
+            # If user doesn't have permission to access ride resource, abort 403
+            abort(403)
+        
         ride = Ride.query.get(ride_id)                  # query db for Ride
         if ride is None:                                # 404 if Ride does not exist
             abort(404)
+        
         return {'ride': marshal(ride.as_dict(), ride_fields)}, 200
 
     """
     Delete a specific Ride object
     """
     def delete(self, ride_id):
+        # Check if current user is an admin or has
+        # permission to access the specified Ride resource
+        permission = AccessRidePermission(ride_id)
+        if not permission.can() and not admin_permission.can():
+            # If user doesn't have permission to access ride resource, abort 403
+            abort(403)
+        
         ride = Ride.query.get(ride_id)  # query db for Ride object
         if ride is None:                # 404 if not found
             abort(404)
+        
         try:
             db.session.delete(ride)     # attempt to delete Ride object from db
             db.session.commit()
         except exc.IntegrityError:
             db.session.rollback()
             abort(404)
+        
         return "", 204
 
 """
@@ -126,8 +153,12 @@ uri: /notifications
 """
 class NotificationAPI(Resource):
     
-    # Require that user must be logged in
-    method_decorators = [login_required]
+    # Require that user must be logged in and
+    # that the user is an admin
+    method_decorators = [
+        admin_permission.require(http_exception=403),
+        login_required
+    ]
 
     """
     Send an sms message to notify the user

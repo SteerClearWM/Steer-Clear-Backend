@@ -11,10 +11,12 @@ except ImportError as e:
 app.config.from_envvar('STEERCLEAR_SETTINGS')
 db = SQLAlchemy(app)
 
+# setup login manager for flask-login
 from flask.ext.login import LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# setup sms client for twilio api
 from steerclear.utils import sms
 sms_client = sms.SteerClearSMSClient(
             app.config['TWILIO_ACCOUNT_SID'], 

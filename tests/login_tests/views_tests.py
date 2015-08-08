@@ -2,7 +2,7 @@ from flask import url_for
 from flask.ext import testing
 from tests.base import base
 from steerclear import app, db
-from steerclear.models import User
+from steerclear.models import User, Role
 
 # name of templates used by the login module
 LOGIN_TEMPLATE_NAME = 'login.html'
@@ -32,6 +32,8 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             u'email': u'ryan',
             u'password': u'1234',
         }
+
+        self.student_role = Role.query.filter_by(name='student').first()
 
     """
     test_get_login_page
@@ -197,6 +199,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertEquals(user.email, self.register_payload[u'email'])
         self.assertEquals(user.password, self.register_payload[u'password'])
         self.assertEquals(user.phone.e164, self.register_payload[u'phone'])
+        self.assertEquals(user.roles.all(), [self.student_role])
 
         # make sure we can log in as new user
         response = self.client.post(url_for('login.login'), data=self.register_payload)
