@@ -97,7 +97,7 @@ At the Moment, login is done with a username and password. We will be switching 
 * Logs the current user out of the system
 
 ## Registering Users
-You can register a new user (assuming the user does not already exist) by making a simple POST request with a username and password field
+You can register a new user (assuming the user does not already exist) by making a simple POST request with a username and password field. The new user will have all api permissions that a student has
 
 ### GET /register
 * Returns the register page
@@ -119,6 +119,7 @@ Desktop app that allows steerclear drivers to log in and manage the queue of rid
 ## API
 * All API routes require that the user be logged in
 * All API routes are prefixed by **/api/**
+* Some API routes require the user to have certain permissions (e.x. be a student, be an admin, etc...)
 
 ## Ride Request Objects
 Ride request objects have several fields:
@@ -142,7 +143,7 @@ Ride request objects have several fields:
 * **dropoff_time**: estimated time for arriving at the dropoff location as a datetime object
 
 ## Rides
-API endpoint for getting, updating, and deleting ride requests
+API endpoint for getting, updating, and deleting ride requests. student users are only allowed to access ride requests they have requested. If a student attempts to access a ride request they have not placed, a 403 is returned
 
 ### GET /api/rides/<int:ride_id>
 Sample request **GET /api/rides/2**:
@@ -206,6 +207,7 @@ Sample Response:
 * Returns the queue of ride requests as a json object
 
 ### POST /api/rides
+* **only admin users can access this route**
 * Creates a new ride request
 * Returns the created ride object on success (this will most likely change to just returning the created ride id).
 * returns error code 400 on failure
@@ -235,6 +237,7 @@ Sample Response:
 API endpoint for sending sms notifications to Users. At the moment, sms messages will only be sent successfully to Users who have verified their phone number with the SteerClear Twilio account
 
 ### POST /api/notifications
+* **only admin users can access this route**
 * Sends an sms message to a User
 * takes a **ride_id** field which is the integer of the Ride object you wish to notify. (The User who made the Ride object is stored in the Ride object so we get which User to notify from the Ride object)
 * On success, returns 201 status code

@@ -46,6 +46,8 @@ class RideListAPI(Resource):
 
     """
     Return the list of Ride objects in the queue
+
+    User must be an admin to access route
     """
     @admin_permission.require(http_exception=403)
     def get(self):
@@ -98,15 +100,12 @@ uri: /rides/<ride_id>
 """
 class RideAPI(Resource):
 
-    # Require that user must be logged in and
-    # that the user is a student or admin
-    method_decorators = [
-        login_required
-    ]
+    # Require that user must be logged in
+    method_decorators = [login_required]
 
     """
     Return the Ride object with the corresponding id as
-     object or 404
+    object or 404
     """
     def get(self, ride_id):
         # Check if current user is an admin or has
@@ -155,7 +154,7 @@ uri: /notifications
 class NotificationAPI(Resource):
     
     # Require that user must be logged in and
-    # that the user is a student or admin
+    # that the user is an admin
     method_decorators = [
         admin_permission.require(http_exception=403),
         login_required
