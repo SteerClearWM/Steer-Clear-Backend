@@ -233,7 +233,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self._test_url_requires_roles(
             self.client.get, 
             url_for('api.ride', ride_id=1),
-            [self.student_role]
+            [self.student_role, self.admin_role]
         )
 
     """
@@ -311,7 +311,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         self._test_url_requires_roles(
             self.client.delete,
             url_for('api.ride', ride_id=1),
-            [self.student_role]
+            [self.student_role, self.admin_role]
         )
 
     """
@@ -410,7 +410,7 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
         self._test_url_requires_roles(
             self.client.post,
             url_for('api.notifications'),
-            [self.student_role]
+            [self.student_role, self.admin_role]
         )    
 
     """
