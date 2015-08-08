@@ -6,7 +6,14 @@ from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
 from steerclear import sms_client
-from steerclear.utils.permissions import student_permission, admin_permission, student_or_admin_permission
+
+from steerclear.utils.permissions import (
+    student_permission, 
+    admin_permission, 
+    student_or_admin_permission,
+    AccessRidePermission
+)
+
 from models import *
 from forms import *
 
@@ -96,7 +103,6 @@ class RideAPI(Resource):
     # Require that user must be logged in and
     # that the user is a student or admin
     method_decorators = [
-        student_or_admin_permission.require(http_exception=403),
         login_required
     ]
 
@@ -105,6 +111,9 @@ class RideAPI(Resource):
      object or 404
     """
     def get(self, ride_id):
+        permission = AccessRidePermission(ride_id)
+        if not permission.can() and not admin_permission.can():
+            abort(403)
         ride = Ride.query.get(ride_id)                  # query db for Ride
         if ride is None:                                # 404 if Ride does not exist
             abort(404)
@@ -113,6 +122,7 @@ class RideAPI(Resource):
     """
     Delete a specific Ride object
     """
+    @student_or_admin_permission.require(http_exception=403)
     def delete(self, ride_id):
         ride = Ride.query.get(ride_id)  # query db for Ride object
         if ride is None:                # 404 if not found

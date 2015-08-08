@@ -25,7 +25,11 @@ from flask.ext.principal import (
 from flask_restful import abort
 from sqlalchemy import exc
 from steerclear import login_manager, app 
-from steerclear.utils.permissions import admin_permission, student_permission
+from steerclear.utils.permissions import (
+    admin_permission, 
+    student_permission,
+    AccessRideNeed
+)
 from forms import *
 from models import *
 
@@ -86,6 +90,12 @@ def on_identity_loaded(sender, identity):
     if hasattr(current_user, 'roles'):
         for role in current_user.roles:
             identity.provides.add(RoleNeed(role.name))
+
+    # Assuming the User model has a list of rides the user
+    # has requested, add the needs to the identity
+    if hasattr(current_user, 'rides'):
+        for ride in current_user.rides:
+            identity.provides.add(AccessRideNeed(unicode(ride.id)))
 
 """
 login
@@ -172,8 +182,9 @@ def register():
 @login_bp.route('/test_student_permission')
 @login_required
 def test_student_permission():
-    with student_permission.require(http_exception=403):
-        return "Congrats, you are a student"
+    if not student_permission.can():
+        abort(403)
+    return "Congrats, you are a student"
 
 @login_bp.route('/test_login')
 @login_required
