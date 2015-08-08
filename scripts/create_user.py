@@ -12,14 +12,17 @@ def create_user():
 	email = raw_input('Enter email: ')
 	password = raw_input('Enter Password: ')
 	phone = raw_input('Enter Phone Number (e.x. +1xxxyyyzzzz): ')
+	role = None
+	while role not in ['student', 'admin']:
+		role = raw_input('Enter Role (student | admin): ')
 	
-	student_role = Role.query.filter_by(name='student').first()
-	if student_role is None:
-		print "Error: student Role does not exist. Start app once and make request"
+	role = Role.query.filter_by(name=role).first()
+	if role is None:
+		print "Error: Role does not exist. Start app once and make request"
 		sys.exit(1)
 
 	# create user
-	user = User(email=email, password=password, phone=phone, roles=[student_role])
+	user = User(email=email, password=password, phone=phone, roles=[role])
 	try:
 		# attempt to add user to db
 		db.session.add(user)
