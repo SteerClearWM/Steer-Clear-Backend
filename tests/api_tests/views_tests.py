@@ -114,8 +114,9 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
     def test_post_ride_list(self):
         self._login(self.student_user)
+        travel_time = 239
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
-        expected_dropoff_time = expected_pickup_time + timedelta(0, 171)
+        expected_dropoff_time = expected_pickup_time + timedelta(0, travel_time)
         expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
         expected_dropoff_string = expected_dropoff_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
         payload = {
@@ -125,12 +126,15 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
                     u"end_latitude": 37.280893,
                     u"end_longitude": -76.719691,
                     u"pickup_time": expected_pickup_string,
-                    u"travel_time": 171,
+                    u"travel_time": travel_time,
                     u"dropoff_time": expected_dropoff_string,
                   }
         response = self.client.post(url_for('api.rides'), data=payload)
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
+        print "response: " + str(response.json)
+        print "correct: " + str({u"ride": payload})
+
         self.assertEquals(response.json, {u"ride": payload})
         self.assertEquals(Ride.query.get(1).user, self.student_user)
 
