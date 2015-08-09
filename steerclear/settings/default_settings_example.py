@@ -1,3 +1,6 @@
+SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@server_address/db_name'
+TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@server_address/test_db_name'
+
 WTF_CSRF_ENABLED = False
 
 SECRET_KEY = 'generate a secret key and place here'
