@@ -5,7 +5,7 @@ env: STEERCLEAR_SETTINGS=settings/unix_settings.py
 
 # commands to run before scipts. setup testing db
 before_script:
-- mysql -e 'source /scripts/setup_db.sql' -u root
+- mysql -u root < /scripts/setup_db.sql
 
 # command to run tests
 script: nosetests

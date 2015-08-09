@@ -50,7 +50,7 @@ In *steerclear/settings/default_settings.py replace the following with your mysq
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/db_name'
     TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/test_db_name'
 
-If you ran the setup_db.sql script it should look like
+If you ran the setup_db.sql script it should look like the first 2 lines in **/steerclear/settings/default_settings_example.py:**
     
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/db'
     TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/test'
