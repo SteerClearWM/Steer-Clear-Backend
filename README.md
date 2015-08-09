@@ -3,6 +3,8 @@ Backend and web app repo for Steer Clear app
 
 ## TODO
 
+* Look into using W&M CAS server for user login
+
 * Change using Floats to store lat/long to using Decimals
 
 * Write tests for cookie remember duration
@@ -13,9 +15,24 @@ Backend and web app repo for Steer Clear app
 
 * Create custom api exceptions
 
-* add error checking/exception handling for database operations
-
 * add api key for google distancematrix api
+
+##Database Setup and Configuration
+
+Backend uses mysql
+
+You need to install the mysql-server and mysql-client
+
+Start the mysql server
+
+User the mysql client to login as the root user of the mysql server and create 2 databases. 1 for production and 1 for testing
+
+**Optional:** Create a new user who has privileges over the 2 databases
+
+In *steerclear/settings/default_settings.py replace the following with your mysql user username, password, and database names
+
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/db_name'
+    TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/test_db_name'
 
 ##Setup and Installation
 `clone` project and `cd` into directory
@@ -39,13 +56,6 @@ Activate OS specific environment variables settings
    
     #Windows - do this is cmd not powershell. you might need to use setx instead
     > set STEERCLEAR_SETTINGS=settings\windows_settings.py
-
-Startup mysql database and create 2 new databases. one for running the project and one for running tests.
-
-In *steerclear/settings/default_settings.py replace the following with your mysql user username, password, and database names
-
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/db_name'
-    TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/test_db_name'
 
 Create Database (NOTE: this will delete old database at the moment)
 
