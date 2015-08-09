@@ -252,8 +252,8 @@ class ETAAPITestCase(base.SteerClearBaseTestCase):
         ride = self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
-        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 252)
-        expected_travel_time = 171
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 375)
+        expected_travel_time = 239
         expected_dropoff_time = expected_pickup_time + timedelta(0, expected_travel_time)
         (pickup_time, travel_time, dropoff_time) = calculate_time_data(pickup_loc, dropoff_loc)
         self.assertEquals(pickup_time, expected_pickup_time)

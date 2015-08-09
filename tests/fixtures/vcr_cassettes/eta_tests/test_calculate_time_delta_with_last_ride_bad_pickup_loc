@@ -7,28 +7,28 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.7.0 CPython/2.7.3 Linux/3.5.0-51-generic]
     method: GET
-    uri: https://maps.googleapis.com/maps/api/distancematrix/json?origins=37.272042%2C-76.714027%7C0.000000%2C0.000000&destinations=0.000000%2C0.000000%7C37.280893%2C-76.719691
+    uri: https://maps.googleapis.com/maps/api/distancematrix/json?origins=37.272000%2C-76.714000%7C0.000000%2C0.000000&destinations=0.000000%2C0.000000%7C37.280893%2C-76.719691
   response:
-    body: {string: !!python/unicode "{\n   \"destination_addresses\" : [\n      \"\
-        0,0\",\n      \"Williamsburg Shopping Center, 1234 Richmond Road, Williamsburg,\
-        \ VA 23185, USA\"\n   ],\n   \"origin_addresses\" : [ \"37.272042,-76.714027\"\
-        , \"0,0\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n      \
-        \      {\n               \"status\" : \"ZERO_RESULTS\"\n            },\n \
-        \           {\n               \"distance\" : {\n                  \"text\"\
-        \ : \"1.3 km\",\n                  \"value\" : 1271\n               },\n \
-        \              \"duration\" : {\n                  \"text\" : \"4 mins\",\n\
-        \                  \"value\" : 218\n               },\n               \"status\"\
-        \ : \"OK\"\n            }\n         ]\n      },\n      {\n         \"elements\"\
-        \ : [\n            {\n               \"status\" : \"ZERO_RESULTS\"\n     \
-        \       },\n            {\n               \"status\" : \"ZERO_RESULTS\"\n\
-        \            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n"}
+    body: {string: !!python/unicode "{\n   \"destination_addresses\" : [ \"0,0\",\
+        \ \"1234 Richmond Road, Williamsburg, VA 23185, USA\" ],\n   \"origin_addresses\"\
+        \ : [ \"37.272,-76.714\", \"0,0\" ],\n   \"rows\" : [\n      {\n         \"\
+        elements\" : [\n            {\n               \"status\" : \"ZERO_RESULTS\"\
+        \n            },\n            {\n               \"distance\" : {\n       \
+        \           \"text\" : \"1.9 km\",\n                  \"value\" : 1877\n \
+        \              },\n               \"duration\" : {\n                  \"text\"\
+        \ : \"6 mins\",\n                  \"value\" : 344\n               },\n  \
+        \             \"status\" : \"OK\"\n            }\n         ]\n      },\n \
+        \     {\n         \"elements\" : [\n            {\n               \"status\"\
+        \ : \"ZERO_RESULTS\"\n            },\n            {\n               \"status\"\
+        \ : \"ZERO_RESULTS\"\n            }\n         ]\n      }\n   ],\n   \"status\"\
+        \ : \"OK\"\n}\n"}
     headers:
       accept-ranges: [none]
       alternate-protocol: ['443:quic,p=1']
       cache-control: ['public, max-age=86400']
       content-type: [application/json; charset=UTF-8]
-      date: ['Sun, 07 Jun 2015 22:02:22 GMT']
-      expires: ['Mon, 08 Jun 2015 22:02:22 GMT']
+      date: ['Sun, 09 Aug 2015 04:13:58 GMT']
+      expires: ['Mon, 10 Aug 2015 04:13:58 GMT']
       server: [mafe]
       vary: ['Accept-Language,Accept-Encoding']
       x-frame-options: [SAMEORIGIN]
