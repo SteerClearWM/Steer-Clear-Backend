@@ -6,7 +6,7 @@ from datetime import datetime
 import json
 
 # format string for Ride.__repr__()
-RIDE_REPR_STRING = '<Ride(ID %rL, Passengers %rL, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %rL, ETD %r)>'
+RIDE_REPR_STRING = '<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD %r)>'
 
 """
 RideModelTestCase
