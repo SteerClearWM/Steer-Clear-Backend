@@ -119,16 +119,26 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         expected_dropoff_time = expected_pickup_time + timedelta(0, travel_time)
         expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
         expected_dropoff_string = expected_dropoff_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
+        # payload = {
+        #             u"num_passengers": 3,
+        #             u"start_latitude": 37.273485,
+        #             u"start_longitude": -76.719628,
+        #             u"end_latitude": 37.280893,
+        #             u"end_longitude": -76.719691,
+        #             u"pickup_time": expected_pickup_string,
+        #             u"travel_time": travel_time,
+        #             u"dropoff_time": expected_dropoff_string,
+        #           }
         payload = {
-                    u"num_passengers": 3,
-                    u"start_latitude": 37.273485,
-                    u"start_longitude": -76.719628,
-                    u"end_latitude": 37.280893,
-                    u"end_longitude": -76.719691,
-                    u"pickup_time": expected_pickup_string,
-                    u"travel_time": travel_time,
-                    u"dropoff_time": expected_dropoff_string,
-                  }
+            u"num_passengers": 3,
+            u"start_latitude": 37.2735,
+            u"start_longitude": -76.7196,
+            u"end_latitude": 37.2809,
+            u"end_longitude": -76.7197,
+            u"pickup_time": expected_pickup_string,
+            u"travel_time": travel_time,
+            u"dropoff_time": expected_dropoff_string,
+          }
         response = self.client.post(url_for('api.rides'), data=payload)
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
