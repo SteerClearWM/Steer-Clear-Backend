@@ -8,7 +8,6 @@ try:
 except ImportError as e:
 	print e
 	app.config.from_object('steerclear.settings.default_settings_example')
-# app.config.from_envvar('STEERCLEAR_SETTINGS')
 db = SQLAlchemy(app)
 
 # setup login manager for flask-login
