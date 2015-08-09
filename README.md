@@ -25,7 +25,7 @@ You need to install the mysql-server and mysql-client
 
 Start the mysql server
 
-User the mysql client to login as the root user of the mysql server and create 2 databases. 1 for production and 1 for testing
+Use the mysql client to login as the root user of the mysql server and create 2 databases. 1 for production and 1 for testing
 
 **Optional:** Create a new user who has privileges over the 2 databases
 
