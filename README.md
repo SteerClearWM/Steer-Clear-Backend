@@ -40,6 +40,13 @@ Activate OS specific environment variables settings
     #Windows - do this is cmd not powershell. you might need to use setx instead
     > set STEERCLEAR_SETTINGS=settings\windows_settings.py
 
+Startup mysql database and create 2 new databases. one for running the project and one for running tests.
+
+In *steerclear/settings/default_settings.py add your mysql user username, password, and database names to the following
+
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/db_name'
+    TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/test_db_name'
+
 Create Database (NOTE: this will delete old database at the moment)
 
 `$ python create_db.py`
@@ -54,7 +61,7 @@ Run app
 
 App will now be accesible through `localhost:5000`
 
-**NOTE:** You need the default_settings.py config file for backend to work. Get from one of the repo overseers. Alternatively, you can create your own default settings file and fill in the corresponding values using the example default settings file
+***NOTE:** You need the default_settings.py config file for backend to work. Get from one of the repo overseers. Alternatively, you can create your own default settings file and fill in the corresponding values using **steerclear/settings/default_settings_example.py** file as a template
 
 ##Testing
 
