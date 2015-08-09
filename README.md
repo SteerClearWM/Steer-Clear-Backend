@@ -42,7 +42,7 @@ Activate OS specific environment variables settings
 
 Startup mysql database and create 2 new databases. one for running the project and one for running tests.
 
-In *steerclear/settings/default_settings.py add your mysql user username, password, and database names to the following
+In *steerclear/settings/default_settings.py replace the following with your mysql user username, password, and database names
 
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/db_name'
     TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/test_db_name'
