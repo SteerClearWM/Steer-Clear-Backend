@@ -2,5 +2,10 @@ language: python
 # command to install dependencies
 install: "pip install -r requirements.txt"
 env: STEERCLEAR_SETTINGS=settings/unix_settings.py
+
+# commands to run before scipts. setup testing db
+before_script:
+- mysql -e 'create database IF NOT EXISTS test;'
+
 # command to run tests
 script: nosetests
