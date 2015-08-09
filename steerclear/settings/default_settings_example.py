@@ -1,5 +1,7 @@
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@server_address/db_name'
-TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@server_address/test_db_name'
+
+# db uri string for mysql db. form: 'mysql+mysqldb://username:password@server_address/db_name'
+SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://root@localhost/db'
+TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://root@localhost/test'
 
 WTF_CSRF_ENABLED = False
 
