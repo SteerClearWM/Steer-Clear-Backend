@@ -26,12 +26,22 @@ Start the mysql server
     # On Linux
     $ sudo service mysql start
 
+    # On Mac
+    $ sudo /usr/local/mysql/support-files/mysql.server start
+
+    # Another way on Mac
+    $ sudo /usr/local/mysql/bin/mysqld_safe
+
+    # On Windows
+    $ "C:\Program Files\MySQL\MySQL Server 5.0\bin\mysqld"
+
 Use the mysql client to login as the root user of the mysql server and create 2 databases. 1 for production and 1 for testing
 
 **Optional:** Create a new user who has privileges over the 2 databases
 
 The script **/scripts/setup_db.sql** will create 2 databases (**db** and **test**) and a new user (**steerclear** with password **St33rCl3@r**) automatically. To run it, use the mysql client as the root user
-
+    
+    # On both Windows and Mac/Linux
     $ mysql -u root -p < scripts/setup_db.sql
     Enter Password: root_user_password_here
 
