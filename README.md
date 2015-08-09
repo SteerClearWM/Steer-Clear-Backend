@@ -19,20 +19,31 @@ Backend and web app repo for Steer Clear app
 
 ##Database Setup and Configuration
 
-Backend uses mysql
-
 You need to install the mysql-server and mysql-client
 
 Start the mysql server
+
+    # On Linux
+    $ sudo service mysql start
 
 Use the mysql client to login as the root user of the mysql server and create 2 databases. 1 for production and 1 for testing
 
 **Optional:** Create a new user who has privileges over the 2 databases
 
+The script **/scripts/setup_db.sql** will create 2 databases (**db** and **test**) and a new user (**steerclear** with password **St33rCl3@r**) automatically. To run it, use the mysql client as the root user
+
+    $ mysql -u root -p < scripts/setup_db.sql
+    Enter Password: root_user_password_here
+
 In *steerclear/settings/default_settings.py replace the following with your mysql user username, password, and database names
 
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/db_name'
     TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/test_db_name'
+
+If you ran the setup_db.sql script it should look like
+    
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/db'
+    TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/test'
 
 ##Setup and Installation
 `clone` project and `cd` into directory
@@ -82,8 +93,14 @@ To run tests use **nosetests**
 ## Helpful Scripts
 There a few helpful scripts for doing things such as creating a new user or ride request
 
+### /scripts/setup_db.sql
+* Creates the production and test databases
+
+* creates a new user, **steerclear**, that has privileges over both databases
+* **mysql server must be running**
+
 ### create_db.py
-* Creates and sets up the database
+* Creates and sets up the data model tables in the database
 * **NOTE: THIS WILL DELETE ALL DATA CURRENTLY IN THE DATABASE**
 * **TODO:** Change to use database migration
 
