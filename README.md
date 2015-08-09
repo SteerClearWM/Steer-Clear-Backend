@@ -3,6 +3,10 @@ Backend and web app repo for Steer Clear app
 
 ## TODO
 
+* Change using Floats to store lat/long to using Decimals
+
+* Write tests for cookie remember duration
+
 * Make sure student users can't access ride queue page
 
 * Replace temp secret key with secure key
