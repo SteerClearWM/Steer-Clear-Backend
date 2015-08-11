@@ -111,7 +111,23 @@ class DMResponseTestCase(unittest.TestCase):
         dmresponse = DMResponse(bad_response)
 
         eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)        
+        self.assertEquals(eta, None)
+
+    def test_get_eta_no_duration(self):
+        bad_response = self.response.copy()
+        bad_response[u'rows'][0][u'elements'][0].pop(u'duration')
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None) 
+
+    def test_get_eta_no_value(self):
+        bad_response = self.response.copy()
+        bad_response[u'rows'][0][u'elements'][0][u'duration'].pop(u'value')
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)             
 
 
 
