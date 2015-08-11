@@ -131,12 +131,12 @@ def time_between_locations(origins, destinations):
     if not destination_addresses:
         return None
 
-    # check to make sure destination_addresses has both addresses
-    if len(destination_addresses) < 2:
-        return None
+    # # check to make sure destination_addresses has both addresses
+    # if len(destination_addresses) < 2:
+    #     return None
 
-    # get pickup and dropoff addresses
-    pickup_address = destination_addresses[0]
-    dropoff_address = destination_addresses[1]
+    # # get pickup and dropoff addresses
+    # pickup_address = destination_addresses[0]
+    # dropoff_address = destination_addresses[1]
 
     return eta_list
