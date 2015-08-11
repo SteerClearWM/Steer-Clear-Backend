@@ -8,6 +8,12 @@ from steerclear.api.views import calculate_time_data
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')
 
+"""
+DMResponseTestCase
+------------------
+Test case for DMResponse class which
+parses response objects from the google distancematrix api
+"""
 class DMResponseTestCase(unittest.TestCase):
 
     """
@@ -395,6 +401,74 @@ class DMResponseTestCase(unittest.TestCase):
             self.response2[u'destination_addresses']
         )
         self.assertEquals(addresses, expected_addresses)
+
+
+class SteerClearDMClientTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.dmclient = SteerClearDMClient()
+
+    """
+    test_format_query
+    ----------------
+    Tests that _format_query will take a list of origin lat/long pairs
+    and a list of destinations lat/long pairs and build the right
+    google distancematrix api query string
+    """
+    def test_format_query(self):
+        # Test that query in formated correclty zero lat/long position
+        origins = [(0.0,0.0)]
+        destinations = [(0.0,0.0)]
+        query = self.dmclient._format_query(origins, destinations)
+        self.assertEquals(query, {
+            'origins': '%f,%f' % origins[0], 
+            'destinations': '%f,%f' % destinations[0]
+        })
+
+        origins = [(-71,70), (65,45.2345)]
+        destinations = [(65,45.2345), (-71,70)]
+        query = self.dmclient._format_query(origins, destinations)
+        self.assertEquals(query, {
+            'origins': ('%f,%f' % origins[0]) + '|' + ('%f,%f' % origins[1]), 
+            'destinations': ('%f,%f' % destinations[0]) + '|' + ('%f,%f' % destinations[1])
+        })
+
+    """
+    test_build_url
+    -----------------------------
+    Tests that _build_url() correctly builds the google
+    distancematrix api url given a query string
+    """
+    def test_build_url(self):
+        base_url = DISTANCEMATRIX_BASE_URL + '?'
+
+        # build query string and url
+        origins = [(0.0, 0.0)]
+        destinations = [(0.0, 0.0)]
+        query = self.dmclient._format_query(origins, destinations)
+        url = self.dmclient._build_url(query)
+        
+        # this is the expected url
+        expected_url = base_url + urllib.urlencode({
+          'origins': "%f,%f" % origins[0],
+          'destinations': "%f,%f" % destinations[0]
+        })
+
+        self.assertEquals(url, expected_url)
+
+        # build query string and url
+        origins = [(-71,70), (65,45.2345)]
+        destinations = [(65,45.2345), (-71,70)]
+        query = self.dmclient._format_query(origins, destinations)
+        url = self.dmclient._build_url(query)
+
+        # this is the expected url
+        expected_url = base_url + urllib.urlencode({
+            'origins': ('%f,%f' % origins[0]) + '|' + ('%f,%f' % origins[1]), 
+            'destinations': ('%f,%f' % destinations[0]) + '|' + ('%f,%f' % destinations[1])
+        })
+
+        self.assertEquals(url, expected_url)
 
 
 # """
