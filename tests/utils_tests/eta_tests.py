@@ -259,10 +259,13 @@ class DMResponseTestCase(unittest.TestCase):
     all eta values from a correct response object
     """
     def test_get_eta_success(self):
-        dmresponse = DMResponse(self.response)
+        dmr = DMResponse(self.response)
+        eta = dmr.get_eta()
+        self.assertEquals(eta, [[267, 238], [0, 239]])
 
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, [[267, 238], [0, 239]])           
+        dmr = DMResponse(self.response2)
+        eta = dmr.get_eta()
+        self.assertEquals(eta, [[267]])
 
 
 
