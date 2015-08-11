@@ -83,6 +83,30 @@ class DMResponseTestCase(unittest.TestCase):
            "status" : "OK"
         }
 
+        # another correct response
+        self.response2 = {
+           "destination_addresses" : [ "2006 Brooks Street, Williamsburg, VA 23185, USA" ],
+           "origin_addresses" : [ "249 Stadium Drive, Williamsburg, VA 23186, USA" ],
+           "rows" : [
+              {
+                 "elements" : [
+                    {
+                       "distance" : {
+                          "text" : "1.4 km",
+                          "value" : 1436
+                       },
+                       "duration" : {
+                          "text" : "4 mins",
+                          "value" : 267
+                       },
+                       "status" : "OK"
+                    }
+                 ]
+              }
+           ],
+           "status" : "OK"
+        }
+
     """
     test_get_eta_no_rows
     --------------------
@@ -97,6 +121,13 @@ class DMResponseTestCase(unittest.TestCase):
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        bad_response = self.response2.copy()
+        bad_response.pop(u'rows')
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
     """
     test_get_eta_empty_rows
     --------------------
@@ -104,6 +135,13 @@ class DMResponseTestCase(unittest.TestCase):
     """
     def test_get_eta_empty_rows(self):
         bad_response = self.response.copy()
+        bad_response[u'rows'] = []
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+        bad_response = self.response2.copy()
         bad_response[u'rows'] = []
         dmresponse = DMResponse(bad_response)
 
@@ -124,6 +162,13 @@ class DMResponseTestCase(unittest.TestCase):
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        bad_response = self.response2.copy()
+        bad_response[u'rows'][0].pop(u'elements')
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
     """
     test_get_eta_empty_elements
     --------------------
@@ -131,6 +176,13 @@ class DMResponseTestCase(unittest.TestCase):
     """
     def test_get_eta_empty_elements(self):
         bad_response = self.response.copy()
+        bad_response[u'rows'][0][u'elements'] = []
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+        bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'] = []
         dmresponse = DMResponse(bad_response)
 
@@ -151,6 +203,13 @@ class DMResponseTestCase(unittest.TestCase):
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        bad_response = self.response2.copy()
+        bad_response[u'rows'][0][u'elements'][0][u'status'] = u'BAD'
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
     """
     test_get_eta_no_duration
     --------------------
@@ -159,6 +218,13 @@ class DMResponseTestCase(unittest.TestCase):
     """
     def test_get_eta_no_duration(self):
         bad_response = self.response.copy()
+        bad_response[u'rows'][0][u'elements'][0].pop(u'duration')
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+        bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'][0].pop(u'duration')
         dmresponse = DMResponse(bad_response)
 
@@ -179,6 +245,19 @@ class DMResponseTestCase(unittest.TestCase):
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        bad_response = self.response2.copy()
+        bad_response[u'rows'][0][u'elements'][0][u'duration'].pop(u'value')
+        dmresponse = DMResponse(bad_response)
+
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+    """
+    test_get_eta_success
+    --------------------
+    Tests that dmresponse correctly returns
+    all eta values from a correct response object
+    """
     def test_get_eta_success(self):
         dmresponse = DMResponse(self.response)
 
