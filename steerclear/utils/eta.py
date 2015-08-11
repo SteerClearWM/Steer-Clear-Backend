@@ -124,4 +124,19 @@ def time_between_locations(origins, destinations):
     data = response.json()                                # get json response
     rows = data.get(u'rows', None)                        # get 'rows' field
     eta_list = get_rows_eta(rows, len(origins))           # get list of all eta_lists
+
+    # get the destination addresses from the response or return None
+    # NOTE: the pickup address is the first element and the dropoff address is the second
+    destination_addresses = data.get(u'destination_addresses', None)
+    if not destination_addresses:
+        return None
+
+    # check to make sure destination_addresses has both addresses
+    if len(destination_addresses) < 2:
+        return None
+
+    # get pickup and dropoff addresses
+    pickup_address = destination_addresses[0]
+    dropoff_address = destination_addresses[1]
+
     return eta_list
