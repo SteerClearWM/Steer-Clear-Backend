@@ -62,6 +62,7 @@ class DMResponse:
     -------
     Return the list of eta data values
     Response object looks like this: https://maps.googleapis.com/maps/api/distancematrix/json?origins=37.272042,-76.714027|37.273485,-76.719628&destinations=37.273485,-76.719628|37.280893,%20-76.719691
+    Returns a list of lists of all of the eta values
     """
     def get_eta(self):
         # bad response
@@ -118,7 +119,8 @@ class DMResponse:
     """
     get_addresses
     -------------
-    Return the origin and destination addresses
+    Return the origin and destination addresses field in the response
+    as a tuple of lists
     """
     def get_addresses(self):
         # bad response

@@ -108,6 +108,21 @@ class DMResponseTestCase(unittest.TestCase):
         }
 
     """
+    test_get_eta_no_response
+    ------------------------
+    Tests that dmresponse returns None
+    if given a bad response json object
+    """
+    def test_get_eta_no_response(self):
+        dmr = DMResponse(None)
+        eta = dmr.get_eta()
+        self.assertEquals(eta, None)
+
+        dmr = DMResponse({})
+        eta = dmr.get_eta()
+        self.assertEquals(eta, None)
+
+    """
     test_get_eta_no_rows
     --------------------
     Tests that dmresponse returns None if there is
@@ -267,6 +282,119 @@ class DMResponseTestCase(unittest.TestCase):
         eta = dmr.get_eta()
         self.assertEquals(eta, [[267]])
 
+    """
+    test_get_addresses_no_response
+    ------------------------
+    Tests that dmresponse returns None
+    if given a bad response json object
+    """
+    def test_get_addresses_no_response(self):
+        dmr = DMResponse(None)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        dmr = DMResponse({})
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+    """
+    test_get_addresses_no_origin_addresses
+    --------------------
+    Tests that dmresponse returns None if there is
+    no 'origin_addresses' field in response oject
+    """
+    def test_get_addresses_no_origin_addresses(self):
+        bad_response = self.response.copy()
+        bad_response.pop(u'origin_addresses')
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        bad_response = self.response2.copy()
+        bad_response.pop(u'origin_addresses')
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+    """
+    test_get_addresses_empty_origin_addresses
+    --------------------
+    Tests that dmresponse returns None if there
+    is no 'origin_addresses' field in the response
+    """
+    def test_get_addresses_empty_origin_addresses(self):
+        bad_response = self.response.copy()
+        bad_response[u'origin_addresses'] = []
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        bad_response = self.response2.copy()
+        bad_response[u'origin_addresses'] = []
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+    """
+    test_get_addresses_no_destination_addresses
+    --------------------
+    Tests that dmresponse returns None if there is
+    no 'destination_addresses' field in response oject
+    """
+    def test_get_addresses_no_destination_addresses(self):
+        bad_response = self.response.copy()
+        bad_response.pop(u'destination_addresses')
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        bad_response = self.response2.copy()
+        bad_response.pop(u'destination_addresses')
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+    """
+    test_get_addresses_empty_destination_addresses
+    --------------------
+    Tests that dmresponse returns None if there
+    is no 'destination_addresses' field in the response
+    """
+    def test_get_addresses_empty_destination_addresses(self):
+        bad_response = self.response.copy()
+        bad_response[u'destination_addresses'] = []
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        bad_response = self.response2.copy()
+        bad_response[u'destination_addresses'] = []
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+    """
+    test_get_addresses
+    ------------------
+    Tests that dmresponse will get the addresses
+    correctly for a response object
+    """
+    def test_get_addresses(self):
+        dmr = DMResponse(self.response)
+        addresses = dmr.get_addresses()
+        expected_addresses = (
+            self.response[u'origin_addresses'],
+            self.response[u'destination_addresses']
+        )
+        self.assertEquals(addresses, expected_addresses)
+
+        dmr = DMResponse(self.response2)
+        addresses = dmr.get_addresses()
+        expected_addresses = (
+            self.response2[u'origin_addresses'],
+            self.response2[u'destination_addresses']
+        )
+        self.assertEquals(addresses, expected_addresses)
 
 
 # """
