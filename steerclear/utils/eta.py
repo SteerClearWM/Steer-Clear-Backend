@@ -70,7 +70,8 @@ class DMResponse:
 
         # get rows or return None
         rows = self.data.get(u'rows', None)
-        if not rows:
+        if rows is None:
+            print 'rows'
             return None
 
         # Get all of the eta values in the response
@@ -78,7 +79,8 @@ class DMResponse:
         for row in rows:
             # get elements
             elements = row.get(u'elements', None)
-            if not elements:
+            if elements is None:
+                print 'elements'
                 return None
 
             eta = []
@@ -87,16 +89,19 @@ class DMResponse:
                 # if bad status, return None
                 status = element.get(u'status', u'')
                 if status != u'OK':
+                    print 'status'
                     return None
 
                 # get duration or return None
                 duration = element.get(u'duration', None)
-                if not duration:
+                if duration is None:
+                    print 'duration'
                     return None
 
                 # get eta value or return None
                 value = duration.get(u'value', None)
-                if not value:
+                if value is None:
+                    print 'value'
                     return None
 
                 # append to current list of eta values
@@ -104,6 +109,10 @@ class DMResponse:
 
             # append list of eta values
             eta_list.append(eta)
+
+        # some part of the response was bad
+        if eta_list == [] or [] in eta_list:
+            return None
         return eta_list
 
     """
