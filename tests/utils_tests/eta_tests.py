@@ -483,13 +483,29 @@ class DMResponseTestCase(unittest.TestCase):
     is no 'origin_addresses' field in the response
     """
     def test_get_addresses_empty_origin_addresses(self):
+        # test response
         bad_response = self.response.copy()
         bad_response[u'origin_addresses'] = []
         dmr = DMResponse(bad_response)
         addresses = dmr.get_addresses()
         self.assertEquals(addresses, None)
 
+        # test response2
         bad_response = self.response2.copy()
+        bad_response[u'origin_addresses'] = []
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        # test response3
+        bad_response = self.response3.copy()
+        bad_response[u'origin_addresses'] = []
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        # test response4
+        bad_response = self.response4.copy()
         bad_response[u'origin_addresses'] = []
         dmr = DMResponse(bad_response)
         addresses = dmr.get_addresses()
