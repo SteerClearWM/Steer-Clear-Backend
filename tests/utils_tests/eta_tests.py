@@ -121,6 +121,51 @@ class DMResponseTestCase(unittest.TestCase):
            "status" : "INVALID_REQUEST"
         }
 
+        # respresents a partialy bad request
+        self.response4 = {
+           "destination_addresses" : [ "37.273485,-76.719628", "37.280893,-76.719691" ],
+           "origin_addresses" : [ "0,0", "2006 Brooks Street, Williamsburg, VA 23185, USA" ],
+           "rows" : [
+              {
+                 "elements" : [
+                    {
+                       "status" : "ZERO_RESULTS"
+                    },
+                    {
+                       "status" : "ZERO_RESULTS"
+                    }
+                 ]
+              },
+              {
+                 "elements" : [
+                    {
+                       "distance" : {
+                          "text" : "1 m",
+                          "value" : 0
+                       },
+                       "duration" : {
+                          "text" : "1 min",
+                          "value" : 0
+                       },
+                       "status" : "OK"
+                    },
+                    {
+                       "distance" : {
+                          "text" : "1.4 km",
+                          "value" : 1353
+                       },
+                       "duration" : {
+                          "text" : "4 mins",
+                          "value" : 239
+                       },
+                       "status" : "OK"
+                    }
+                 ]
+              }
+           ],
+           "status" : "OK"
+        }
+
     """
     test_dmresponse_invalid_request
     -------------------------------
@@ -154,19 +199,19 @@ class DMResponseTestCase(unittest.TestCase):
     no 'rows' field in response oject
     """
     def test_get_eta_no_rows(self):
-        bad_response = self.response.copy()
-        bad_response.pop(u'rows')
-        dmresponse = DMResponse(bad_response)
+        # makes a copy of response and pops off 'row' field
+        def make_test(response):
+            bad_response = response.copy()
+            bad_response.pop(u'rows')
+            dmresponse = DMResponse(bad_response)
+            eta = dmresponse.get_eta()
+            self.assertEquals(eta, None)
 
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
-
-        bad_response = self.response2.copy()
-        bad_response.pop(u'rows')
-        dmresponse = DMResponse(bad_response)
-
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        # test all types of responses
+        make_test(self.response)
+        make_test(self.response2)
+        make_test(self.response3)
+        make_test(self.response4)
 
     """
     test_get_eta_empty_rows
@@ -174,19 +219,19 @@ class DMResponseTestCase(unittest.TestCase):
     Tests that dmresponse returns []] if 'rows' is empty
     """
     def test_get_eta_empty_rows(self):
-        bad_response = self.response.copy()
-        bad_response[u'rows'] = []
-        dmresponse = DMResponse(bad_response)
+        # make copy of response and sets 'row' field to []
+        def make_test(response):
+            bad_response = response.copy()
+            bad_response[u'rows'] = []
+            dmresponse = DMResponse(bad_response)
+            eta = dmresponse.get_eta()
+            self.assertEquals(eta, None)
 
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
-
-        bad_response = self.response2.copy()
-        bad_response[u'rows'] = []
-        dmresponse = DMResponse(bad_response)
-
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        # test all types of responses
+        make_test(self.response)
+        make_test(self.response2)
+        make_test(self.response3)
+        make_test(self.response4)
 
     """
     test_get_eta_no_elements
@@ -195,17 +240,30 @@ class DMResponseTestCase(unittest.TestCase):
     no 'elements' field in response oject
     """
     def test_get_eta_no_elements(self):
+        # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0].pop(u'elements')
         dmresponse = DMResponse(bad_response)
-
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0].pop(u'elements')
         dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
 
+        # test response3
+        bad_response = self.response3.copy()
+        dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+        # test response4
+        bad_response = self.response4.copy()
+        bad_response[u'rows'][0].pop(u'elements')
+        dmresponse = DMResponse(bad_response)
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
@@ -215,17 +273,30 @@ class DMResponseTestCase(unittest.TestCase):
     Tests that dmresponse returns []] if 'elements' is empty
     """
     def test_get_eta_empty_elements(self):
+        # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0][u'elements'] = []
         dmresponse = DMResponse(bad_response)
-
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'] = []
         dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
 
+        # test response3
+        bad_response = self.response3.copy()
+        dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+        # test response4
+        bad_response = self.response4.copy()
+        bad_response[u'rows'][0][u'elements'] = []
+        dmresponse = DMResponse(bad_response)
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
@@ -236,17 +307,29 @@ class DMResponseTestCase(unittest.TestCase):
     element status is a bad status
     """
     def test_get_eta_bad_element_status(self):
+        # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0][u'elements'][0][u'status'] = u'BAD'
         dmresponse = DMResponse(bad_response)
-
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'][0][u'status'] = u'BAD'
         dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
 
+        # test response3
+        bad_response = self.response3.copy()
+        dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+        # test response4
+        bad_response = self.response4.copy()
+        dmresponse = DMResponse(bad_response)
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
@@ -257,19 +340,31 @@ class DMResponseTestCase(unittest.TestCase):
     no 'duration' field in response oject
     """
     def test_get_eta_no_duration(self):
+        # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0][u'elements'][0].pop(u'duration')
         dmresponse = DMResponse(bad_response)
-
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'][0].pop(u'duration')
         dmresponse = DMResponse(bad_response)
-
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None) 
+
+        # test response3
+        bad_response = self.response3.copy()
+        dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+        # test response4
+        bad_response = self.response4.copy()
+        dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
 
     """
     test_get_eta_no_value
@@ -278,17 +373,29 @@ class DMResponseTestCase(unittest.TestCase):
     no 'value' field in response oject
     """
     def test_get_eta_no_value(self):
+        # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0][u'elements'][0][u'duration'].pop(u'value')
         dmresponse = DMResponse(bad_response)
-
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
+        # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'][0][u'duration'].pop(u'value')
         dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
 
+        # test response2
+        bad_response = self.response2.copy()
+        dmresponse = DMResponse(bad_response)
+        eta = dmresponse.get_eta()
+        self.assertEquals(eta, None)
+
+        # test response2
+        bad_response = self.response2.copy()
+        dmresponse = DMResponse(bad_response)
         eta = dmresponse.get_eta()
         self.assertEquals(eta, None)
 
@@ -299,13 +406,25 @@ class DMResponseTestCase(unittest.TestCase):
     all eta values from a correct response object
     """
     def test_get_eta_success(self):
+        # test response
         dmr = DMResponse(self.response)
         eta = dmr.get_eta()
         self.assertEquals(eta, [[267, 238], [0, 239]])
 
+        # test response2
         dmr = DMResponse(self.response2)
         eta = dmr.get_eta()
         self.assertEquals(eta, [[267]])
+
+        # test response3 - should return None
+        dmr = DMResponse(self.response3)
+        eta = dmr.get_eta()
+        self.assertEquals(eta, None)
+
+        # test response4 - should return None
+        dmr = DMResponse(self.response4)
+        eta = dmr.get_eta()
+        self.assertEquals(eta, None)
 
     """
     test_get_addresses_no_response
@@ -329,13 +448,29 @@ class DMResponseTestCase(unittest.TestCase):
     no 'origin_addresses' field in response oject
     """
     def test_get_addresses_no_origin_addresses(self):
+        # test response
         bad_response = self.response.copy()
         bad_response.pop(u'origin_addresses')
         dmr = DMResponse(bad_response)
         addresses = dmr.get_addresses()
         self.assertEquals(addresses, None)
 
+        # test response2
         bad_response = self.response2.copy()
+        bad_response.pop(u'origin_addresses')
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        # test response3
+        bad_response = self.response3.copy()
+        bad_response.pop(u'origin_addresses')
+        dmr = DMResponse(bad_response)
+        addresses = dmr.get_addresses()
+        self.assertEquals(addresses, None)
+
+        # test response4
+        bad_response = self.response4.copy()
         bad_response.pop(u'origin_addresses')
         dmr = DMResponse(bad_response)
         addresses = dmr.get_addresses()
@@ -539,6 +674,20 @@ class SteerClearDMClientTestCase(unittest.TestCase):
         response = self.dmclient.query_api(origins, destinations)
         self.assertNotEquals(response, DMResponse(None))
         self.assertEquals(response.get_eta(), [[238]])
+
+    """
+    test_query_api_multiple_origins
+    ----------------------------
+    Tests that dmclient does not fail for a normal query with
+    a multiple origins and destinations
+    """
+    @myvcr.use_cassette()
+    def test_query_api_multiple_origins(self):
+        # expected value [[267, 238], [0, 239]]
+        origins = [(37.272042, -76.714027), (37.273485, -76.719628)]
+        destinations = [(37.273485, -76.719628), (37.280893, -76.719691)]
+        response = self.dmclient.query_api(origins, destinations)
+        self.assertEquals(response.get_eta(), [[267, 238], [0, 239]])
 
 # """
 # ETATestCase
