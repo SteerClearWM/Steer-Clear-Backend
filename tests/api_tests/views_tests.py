@@ -155,9 +155,6 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
             u"start_longitude": -76.719628,
             u"end_latitude": 37.280893,
             u"end_longitude": -76.719691,
-            u"pickup_time": u'Mon, 01 Jan 0001 00:00:00 -0000',
-            u"travel_time": 171,
-            u"dropoff_time": u'Mon, 01 Jan 0001 00:00:00 -0000',
           }
 
         bad_payload = payload.copy()
