@@ -1,6 +1,6 @@
 from steerclear import app, db
 from steerclear.models import Ride
-from steerclear.api.views import calculate_time_data
+from steerclear.api.views import query_distance_matrix_api
 from tests.base import base
 
 from testfixtures import replace, test_datetime
@@ -119,16 +119,6 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         expected_dropoff_time = expected_pickup_time + timedelta(0, travel_time)
         expected_pickup_string = expected_pickup_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
         expected_dropoff_string = expected_dropoff_time.strftime('%a, %d %b %Y %H:%M:%S -0000')
-        # payload = {
-        #             u"num_passengers": 3,
-        #             u"start_latitude": 37.273485,
-        #             u"start_longitude": -76.719628,
-        #             u"end_latitude": 37.280893,
-        #             u"end_longitude": -76.719691,
-        #             u"pickup_time": expected_pickup_string,
-        #             u"travel_time": travel_time,
-        #             u"dropoff_time": expected_dropoff_string,
-        #           }
         payload = {
             u"num_passengers": 3,
             u"start_latitude": 37.2735,
@@ -138,7 +128,10 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
             u"pickup_time": expected_pickup_string,
             u"travel_time": travel_time,
             u"dropoff_time": expected_dropoff_string,
+            u'pickup_address': u'2006 Brooks Street, Williamsburg, VA 23185, USA',
+            u'dropoff_address': u'1234 Richmond Road, Williamsburg, VA 23185, USA',
           }
+
         response = self.client.post(url_for('api.rides'), data=payload)
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
@@ -162,9 +155,6 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
             u"start_longitude": -76.719628,
             u"end_latitude": 37.280893,
             u"end_longitude": -76.719691,
-            u"pickup_time": u'Mon, 01 Jan 0001 00:00:00 -0000',
-            u"travel_time": 171,
-            u"dropoff_time": u'Mon, 01 Jan 0001 00:00:00 -0000',
           }
 
         bad_payload = payload.copy()
@@ -510,3 +500,90 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
 
         response = self.client.post(url_for('api.notifications'), data={'ride_id': 2})
         self.assertEquals(response.status_code, 400)
+
+
+"""
+ETAAPITestCase
+------------------
+TestCase for testing API interface with eta calculation module
+"""
+class ETAAPITestCase(base.SteerClearBaseTestCase):
+
+    @myvcr.use_cassette()
+    @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
+    def test_query_distance_matrix_api_no_rides(self):
+        pickup_loc = (37.273485, -76.719628)
+        dropoff_loc = (37.280893, -76.719691)
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
+        expected_dropoff_time = expected_pickup_time + timedelta(0, 239)
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+
+        (pickup_time, travel_time, dropoff_time) = result[0]
+        self.assertEquals(pickup_time, expected_pickup_time)
+        self.assertEquals(travel_time, 239)
+        self.assertEquals(dropoff_time, expected_dropoff_time)
+
+        pickup_address, dropoff_address = result[1]
+        self.assertEquals(pickup_address, u'2006 Brooks Street, Williamsburg, VA 23185, USA')
+        self.assertEquals(dropoff_address, u'1234 Richmond Road, Williamsburg, VA 23185, USA')
+
+    @myvcr.use_cassette()
+    def test_query_distance_matrix_api_no_rides_bad_pickup_loc(self):
+        pickup_loc = (0.0, 0.0)
+        dropoff_loc = (37.280893, -76.719691)
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)
+
+    @myvcr.use_cassette()
+    def test_query_distance_matrix_api_no_rides_bad_dest_loc(self):
+        pickup_loc = (37.280893, -76.719691)
+        dropoff_loc = (0.0, 0.0)
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)
+
+    @myvcr.use_cassette()
+    def test_query_distance_matrix_api_with_last_ride(self):
+        user = self._create_user()
+        ride = self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        pickup_loc = (37.273485, -76.719628)
+        dropoff_loc = (37.280893, -76.719691)
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 373)
+        expected_travel_time = 239
+        expected_dropoff_time = expected_pickup_time + timedelta(0, expected_travel_time)
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+
+        (pickup_time, travel_time, dropoff_time) = result[0]
+        self.assertEquals(pickup_time, expected_pickup_time)
+        self.assertEquals(travel_time, expected_travel_time)
+        self.assertEquals(dropoff_time, expected_dropoff_time)
+
+        pickup_address, dropoff_address = result[1]
+        self.assertEquals(pickup_address, u'2006 Brooks Street, Williamsburg, VA 23185, USA')
+        self.assertEquals(dropoff_address, u'1234 Richmond Road, Williamsburg, VA 23185, USA')
+
+    @myvcr.use_cassette()
+    def test_query_distance_matrix_api_with_last_ride_bad_start_loc(self):
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 0.0, 0.0, None, None, datetime(2015,6,13,1,2,3))
+        pickup_loc = (37.273485, -76.719628)
+        dropoff_loc = (37.280893, -76.719691)
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)    
+
+    @myvcr.use_cassette()
+    def test_query_distance_matrix_api_with_last_ride_bad_pickup_loc(self):
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        pickup_loc = (0.0, 0.0)
+        dropoff_loc = (37.280893, -76.719691)
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)   
+
+    @myvcr.use_cassette()
+    def test_query_distance_matrix_api_with_last_ride_bad_dropoff_loc(self):
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        pickup_loc = (37.280893, -76.719691)
+        dropoff_loc = (0.0, 0.0)
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)

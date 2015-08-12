@@ -8,13 +8,19 @@ Model class for the Ride object
 class Ride(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     num_passengers = db.Column(db.Integer)
+    
     start_latitude = db.Column(db.Float)
     start_longitude = db.Column(db.Float)
+    
     end_latitude = db.Column(db.Float)
     end_longitude = db.Column(db.Float)
+    
     pickup_time = db.Column(types.DateTime)
     travel_time = db.Column(db.Integer)
     dropoff_time = db.Column(types.DateTime)
+
+    pickup_address = db.Column(db.String(255))
+    dropoff_address = db.Column(db.String(255))
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -43,4 +49,6 @@ class Ride(db.Model):
             'pickup_time': self.pickup_time,
             'travel_time': self.travel_time,
             'dropoff_time': self.dropoff_time,
+            'pickup_address': self.pickup_address,
+            'dropoff_address': self.dropoff_address,
         }

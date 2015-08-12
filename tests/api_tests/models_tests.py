@@ -40,7 +40,9 @@ class RideModelTestCase(base.SteerClearBaseTestCase):
             'end_longitude': 2.1, 
             'pickup_time': datetime(1,1,1), 
             'travel_time': 10, 
-            'dropoff_time': datetime(1,1,1)
+            'dropoff_time': datetime(1,1,1),
+            'pickup_address': 'Foo',
+            'dropoff_address': 'Bar'
         }
         self.assertEquals(self.default_ride.as_dict(), correct_default_dict)
 
