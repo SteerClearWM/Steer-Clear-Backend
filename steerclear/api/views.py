@@ -63,15 +63,22 @@ class RideListAPI(Resource):
         if not form.validate_on_submit():
             abort(400)
         
-        # calculate pickup and dropoff time
+        # get pickup and dropoff locations of Ride request
         pickup_loc = (form.start_latitude.data, form.start_longitude.data)
         dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
-        time_data = query_distance_matrix_api(pickup_loc, dropoff_loc)
-        if time_data is None:
+
+        # query distance matrix api and get eta time data and addresses
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+        if result is None:
             abort(400)
+
+        # get pickup, travel, and dropoff times
+        pickup_time, travel_time, dropoff_time = result[0]
+
+        # get pickup and dropoff addresses
+        pickup_address, dropoff_address = result[1]
         
         # create new Ride object
-        pickup_time, travel_time, dropoff_time = time_data
         new_ride = Ride(
             num_passengers=form.num_passengers.data,
             start_latitude=form.start_latitude.data,
