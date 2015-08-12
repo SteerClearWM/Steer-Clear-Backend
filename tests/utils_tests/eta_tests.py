@@ -1,9 +1,5 @@
 from steerclear.utils.eta import *
 import unittest, urllib, vcr
-from tests.base import base
-from testfixtures import replace, test_datetime
-from datetime import datetime, timedelta
-from steerclear.api.views import calculate_time_data
 
 # vcr object used to record api request responses or return already recorded responses
 myvcr = vcr.VCR(cassette_library_dir='tests/fixtures/vcr_cassettes/eta_tests/')

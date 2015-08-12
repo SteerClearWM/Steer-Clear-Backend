@@ -66,7 +66,7 @@ class RideListAPI(Resource):
         # calculate pickup and dropoff time
         pickup_loc = (form.start_latitude.data, form.start_longitude.data)
         dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
-        time_data = calculate_time_data(pickup_loc, dropoff_loc)
+        time_data = query_distance_matrix_api(pickup_loc, dropoff_loc)
         if time_data is None:
             abort(400)
         
@@ -187,7 +187,13 @@ api.add_resource(RideListAPI, '/rides', endpoint='rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
 api.add_resource(NotificationAPI, '/notifications', endpoint='notifications')
 
-def calculate_time_data(pickup_loc, dropoff_loc):
+"""
+query_distance_matrix_api
+-------------------
+Takes a pickup and dropoff location for a Ride request
+and returns the pickup, travel, and dropoff times
+"""
+def query_distance_matrix_api(pickup_loc, dropoff_loc):
     # check to see if there are any rides in the queue
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
 
@@ -209,24 +215,47 @@ def calculate_time_data(pickup_loc, dropoff_loc):
         pickup_time = datetime.utcnow() + timedelta(0, 10 * 60)
         travel_time = eta[0][0]
         dropoff_time = pickup_time + timedelta(0, travel_time)
+
+        # get addresses or return None
+        addresses = response.get_addresses()
+        if addresses is None:
+            return None
+
+        # get pickup and dropoff addresses.
+        # pickup address is the first address in origin_addresses (index 0)
+        # dropoff address is the first address in destination_addresses (index 1)
+        pickup_address = addresses[0][0]
+        dropoff_address = addresses[1][0]
     
     # else there are other rides in the queue, so we must factor
     # in the dropoff time and location from the last ride in the queue
     else:
+        # get last ride dropoff location. this is our starting location
         start_loc = (last_ride.end_latitude, last_ride.end_longitude)
 
+        # query google distance matrix api and get response
         response = dm_client.query_api([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
-
+        
+        # get eta or return None
         eta = response.get_eta()
         if eta is None:
             return None
-        # eta = time_between_locations([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
-        # if eta is None:
-        #     return None
+
+        # get addresses or return None
+        addresses = response.get_addresses()
+        if addresses is None:
+            return None
         
+        # calculate pickup, travel, and dropoff times based off eta response
         pickup_time = last_ride.dropoff_time + timedelta(0, eta[0][0])
         travel_time = eta[1][1]
         dropoff_time = pickup_time + timedelta(0, travel_time)
+
+        # get pickup and dropoff addresses.
+        # pickup address is the second address in origin_addresses (index 0)
+        # dropoff address is the second address in destination_addresses (index 1)
+        pickup_address = addresses[0][1]
+        dropoff_address = addresses[1][1]
     
     return (pickup_time, travel_time, dropoff_time)
 
