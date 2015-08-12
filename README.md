@@ -184,24 +184,28 @@ Ride request objects have several fields:
 
 * **dropoff_time**: estimated time for arriving at the dropoff location as a datetime object
 
+* **pickup_address**: the string address of the pickup location for the request
+
+* **dropoff_address**: the string address of the dropoff location for the request
+
 ## Rides
 API endpoint for getting, updating, and deleting ride requests. student users are only allowed to access ride requests they have requested. If a student attempts to access a ride request they have not placed, a 403 is returned
 
 ### GET /api/rides/<int:ride_id>
 Sample request **GET /api/rides/2**:
 
-    {
-      "ride": {
-        "dropoff_time": "Sun, 07 Jun 2015 02:24:49 GMT", 
-        "end_latitude": 37.280893, 
-        "end_longitude": -76.719691, 
-        "id": 2, 
-        "num_passengers": 4, 
-        "pickup_time": "Sun, 07 Jun 2015 02:21:58 GMT", 
-        "start_latitude": 37.273485, 
-        "start_longitude": -76.719628, 
-        "travel_time": 171
-      }
+    "ride": {
+        "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
+        "dropoff_time": "Wed, 12 Aug 2015 05:33:08 -0000", 
+        "end_latitude": 37.2809, 
+        "end_longitude": -76.7197, 
+        "id": 1, 
+        "num_passengers": 3, 
+        "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
+        "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000", 
+        "start_latitude": 37.2735, 
+        "start_longitude": -76.7196, 
+        "travel_time": 239
     }
 
 * Returns the ride request object with the corresponding **ride_id**
@@ -221,29 +225,33 @@ Sample Response:
 
     {
         "rides": [
-        {
-          "dropoff_time": "Sun, 07 Jun 2015 02:18:50 GMT", 
-          "end_latitude": 37.280893, 
-          "end_longitude": -76.719691, 
-          "id": 1, 
-          "num_passengers": 4, 
-          "pickup_time": "Sun, 07 Jun 2015 02:15:59 GMT", 
-          "start_latitude": 37.273485, 
-          "start_longitude": -76.719628, 
-          "travel_time": 171
-        }, 
-        {
-          "dropoff_time": "Sun, 07 Jun 2015 02:24:49 GMT", 
-          "end_latitude": 37.280893, 
-          "end_longitude": -76.719691, 
-          "id": 2, 
-          "num_passengers": 4, 
-          "pickup_time": "Sun, 07 Jun 2015 02:21:58 GMT", 
-          "start_latitude": 37.273485, 
-          "start_longitude": -76.719628, 
-          "travel_time": 171
-        }
-      ]
+            {
+                "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
+                "dropoff_time": "Wed, 12 Aug 2015 05:33:08 -0000", 
+                "end_latitude": 37.2809, 
+                "end_longitude": -76.7197, 
+                "id": 1, 
+                "num_passengers": 3, 
+                "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
+                "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000", 
+                "start_latitude": 37.2735, 
+                "start_longitude": -76.7196, 
+                "travel_time": 239
+            }, 
+            {
+                "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
+                "dropoff_time": "Wed, 12 Aug 2015 05:40:34 -0000", 
+                "end_latitude": 37.2809, 
+                "end_longitude": -76.7197, 
+                "id": 2, 
+                "num_passengers": 3, 
+                "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
+                "pickup_time": "Wed, 12 Aug 2015 05:36:35 -0000", 
+                "start_latitude": 37.2735, 
+                "start_longitude": -76.7196, 
+                "travel_time": 239
+            }
+        ]
     }
 
 * Returns the queue of ride requests as a json object
@@ -254,7 +262,7 @@ Sample Response:
 * Returns the created ride object on success (this will most likely change to just returning the created ride id).
 * returns error code 400 on failure
 * Expects a form with the following fields
-  * **id**: id number of the ride object in the queue
+
 
   * **num_passengers**: number of passengers in the ride request
 
@@ -265,15 +273,6 @@ Sample Response:
   * **end_latitude**: latitude coordinate for the dropoff location
 
   * **end_longitude**: longitude coordinate for the dropoff location
-
-  * **pickup_time**: estimated pickup time. See note below for string format
-
-  * **travel_time**: estimated time it will take in seconds to go from pickup location to dropoff location
-
-  * **dropoff_time**: estimated time for arriving at the dropoff location. see note below for string format
-
-  * **NOTE**: the **pickup_time** and **dropoff_time** fields are datetime objects representing UTC times that are formatted as strings using the following format string **"%a, %d %b %Y %H:%M:%S GMT"**. Where **%a** is the weekday's abreviated name (i.e. Mon), **%d** is the day of the month as a zero-padded decimal number (i.e. 09 and 22), **%b** is the month's abreviated name (i.e. Sep), **%Y** is the four digit year value (i.e. 2015), **%H** is the hour zero-padded hour value (i.e. 02 or 20), **%M** is the zero-padded minute value (i.e. 05 or 52), and **%S** is the zero-padded seconds value (i.e. 06 or 33).
-
 
 ## Notifications
 API endpoint for sending sms notifications to Users. At the moment, sms messages will only be sent successfully to Users who have verified their phone number with the SteerClear Twilio account
