@@ -510,3 +510,78 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
 
         response = self.client.post(url_for('api.notifications'), data={'ride_id': 2})
         self.assertEquals(response.status_code, 400)
+
+
+"""
+ETAAPITestCase
+------------------
+TestCase for testing API interface with eta calculation module
+"""
+class ETAAPITestCase(base.SteerClearBaseTestCase):
+
+    @myvcr.use_cassette()
+    @replace('steerclear.api.views.datetime', test_datetime(2015,6,13,1,2,3))
+    def test_calculate_time_data_no_rides(self):
+        pickup_loc = (37.273485, -76.719628)
+        dropoff_loc = (37.280893, -76.719691)
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 10 * 60)
+        expected_dropoff_time = expected_pickup_time + timedelta(0, 239)
+        (pickup_time, travel_time, dropoff_time) = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(pickup_time, expected_pickup_time)
+        self.assertEquals(travel_time, 239)
+        self.assertEquals(dropoff_time, expected_dropoff_time)
+
+    @myvcr.use_cassette()
+    def test_calculate_time_data_no_rides_bad_pickup_loc(self):
+        pickup_loc = (0.0, 0.0)
+        dropoff_loc = (37.280893, -76.719691)
+        result = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)
+
+    @myvcr.use_cassette()
+    def test_calculate_time_data_no_rides_bad_dest_loc(self):
+        pickup_loc = (37.280893, -76.719691)
+        dropoff_loc = (0.0, 0.0)
+        result = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)
+
+    @myvcr.use_cassette()
+    def test_calculate_time_data_with_last_ride(self):
+        user = self._create_user()
+        ride = self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        pickup_loc = (37.273485, -76.719628)
+        dropoff_loc = (37.280893, -76.719691)
+        expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 373)
+        expected_travel_time = 239
+        expected_dropoff_time = expected_pickup_time + timedelta(0, expected_travel_time)
+        (pickup_time, travel_time, dropoff_time) = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(pickup_time, expected_pickup_time)
+        self.assertEquals(travel_time, expected_travel_time)
+        self.assertEquals(dropoff_time, expected_dropoff_time)
+
+    @myvcr.use_cassette()
+    def test_calculate_time_delta_with_last_ride_bad_start_loc(self):
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 0.0, 0.0, None, None, datetime(2015,6,13,1,2,3))
+        pickup_loc = (37.273485, -76.719628)
+        dropoff_loc = (37.280893, -76.719691)
+        result = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)    
+
+    @myvcr.use_cassette()
+    def test_calculate_time_delta_with_last_ride_bad_pickup_loc(self):
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        pickup_loc = (0.0, 0.0)
+        dropoff_loc = (37.280893, -76.719691)
+        result = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)   
+
+    @myvcr.use_cassette()
+    def test_calculate_time_delta_with_last_ride_bad_dropoff_loc(self):
+        user = self._create_user()
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        pickup_loc = (37.280893, -76.719691)
+        dropoff_loc = (0.0, 0.0)
+        result = calculate_time_data(pickup_loc, dropoff_loc)
+        self.assertEquals(result, None)

@@ -23,6 +23,10 @@ sms_client = sms.SteerClearSMSClient(
             app.config['TWILIO_NUMBER']
         )
 
+# setup google distance matrix api client
+from steerclear.utils.eta import SteerClearDMClient
+dm_client = SteerClearDMClient()
+
 from steerclear.api.views import api_bp
 from steerclear.driver_portal.views import driver_portal_bp
 from steerclear.login.views import login_bp

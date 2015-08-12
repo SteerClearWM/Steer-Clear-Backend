@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
-from steerclear import sms_client
+from steerclear import sms_client, dm_client
 
 from steerclear.utils.permissions import (
     student_permission, 
@@ -188,20 +188,41 @@ api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
 api.add_resource(NotificationAPI, '/notifications', endpoint='notifications')
 
 def calculate_time_data(pickup_loc, dropoff_loc):
+    # check to see if there are any rides in the queue
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
+
+    # if there are no rides in the queue, pickup_loc and
+    # dropoff_loc are our only destinations
     if last_ride is None:
-        eta = time_between_locations([pickup_loc], [dropoff_loc])
+        # eta = time_between_locations([pickup_loc], [dropoff_loc])
+
+        # query google distance matrix api and get response
+        response = dm_client.query_api([pickup_loc], [dropoff_loc])
+        
+        # get eta or return None
+        eta = response.get_eta()
         if eta is None:
             return None
        
+        # calculate pickup, travel, and dropoff times based off eta response
+        # assumes that van will arive at pickup_loc within 5 minutes
         pickup_time = datetime.utcnow() + timedelta(0, 10 * 60)
         travel_time = eta[0][0]
         dropoff_time = pickup_time + timedelta(0, travel_time)
+    
+    # else there are other rides in the queue, so we must factor
+    # in the dropoff time and location from the last ride in the queue
     else:
         start_loc = (last_ride.end_latitude, last_ride.end_longitude)
-        eta = time_between_locations([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
+
+        response = dm_client.query_api([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
+
+        eta = response.get_eta()
         if eta is None:
             return None
+        # eta = time_between_locations([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
+        # if eta is None:
+        #     return None
         
         pickup_time = last_ride.dropoff_time + timedelta(0, eta[0][0])
         travel_time = eta[1][1]
