@@ -49,4 +49,6 @@ class Ride(db.Model):
             'pickup_time': self.pickup_time,
             'travel_time': self.travel_time,
             'dropoff_time': self.dropoff_time,
+            'pickup_address': self.pickup_address,
+            'dropoff_address': self.dropoff_address,
         }
