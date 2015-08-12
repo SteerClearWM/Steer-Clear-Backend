@@ -240,32 +240,32 @@ class DMResponseTestCase(unittest.TestCase):
     no 'elements' field in response oject
     """
     def test_get_eta_no_elements(self):
+        # checks that bad response return None for get_eta
+        def make_test(bad_response):
+            dmresponse = DMResponse(bad_response)
+            eta = dmresponse.get_eta()
+            self.assertEquals(eta, None)
+
         # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0].pop(u'elements')
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0].pop(u'elements')
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response3
         bad_response = self.response3.copy()
         dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response4
         bad_response = self.response4.copy()
         bad_response[u'rows'][0].pop(u'elements')
         dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
     """
     test_get_eta_empty_elements
@@ -273,32 +273,30 @@ class DMResponseTestCase(unittest.TestCase):
     Tests that dmresponse returns []] if 'elements' is empty
     """
     def test_get_eta_empty_elements(self):
+        # checks that bad response return None for get_eta
+        def make_test(bad_response):
+            dmresponse = DMResponse(bad_response)
+            eta = dmresponse.get_eta()
+            self.assertEquals(eta, None)
+
         # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0][u'elements'] = []
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'] = []
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response3
         bad_response = self.response3.copy()
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response4
         bad_response = self.response4.copy()
         bad_response[u'rows'][0][u'elements'] = []
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
     """
     test_get_eta_bad_element_status
@@ -307,31 +305,29 @@ class DMResponseTestCase(unittest.TestCase):
     element status is a bad status
     """
     def test_get_eta_bad_element_status(self):
+        # checks that bad response return None for get_eta
+        def make_test(bad_response):
+            dmresponse = DMResponse(bad_response)
+            eta = dmresponse.get_eta()
+            self.assertEquals(eta, None)
+
         # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0][u'elements'][0][u'status'] = u'BAD'
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'][0][u'status'] = u'BAD'
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response3
         bad_response = self.response3.copy()
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response4
         bad_response = self.response4.copy()
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
     """
     test_get_eta_no_duration
@@ -340,31 +336,29 @@ class DMResponseTestCase(unittest.TestCase):
     no 'duration' field in response oject
     """
     def test_get_eta_no_duration(self):
+        # checks that bad response return None for get_eta
+        def make_test(bad_response):
+            dmresponse = DMResponse(bad_response)
+            eta = dmresponse.get_eta()
+            self.assertEquals(eta, None)
+
         # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0][u'elements'][0].pop(u'duration')
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'][0].pop(u'duration')
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None) 
+        make_test(bad_response) 
 
         # test response3
         bad_response = self.response3.copy()
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response4
         bad_response = self.response4.copy()
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
     """
     test_get_eta_no_value
@@ -373,31 +367,29 @@ class DMResponseTestCase(unittest.TestCase):
     no 'value' field in response oject
     """
     def test_get_eta_no_value(self):
+        # checks that bad response return None for get_eta
+        def make_test(bad_response):
+            dmresponse = DMResponse(bad_response)
+            eta = dmresponse.get_eta()
+            self.assertEquals(eta, None)
+
         # test response
         bad_response = self.response.copy()
         bad_response[u'rows'][0][u'elements'][0][u'duration'].pop(u'value')
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response2
         bad_response = self.response2.copy()
         bad_response[u'rows'][0][u'elements'][0][u'duration'].pop(u'value')
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response2
         bad_response = self.response2.copy()
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
         # test response2
         bad_response = self.response2.copy()
-        dmresponse = DMResponse(bad_response)
-        eta = dmresponse.get_eta()
-        self.assertEquals(eta, None)
+        make_test(bad_response)
 
     """
     test_get_eta_success
@@ -448,33 +440,20 @@ class DMResponseTestCase(unittest.TestCase):
     no 'origin_addresses' field in response oject
     """
     def test_get_addresses_no_origin_addresses(self):
-        # test response
-        bad_response = self.response.copy()
-        bad_response.pop(u'origin_addresses')
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
+        # pops 'origin_addresses' field off response and checks that
+        # get_addresses returns None
+        def make_test(response):
+            bad_response = response.copy()
+            bad_response.pop(u'origin_addresses')
+            dmr = DMResponse(bad_response)
+            addresses = dmr.get_addresses()
+            self.assertEquals(addresses, None)        
 
-        # test response2
-        bad_response = self.response2.copy()
-        bad_response.pop(u'origin_addresses')
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
-
-        # test response3
-        bad_response = self.response3.copy()
-        bad_response.pop(u'origin_addresses')
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
-
-        # test response4
-        bad_response = self.response4.copy()
-        bad_response.pop(u'origin_addresses')
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
+        # test all responses
+        make_test(self.response)
+        make_test(self.response2)
+        make_test(self.response3)
+        make_test(self.response4)
 
     """
     test_get_addresses_empty_origin_addresses
@@ -483,33 +462,20 @@ class DMResponseTestCase(unittest.TestCase):
     is no 'origin_addresses' field in the response
     """
     def test_get_addresses_empty_origin_addresses(self):
-        # test response
-        bad_response = self.response.copy()
-        bad_response[u'origin_addresses'] = []
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
+        # sets 'origin_addresses' field of response to be []
+        # and checks that get_addresses returns None
+        def make_test(response):
+            bad_response = response.copy()
+            bad_response[u'origin_addresses'] = []
+            dmr = DMResponse(bad_response)
+            addresses = dmr.get_addresses()
+            self.assertEquals(addresses, None)
 
-        # test response2
-        bad_response = self.response2.copy()
-        bad_response[u'origin_addresses'] = []
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
-
-        # test response3
-        bad_response = self.response3.copy()
-        bad_response[u'origin_addresses'] = []
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
-
-        # test response4
-        bad_response = self.response4.copy()
-        bad_response[u'origin_addresses'] = []
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
+        # test all responses
+        make_test(self.response)
+        make_test(self.response2)
+        make_test(self.response3)
+        make_test(self.response4)
 
     """
     test_get_addresses_no_destination_addresses
@@ -518,33 +484,20 @@ class DMResponseTestCase(unittest.TestCase):
     no 'destination_addresses' field in response oject
     """
     def test_get_addresses_no_destination_addresses(self):
-        # test response
-        bad_response = self.response.copy()
-        bad_response.pop(u'destination_addresses')
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
+        # pops 'destination_addresses' field off response and checks that
+        # get_addresses returns None
+        def make_test(response):
+            bad_response = response.copy()
+            bad_response.pop(u'destination_addresses')
+            dmr = DMResponse(bad_response)
+            addresses = dmr.get_addresses()
+            self.assertEquals(addresses, None)        
 
-        # test response2
-        bad_response = self.response2.copy()
-        bad_response.pop(u'destination_addresses')
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
-
-        # test response3
-        bad_response = self.response3.copy()
-        bad_response.pop(u'destination_addresses')
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
-
-        # test response4
-        bad_response = self.response4.copy()
-        bad_response.pop(u'destination_addresses')
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
+        # test all responses
+        make_test(self.response)
+        make_test(self.response2)
+        make_test(self.response3)
+        make_test(self.response4)
 
     """
     test_get_addresses_empty_destination_addresses
@@ -553,33 +506,20 @@ class DMResponseTestCase(unittest.TestCase):
     is no 'destination_addresses' field in the response
     """
     def test_get_addresses_empty_destination_addresses(self):
-        # test response
-        bad_response = self.response.copy()
-        bad_response[u'destination_addresses'] = []
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
+        # sets 'destination_addresses' field of response to be []
+        # and checks that get_addresses returns None
+        def make_test(response):
+            bad_response = response.copy()
+            bad_response[u'destination_addresses'] = []
+            dmr = DMResponse(bad_response)
+            addresses = dmr.get_addresses()
+            self.assertEquals(addresses, None)
 
-        # test response2
-        bad_response = self.response2.copy()
-        bad_response[u'destination_addresses'] = []
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
-
-        # test response3
-        bad_response = self.response3.copy()
-        bad_response[u'destination_addresses'] = []
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
-
-        # test response4
-        bad_response = self.response4.copy()
-        bad_response[u'destination_addresses'] = []
-        dmr = DMResponse(bad_response)
-        addresses = dmr.get_addresses()
-        self.assertEquals(addresses, None)
+        # test all responses
+        make_test(self.response)
+        make_test(self.response2)
+        make_test(self.response3)
+        make_test(self.response4)
 
     """
     test_get_addresses
