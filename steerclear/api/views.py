@@ -88,6 +88,8 @@ class RideListAPI(Resource):
             pickup_time=pickup_time,
             travel_time=travel_time,
             dropoff_time=dropoff_time,
+            pickup_address=pickup_address,
+            dropoff_address=dropoff_address,
             user=current_user
         )
         
