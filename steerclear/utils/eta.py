@@ -6,11 +6,18 @@ DISTANCEMATRIX_BASE_URL = 'https://maps.googleapis.com/maps/api/distancematrix/j
 
 class SteerClearDMClient():
 
+
     def query_api(self, origins, destinations):
-        query = _format_query(origins, destinations)
-        url = _build_url(query)
+        # build query string and url
+        query = self._format_query(origins, destinations)
+        url = self._build_url(query)
+
+        # make request and check for bad response
         response = requests.get(url)
-        return DMResponse(response)
+        if response.status_code != requests.codes.ok:
+            return DMResponse(None)
+        # return response object
+        return DMResponse(response.json())
 
     """
     _format_query
@@ -52,7 +59,13 @@ class DMResponse():
     of the response from the distancematrix api
     """
     def __init__(self, data):
-        self.data = data
+        if data is not None and data.get(u'status', u'') != u'OK':
+            self.data = None
+        else:
+            self.data = data
+
+    def __eq__(self, other):
+        return self.data == other.data
 
     """
     get_eta

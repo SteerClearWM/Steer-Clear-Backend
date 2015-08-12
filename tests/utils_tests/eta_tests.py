@@ -113,6 +113,25 @@ class DMResponseTestCase(unittest.TestCase):
            "status" : "OK"
         }
 
+        # represents an invalid request
+        self.response3 = {
+           "destination_addresses" : [],
+           "origin_addresses" : [],
+           "rows" : [],
+           "status" : "INVALID_REQUEST"
+        }
+
+    """
+    test_dmresponse_invalid_request
+    -------------------------------
+    Tests that the dmresponse handles an
+    invalid request correctly by settings its
+    :data: attribute to None
+    """
+    def test_dmresponse_invalid_request(self):
+        dmr = DMResponse(self.response3)
+        self.assertEquals(dmr.data, None)
+
     """
     test_get_eta_no_response
     ------------------------
@@ -470,6 +489,56 @@ class SteerClearDMClientTestCase(unittest.TestCase):
 
         self.assertEquals(url, expected_url)
 
+    """
+    test_query_api_bad_origin_latlong
+    ---------------------------------
+    Tests that dmrclient handles no origin point correctly
+    """
+    @myvcr.use_cassette()
+    def test_query_api_bad_origin_latlong(self):
+        origins = []
+        destinations = [(0.0, 0.0)]
+        response = self.dmclient.query_api(origins, destinations)
+        self.assertEquals(response, DMResponse(None))
+
+    """
+    test_query_api_bad_destination_latlong
+    ---------------------------------
+    Tests that dmrclient handles no destination point correctly
+    """
+    @myvcr.use_cassette()
+    def test_query_api_bad_destination_latlong(self):
+        origins = [(0.0, 0.0)]
+        destinations = []
+        response = self.dmclient.query_api(origins, destinations)
+        self.assertEquals(response, DMResponse(None))
+
+    """
+    test_query_api_zero_coordinate
+    ------------------------------
+    Tests that dmrclient does not fail for weird lat/long coordinates
+    """
+    @myvcr.use_cassette()
+    def test_query_api_zero_coordinate(self):
+        origins = [(0.0, 0.0)]
+        destinations = [(0.0, 0.0)]
+        response = self.dmclient.query_api(origins, destinations)
+        self.assertNotEquals(response, DMResponse(None))
+
+    """
+    test_query_api_single_origin
+    ----------------------------
+    Tests that dmclient does not fail for a normal query with
+    a single origin and destination
+    """
+    @myvcr.use_cassette()
+    def test_query_api_single_origin(self):
+        # expected value [[238]]
+        origins = [(37.272042, -76.714027)]
+        destinations = [(37.280893, -76.719691)]
+        response = self.dmclient.query_api(origins, destinations)
+        self.assertNotEquals(response, DMResponse(None))
+        self.assertEquals(response.get_eta(), [[238]])
 
 # """
 # ETATestCase
