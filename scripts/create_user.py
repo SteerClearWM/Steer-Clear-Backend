@@ -10,7 +10,6 @@ from sqlalchemy import exc
 def create_user():
 	# prompt for input
 	email = raw_input('Enter email: ')
-	password = raw_input('Enter Password: ')
 	phone = raw_input('Enter Phone Number (e.x. +1xxxyyyzzzz): ')
 	role = None
 	while role not in ['student', 'admin']:
@@ -22,7 +21,7 @@ def create_user():
 		sys.exit(1)
 
 	# create user
-	user = User(email=email, password=password, phone=phone, roles=[role])
+	user = User(email=email, phone=phone, roles=[role])
 	try:
 		# attempt to add user to db
 		db.session.add(user)
