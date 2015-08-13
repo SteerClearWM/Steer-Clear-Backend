@@ -60,7 +60,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 400)
 
         # test with user that has different email but same password
-        self._create_user(email='kyle', password='1234')
+        self._create_user(email='kyle')
         response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertEquals(response.status_code, 400)
@@ -78,7 +78,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 400)
 
         # test with user that has same email but different password
-        self._create_user(email='ryan', password='4321')
+        self._create_user(email='ryan')
         response = self.client.post(url_for('login.login'), data=self.login_payload)
         self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
         self.assertEquals(response.status_code, 400)
@@ -111,7 +111,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         # replace validate_user function so it passes
         with Replacer() as r:
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
-            self._create_user(email='ryan', password='1234')
+            self._create_user(email='ryan')
             response = self.client.post(url_for('login.login'), data=self.login_payload)
             self.assertRedirects(response, url_for('driver_portal.index'))
 
@@ -135,7 +135,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
             
             # login a user
-            self._create_user(email='ryan', password='1234')
+            self._create_user(email='ryan')
             self.client.post(url_for('login.login'), data=self.login_payload)
 
             # logout user
@@ -170,7 +170,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         with Replacer() as r:
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
             # create a user
-            self._create_user(email='ryan', password='1234')
+            self._create_user(email='ryan')
 
             # check that POST request failed
             response = self.client.post(url_for('login.register'), data=self.register_payload)
@@ -186,7 +186,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_register_failure_form_failure(self):
         # create a user
-        self._create_user(email='ryan', password='1234')
+        self._create_user(email='ryan')
 
         # check that POST request failed
         bad_payload = self.register_payload.copy()
@@ -229,7 +229,6 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             user = User.query.filter_by(email=self.register_payload[u'email']).first()
             self.assertIsNotNone(user)
             self.assertEquals(user.email, self.register_payload[u'email'])
-            self.assertEquals(user.password, self.register_payload[u'password'])
             self.assertEquals(user.phone.e164, self.register_payload[u'phone'])
             self.assertEquals(user.roles.all(), [self.student_role])
 

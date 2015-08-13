@@ -65,7 +65,7 @@ class SteerClearBaseTestCase(testing.TestCase):
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
             self.client.post(url_for('login.login'), data={
                     u'email': user.email,
-                    u'password': user.password,
+                    u'password': '1234',
                 })
 
     """
@@ -81,11 +81,11 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------------
     Helper function that creates and returns a new User object in the db
     """
-    def _create_user(self, email='ryan', password='1234', phone='+17572214000', role=None):
+    def _create_user(self, email='ryan', phone='+17572214000', role=None):
         if role is None:
             role = Role.query.filter_by(name='student').first()
 
-        user = User(email=email, password=password, phone=phone, roles=[role])
+        user = User(email=email, phone=phone, roles=[role])
         db.session.add(user)
         db.session.commit()
         return user

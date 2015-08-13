@@ -111,13 +111,20 @@ POST - logs user in if valid email and password
 """
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    # GET request. return login page
     if request.method == 'GET':
         return render_template('login.html', action=url_for('.login'))
 
+    # POST request. attempt to login
+    # must validate LoginForm and CAS server
     form = LoginForm()
     if form.validate_on_submit() and cas.validate_user(form.email.data, form.password.data):
+        
+        # get User object if exists
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.password == form.password.data:
+        if user:
+
+            # login user
             login_user(user)
 
             # Tell Flask-Principal the identity changed
@@ -174,7 +181,6 @@ def register():
         # attempt to create a new User in the db
         new_user = User(
             email=form.email.data, 
-            password=form.password.data,
             phone=form.phone.data,
             roles=[student_role]
         )
