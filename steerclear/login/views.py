@@ -164,7 +164,7 @@ def register():
 
     # attempt to validate RegisterForm
     form = RegisterForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit() and cas.validate_user(form.email.data, form.password.data):
         
         # Find StudentRole. SHOULD EXIST ON STARTUP. IF NOT, THEN SERVER ERROR
         student_role = Role.query.filter_by(name='student').first()
