@@ -2,6 +2,7 @@ from flask import url_for
 from flask.ext import testing
 from steerclear import app, db
 from steerclear.models import User, Ride, Role
+from testfixtures import Replacer
 
 from datetime import datetime
 
@@ -60,10 +61,12 @@ class SteerClearBaseTestCase(testing.TestCase):
     Helper function that creates a user and then logins as that user
     """
     def _login(self, user):
-        self.client.post(url_for('login.login'), data={
-                u'email': user.email,
-                u'password': user.password,
-            })
+        with Replacer() as r:
+            r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
+            self.client.post(url_for('login.login'), data={
+                    u'email': user.email,
+                    u'password': user.password,
+                })
 
     """
     _logout
@@ -166,3 +169,11 @@ class SteerClearBaseTestCase(testing.TestCase):
                     # if the user shouldn't have permission, make sure status code is 403
                     self.assertEquals(response.status_code, 403)
                     break
+
+    """
+    mock_validate_user
+    ------------------
+    Mock method for replacing validate_user() so that it always returns true
+    """
+    def mock_validate_user(self, email, password):
+        return True

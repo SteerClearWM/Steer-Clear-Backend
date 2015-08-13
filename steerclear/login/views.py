@@ -26,6 +26,7 @@ from flask.ext.principal import (
 from flask_restful import abort
 from sqlalchemy import exc
 from steerclear import login_manager, app 
+from steerclear.utils import cas
 from steerclear.utils.permissions import (
     admin_permission, 
     student_permission,
@@ -114,7 +115,7 @@ def login():
         return render_template('login.html', action=url_for('.login'))
 
     form = LoginForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit() and cas.validate_user(form.email.data, form.password.data):
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.password == form.password.data:
             login_user(user)
