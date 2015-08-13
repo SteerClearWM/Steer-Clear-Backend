@@ -175,5 +175,5 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------------------
     Mock method for replacing validate_user() so that it always returns true
     """
-    def mock_validate_user(self, email, password):
+    def mock_validate_user(self, username, password):
         return True
