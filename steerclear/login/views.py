@@ -26,6 +26,7 @@ from flask.ext.principal import (
 from flask_restful import abort
 from sqlalchemy import exc
 from steerclear import login_manager, app 
+from steerclear.utils import cas
 from steerclear.utils.permissions import (
     admin_permission, 
     student_permission,
@@ -103,20 +104,27 @@ login
 -----
 main endpoint for logging users in and out
 GET - returns the login page
-POST - logs user in if valid email and password
+POST - logs user in if valid username and password
        and redirects to index page else returns the login template
 :TODO: factor in password hashing + salt. add
        more helpful error messages
 """
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    # GET request. return login page
     if request.method == 'GET':
         return render_template('login.html', action=url_for('.login'))
 
+    # POST request. attempt to login
+    # must validate LoginForm and CAS server
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and user.password == form.password.data:
+    if form.validate_on_submit() and cas.validate_user(form.username.data, form.password.data):
+        
+        # get User object if exists
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+
+            # login user
             login_user(user)
 
             # Tell Flask-Principal the identity changed
@@ -152,18 +160,19 @@ register
 --------
 Main endpoint for registering new users in the system
 GET - returns the register user template
-POST - takes a email/password form and creates a new user.
-       If a user already exists with the same email, flash an error message
+POST - takes a username/password form and creates a new user.
+       If a user already exists with the same username, flash an error message
        and return the register screen again. On success, redirect user to login page
 """
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    # GET request. return register page
     if request.method == 'GET':
         return render_template('login.html', action=url_for('.register'))
 
-    # attempt to validate RegisterForm
+    # POST request. attempt to validate RegisterForm and user with CAS server
     form = RegisterForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit() and cas.validate_user(form.username.data, form.password.data):
         
         # Find StudentRole. SHOULD EXIST ON STARTUP. IF NOT, THEN SERVER ERROR
         student_role = Role.query.filter_by(name='student').first()
@@ -172,8 +181,7 @@ def register():
 
         # attempt to create a new User in the db
         new_user = User(
-            email=form.email.data, 
-            password=form.password.data,
+            username=form.username.data, 
             phone=form.phone.data,
             roles=[student_role]
         )

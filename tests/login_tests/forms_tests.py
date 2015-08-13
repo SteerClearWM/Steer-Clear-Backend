@@ -2,9 +2,9 @@ from steerclear import app
 from steerclear.forms import RegisterForm, LoginForm
 import unittest, flask
 
-# email string min and max lengths
-EMAIL_MIN_LENGTH = 1
-EMAIL_MAX_LENGTH = 119
+# username string min and max lengths
+USERNAME_MIN_LENGTH = 1
+USERNAME_MAX_LENGTH = 119
 
 # password string min and max lengths
 PASSWORD_MIN_LENGTH = 1
@@ -34,7 +34,7 @@ class RegisterFormTestCase(unittest.TestCase):
 
     def setUp(self):
         self.payload = {
-            u"email": u"ryan",
+            u"username": u"ryan",
             u"password": u"1234",
             u'phone': u'+17572214000',
         }
@@ -63,36 +63,36 @@ class RegisterFormTestCase(unittest.TestCase):
             self.assertFalse(result)
 
     """
-    test_email_min_length
+    test_username_min_length
     ------------------------
     Tests that a RegisterForm validates the minimum length
-    for the email field correctly
+    for the username field correctly
     """
-    def test_email_min_length(self):
+    def test_username_min_length(self):
         payload = self.payload.copy()
-        payload[u'email'] = 'x' * EMAIL_MIN_LENGTH
+        payload[u'username'] = 'x' * USERNAME_MIN_LENGTH
         result = self.submit_form(RegisterForm, payload)
         self.assertTrue(result)
 
         payload = self.payload.copy()
-        payload[u'email'] = 'x' * (EMAIL_MIN_LENGTH-1)
+        payload[u'username'] = 'x' * (USERNAME_MIN_LENGTH-1)
         result = self.submit_form(RegisterForm, payload)
         self.assertFalse(result)
 
     """
-    test_email_max_length
+    test_username_max_length
     ------------------------
     Tests that a RegisterForm validates the maximum length
-    for the email field correctly
+    for the username field correctly
     """
-    def test_email_max_length(self):
+    def test_username_max_length(self):
         payload = self.payload.copy()
-        payload[u'email'] = 'x' * EMAIL_MAX_LENGTH
+        payload[u'username'] = 'x' * USERNAME_MAX_LENGTH
         result = self.submit_form(RegisterForm, payload)
         self.assertTrue(result)
 
         payload = self.payload.copy()
-        payload[u'email'] = 'x' * (EMAIL_MAX_LENGTH+1)
+        payload[u'username'] = 'x' * (USERNAME_MAX_LENGTH+1)
         result = self.submit_form(RegisterForm, payload)
         self.assertFalse(result)
 
@@ -216,7 +216,7 @@ class LoginFormTestCase(unittest.TestCase):
 
     def setUp(self):
         self.payload = {
-            u"email": u"ryan",
+            u"username": u"ryan",
             u"password": u"1234",
         }
 

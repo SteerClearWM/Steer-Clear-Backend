@@ -24,11 +24,11 @@ def validate_phone(form, field):
 RegisterForm
 ------------
 Form for validating registration requests.
-Has email, password, and phone number fields
+Has username, password, and phone number fields
 for the new user
 """
 class RegisterForm(Form):
-    email = TextField('email', [DataRequired(), Length(min=1, max=119)])
+    username = TextField('username', [DataRequired(), Length(min=1, max=119)])
     password = PasswordField('password', [DataRequired(), Length(min=1, max=119)])
     phone = StringField('phone', [DataRequired(), validate_phone])
 
@@ -36,9 +36,9 @@ class RegisterForm(Form):
 LoginForm
 ---------
 Form for validating login requests.
-Has email and password fields for the
+Has username and password fields for the
 user that is attempting to login
 """
 class LoginForm(Form):
-    email = TextField('email', [DataRequired(), Length(min=1, max=119)])
+    username = TextField('username', [DataRequired(), Length(min=1, max=119)])
     password = PasswordField('password', [DataRequired(), Length(min=1, max=119)])

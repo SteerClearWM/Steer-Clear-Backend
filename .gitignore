@@ -58,3 +58,4 @@ target/
 
 default_settings.py
 test_notify_user_bad_phone_number
+test_validate_user_success

@@ -116,21 +116,21 @@ There a few helpful scripts for doing things such as creating a new user or ride
 
 ### /scripts/create_user.py
 * Creates a new User
-* Prompts for username/password input
+* Prompts for username/phone/role input
 * Displays message if user already exists
 
 ### /scripts/create_ride.py
 * Creates a new Ride request
 
 ## Login
-At the Moment, login is done with a username and password. We will be switching to just using an email address and a per session random cookie for login later.
+Login is done with a valid w&m account username and password. 
 
 ### GET /login
 * Returns the login page
 
 ### POST /login
 * Route to actually log a user in
-* Takes a form with a **email** and **password** field. 
+* Takes a form with a **username** and **password** field. 
 * On success, redirects to **index** page.
 * On failure, returns login page again and 400 status code
 
@@ -139,14 +139,14 @@ At the Moment, login is done with a username and password. We will be switching 
 * Logs the current user out of the system
 
 ## Registering Users
-You can register a new user (assuming the user does not already exist) by making a simple POST request with a username and password field. The new user will have all api permissions that a student has
+You can register a new user (assuming the user does not already exist) by making a simple POST request with a username, password, and phone field. The new user will have all api permissions that a student has
 
 ### GET /register
 * Returns the register page
 
 ### POST /register
 * Creates a new user. 
-* Takes a form with a **email** and **password** and a **phone** field.
+* Takes a form with a **username** and **password** and a **phone** field.
 * **phone** field must be a valid phone number string (i.e. +1xxxyyyzzzz) 
 * If the user already exists return the register page again and a 409 status code
 * **TODO** add error message
