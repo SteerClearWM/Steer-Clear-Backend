@@ -64,7 +64,7 @@ class SteerClearBaseTestCase(testing.TestCase):
         with Replacer() as r:
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
             self.client.post(url_for('login.login'), data={
-                    u'username': user.email,
+                    u'username': user.username,
                     u'password': '1234',
                 })
 
@@ -85,7 +85,7 @@ class SteerClearBaseTestCase(testing.TestCase):
         if role is None:
             role = Role.query.filter_by(name='student').first()
 
-        user = User(email=email, phone=phone, roles=[role])
+        user = User(username=email, phone=phone, roles=[role])
         db.session.add(user)
         db.session.commit()
         return user

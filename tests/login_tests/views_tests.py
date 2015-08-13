@@ -54,17 +54,21 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     Tests that login fails if the user supplies the wrong email
     """
     def test_login_failure_incorrect_email(self):
-        # test with no Users in db
-        response = self.client.post(url_for('login.login'), data=self.login_payload)
-        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertEquals(response.status_code, 400)
+        # replace validate_user function so it passes
+        with Replacer() as r:
+            r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
+            
+            # test with no Users in db
+            response = self.client.post(url_for('login.login'), data=self.login_payload)
+            self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
+            self.assertEquals(response.status_code, 400)
 
-        # test with user that has different email but same password
-        self._create_user(email='kyle')
-        response = self.client.post(url_for('login.login'), data=self.login_payload)
-        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertEquals(response.status_code, 400)
-        self.assertContext('action', url_for('login.login'))
+            # test with user that has different email but same password
+            self._create_user(email='kyle')
+            response = self.client.post(url_for('login.login'), data=self.login_payload)
+            self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
+            self.assertEquals(response.status_code, 400)
+            self.assertContext('action', url_for('login.login'))
 
     """
     test_login_failure_incorrect_password
@@ -72,17 +76,23 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     Tests that login fails if the user supplies the wrong password
     """
     def test_login_failure_incorrect_password(self):
-        # test with no Users in db
-        response = self.client.post(url_for('login.login'), data=self.login_payload)
-        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertEquals(response.status_code, 400)
+        def mock_validate(username, password):
+            return False
+        # replace validate_user function so it passes
+        with Replacer() as r:
+            r.replace('steerclear.utils.cas.validate_user', mock_validate)
+            
+            # test with no Users in db
+            response = self.client.post(url_for('login.login'), data=self.login_payload)
+            self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
+            self.assertEquals(response.status_code, 400)
 
-        # test with user that has same email but different password
-        self._create_user(email='ryan')
-        response = self.client.post(url_for('login.login'), data=self.login_payload)
-        self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
-        self.assertEquals(response.status_code, 400)
-        self.assertContext('action', url_for('login.login'))
+            # test with user that has same email but different password
+            self._create_user(email='ryan')
+            response = self.client.post(url_for('login.login'), data=self.login_payload)
+            self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
+            self.assertEquals(response.status_code, 400)
+            self.assertContext('action', url_for('login.login'))
 
     """
     test_login_failure_valid_credentials_but_hasnt_registered
@@ -225,10 +235,10 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             response = self.client.post(url_for('login.register'), data=self.register_payload)
             self.assertRedirects(response, url_for('login.login'))
 
-            # find new user in db and check that it has correct email/password
-            user = User.query.filter_by(email=self.register_payload[u'username']).first()
+            # find new user in db and check that it has correct username/password
+            user = User.query.filter_by(username=self.register_payload[u'username']).first()
             self.assertIsNotNone(user)
-            self.assertEquals(user.email, self.register_payload[u'username'])
+            self.assertEquals(user.username, self.register_payload[u'username'])
             self.assertEquals(user.phone.e164, self.register_payload[u'phone'])
             self.assertEquals(user.roles.all(), [self.student_role])
 

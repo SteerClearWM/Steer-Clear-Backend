@@ -14,11 +14,11 @@ WM_CAS_SERVER_URL = 'https://cas.wm.edu/cas/login?service=http%3A//localhost%3A8
 """
 validate_user
 -------------
-Checks if a Users' email and password credentials are valid,
+Checks if a Users' username and password credentials are valid,
 meaning that they are a valid W&M student and can use the
 steerclear service
 """
-def validate_user(email, password):
+def validate_user(username, password):
     # create new browser object
     browser = mechanize.Browser()
 
@@ -35,8 +35,8 @@ def validate_user(email, password):
     # select the login form
     browser.select_form(nr=0)
 
-    # fill in the form with the users email and password
-    browser['username'] = email
+    # fill in the form with the users username and password
+    browser['username'] = username
     browser['password'] = password
 
     try:

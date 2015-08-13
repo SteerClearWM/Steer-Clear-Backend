@@ -104,7 +104,7 @@ login
 -----
 main endpoint for logging users in and out
 GET - returns the login page
-POST - logs user in if valid email and password
+POST - logs user in if valid username and password
        and redirects to index page else returns the login template
 :TODO: factor in password hashing + salt. add
        more helpful error messages
@@ -121,7 +121,7 @@ def login():
     if form.validate_on_submit() and cas.validate_user(form.username.data, form.password.data):
         
         # get User object if exists
-        user = User.query.filter_by(email=form.username.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
         if user:
 
             # login user
@@ -160,8 +160,8 @@ register
 --------
 Main endpoint for registering new users in the system
 GET - returns the register user template
-POST - takes a email/password form and creates a new user.
-       If a user already exists with the same email, flash an error message
+POST - takes a username/password form and creates a new user.
+       If a user already exists with the same username, flash an error message
        and return the register screen again. On success, redirect user to login page
 """
 @login_bp.route('/register', methods=['GET', 'POST'])
@@ -181,7 +181,7 @@ def register():
 
         # attempt to create a new User in the db
         new_user = User(
-            email=form.username.data, 
+            username=form.username.data, 
             phone=form.phone.data,
             roles=[student_role]
         )
