@@ -130,7 +130,7 @@ Login is done with a valid w&m account username and password.
 
 ### POST /login
 * Route to actually log a user in
-* Takes a form with a **email** and **password** field. 
+* Takes a form with a **username** and **password** field. 
 * On success, redirects to **index** page.
 * On failure, returns login page again and 400 status code
 
@@ -146,7 +146,7 @@ You can register a new user (assuming the user does not already exist) by making
 
 ### POST /register
 * Creates a new user. 
-* Takes a form with a **email** and **password** and a **phone** field.
+* Takes a form with a **username** and **password** and a **phone** field.
 * **phone** field must be a valid phone number string (i.e. +1xxxyyyzzzz) 
 * If the user already exists return the register page again and a 409 status code
 * **TODO** add error message
