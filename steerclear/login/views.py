@@ -118,10 +118,10 @@ def login():
     # POST request. attempt to login
     # must validate LoginForm and CAS server
     form = LoginForm()
-    if form.validate_on_submit() and cas.validate_user(form.email.data, form.password.data):
+    if form.validate_on_submit() and cas.validate_user(form.username.data, form.password.data):
         
         # get User object if exists
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.username.data).first()
         if user:
 
             # login user
@@ -172,7 +172,7 @@ def register():
 
     # POST request. attempt to validate RegisterForm and user with CAS server
     form = RegisterForm()
-    if form.validate_on_submit() and cas.validate_user(form.email.data, form.password.data):
+    if form.validate_on_submit() and cas.validate_user(form.username.data, form.password.data):
         
         # Find StudentRole. SHOULD EXIST ON STARTUP. IF NOT, THEN SERVER ERROR
         student_role = Role.query.filter_by(name='student').first()
@@ -181,7 +181,7 @@ def register():
 
         # attempt to create a new User in the db
         new_user = User(
-            email=form.email.data, 
+            email=form.username.data, 
             phone=form.phone.data,
             roles=[student_role]
         )

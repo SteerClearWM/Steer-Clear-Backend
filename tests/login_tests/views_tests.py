@@ -24,13 +24,13 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     def setUp(self):
         super(SteerClearLoginTestCase, self).setUp()
         self.register_payload = {
-            u'email': u'ryan',
+            u'username': u'ryan',
             u'password': u'1234',
             u'phone': '+17572214000'
         }
 
         self.login_payload = {
-            u'email': u'ryan',
+            u'username': u'ryan',
             u'password': u'1234',
         }
 
@@ -190,7 +190,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
 
         # check that POST request failed
         bad_payload = self.register_payload.copy()
-        bad_payload.pop('email')
+        bad_payload.pop('username')
         response = self.client.post(url_for('login.register'), data=bad_payload)
         self.assertEquals(response.status_code, 400)
         self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
@@ -226,9 +226,9 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             self.assertRedirects(response, url_for('login.login'))
 
             # find new user in db and check that it has correct email/password
-            user = User.query.filter_by(email=self.register_payload[u'email']).first()
+            user = User.query.filter_by(email=self.register_payload[u'username']).first()
             self.assertIsNotNone(user)
-            self.assertEquals(user.email, self.register_payload[u'email'])
+            self.assertEquals(user.email, self.register_payload[u'username'])
             self.assertEquals(user.phone.e164, self.register_payload[u'phone'])
             self.assertEquals(user.roles.all(), [self.student_role])
 

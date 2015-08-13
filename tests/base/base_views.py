@@ -64,7 +64,7 @@ class SteerClearBaseTestCase(testing.TestCase):
         with Replacer() as r:
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
             self.client.post(url_for('login.login'), data={
-                    u'email': user.email,
+                    u'username': user.email,
                     u'password': '1234',
                 })
 
