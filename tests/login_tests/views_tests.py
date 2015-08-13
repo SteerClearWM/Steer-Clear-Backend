@@ -85,6 +85,24 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertContext('action', url_for('login.login'))
 
     """
+    test_login_failure_valid_credentials_but_hasnt_registered
+    ---------------------------------------------------------
+    Tests that a user who hasn't registered yet but
+    attempts to login with valid W&M account credentials
+    will fail to login
+    """
+    def test_login_failure_valid_credentials_but_hasnt_registered(self):
+        # replace validate_user function so it passes
+        with Replacer() as r:
+            r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
+
+            # try to login
+            response = self.client.post(url_for('login.login'), data=self.login_payload)
+            self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
+            self.assertEquals(response.status_code, 400)
+            self.assertContext('action', url_for('login.login'))
+
+    """
     test_login_success
     ------------------
     Tests that a user can login successfully
