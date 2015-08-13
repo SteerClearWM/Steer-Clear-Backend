@@ -1,0 +1,152 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection: [close]
+      Host: [cas.wm.edu]
+      User-Agent: [Python-urllib/2.7]
+    method: GET
+    uri: https://cas.wm.edu/cas/login?service=http%3A//localhost%3A8080/login/
+  response:
+    body: {string: !!python/unicode "\n\n\n\n\n\n\n\n\n\n<html lang=\"en\">\n<head>\n\
+        \    <meta content=\"IE=edge\" http-equiv=\"X-UA-Compatible\">\n    <meta\
+        \ charset=\"utf-8\">\n    <meta content=\"width=device-width, initial-scale=1\"\
+        \ name=\"viewport\">\n\n    <title>W&amp;M CAS &ndash; Central Authentication\
+        \ Service</title>\n    \n    <link type=\"text/css\" rel=\"stylesheet\" href=\"\
+        /cas/css/wm_rt_style.css;jsessionid=FB65AA09341F2C03201C25538A8CB369\" />\n\
+        </head>\n\n<body>\n    <div id=\"container\">\n        <header id=\"main_header\"\
+        >\n            <img id=\"cypher\" src=\"assets/wmcypher.png\" alt=\"College\
+        \ of William &amp; Mary\" width=\"106\" height=\"97\"> <a href=\n        \
+        \    \"http://www.wm.edu\" id=\"logo\"><img id=\"stacked_wordmark\" src=\"\
+        assets/logo_with_line.png\" alt=\"College of William &amp; Mary\"\n      \
+        \      width=\"185\" height=\"91\"> <img id=\"single_line_wordmark\" src=\"\
+        assets/single-line-wordmark.png\" alt=\n            \"College of William &\
+        \ Mary\"></a>\n\n           <h1 class=\"bannerTitle\"><a class=\"deptText\
+        \ XX-Small\" href=\"/cas/login\">Central Authentication Service</a></h1>\n\
+        \        </header>\n        <div id=\"content\">\n\n\n\n\n<p>The Service you\
+        \ are attempting to access requires that you authenticate using the College\
+        \ of William &amp; Mary's Central Authentication Service.</p>\n<div id=\"\
+        login\">\n    <form id=\"credentials\" action=\"/cas/login;jsessionid=FB65AA09341F2C03201C25538A8CB369?service=http%3A//localhost%3A8080/login/\"\
+        \ method=\"post\">\n        \n        <strong>Enter your WMuserid and Password</strong>\n\
+        \            <label for=\"username\" ><span class=\"accesskey\">W</span>Muserid:</label>\n\
+        \        \n\n        \n            \n            <input id=\"username\" name=\"\
+        username\" class=\"required\" tabindex=\"1\" accesskey=\"w\" type=\"text\"\
+        \ value=\"\" size=\"35\" autocomplete=\"false\"/>\n        \n        <label\
+        \ for=\"password\" <span class=\"accesskey\">P</span>assword:</label>\n  \
+        \      \n        <input id=\"password\" name=\"password\" class=\"required\"\
+        \ tabindex=\"2\" accesskey=\"p\" type=\"password\" value=\"\" size=\"35\"\
+        \ autocomplete=\"off\"/>\n        <p><input id=\"warn\" name=\"warn\" value=\"\
+        true\" tabindex=\"3\" type=\"checkbox\" /> Warn me before logging me into\
+        \ other sites</p>\n        \n\n        <div>\n            <input type=\"hidden\"\
+        \ name=\"lt\" value=\"LT-1873143-HXyQmsnTerOo9BQztgXVVd6X2dswpC\" />\n   \
+        \         <input type=\"hidden\" name=\"execution\" value=\"e1s1\" />\n  \
+        \          <input type=\"hidden\" name=\"_eventId\" value=\"submit\" />\n\
+        \            <input class=\"btn-submit\" name=\"submit\" accesskey=\"l\" value=\"\
+        Login\" tabindex=\"4\" type=\"submit\" />\n        </div>\n    </form>\n</div>\n\
+        <br /><p><a href=\"http://www.wm.edu/offices/it/services/network/cas/index.php\"\
+        >About CAS</a><br /><a href=\"http://www.wm.edu/offices/it/services/accounts/faqsloginpassword/index.php\"\
+        >Need help with your WMuserid or Password?</a></p>\n<p>For security reasons,\
+        \ please Log Out and Exit your web browser when you are done accessing services\
+        \ that require authentication.</p>\n\n\n\n        </div>\n\n        <footer\
+        \ id=\"main_footer\">\n            <div class=\"college-info\">\n        \
+        \        <p class=\"college-name\">The College of William &amp; Mary</p>\n\
+        \n                <p class=\"college-location\">Williamsburg, VA. <a href=\"\
+        http://www.wm.edu/contactus/index.php\">Contact Us</a></p>\n\n           \
+        \     <p class=\"rights-reserved\">All Rights Reserved &#169; 2014</p>\n \
+        \           </div>\n        </footer>\n    </div><!-- end #container -->\n\
+        \        <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js\"\
+        ></script>\n        <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js\"\
+        ></script>\n        <script type=\"text/javascript\" src=\"/cas/js/cas.js;jsessionid=FB65AA09341F2C03201C25538A8CB369\"\
+        ></script>\n    </body>\n    <!-- WMdebugInfo\n      LocalAddr: 10.80.160.24\n\
+        \      LocalName: casprd01\n      ServerName: cas.wm.edu\n      RemoteAddr:\
+        \ 204.11.129.249\n      Powered by Jasig Central Authentication Service 3.5.3\n\
+        \      http://www.jasig.org/casJasig\n    -->\n</html>\n\n"}
+    headers:
+      cache-control: [no-cache, no-store]
+      connection: [close]
+      content-length: ['3916']
+      content-type: [text/html;charset=UTF-8]
+      date: ['Thu, 13 Aug 2015 04:17:28 GMT']
+      expires: ['Thu, 01 Jan 1970 00:00:00 GMT']
+      pragma: [no-cache]
+      server: [Apache-Coyote/1.1]
+      set-cookie: [JSESSIONID=FB65AA09341F2C03201C25538A8CB369; Path=/cas/; Secure;
+          HttpOnly]
+    status: {code: 200, message: OK}
+- request:
+    body: username=username&password=HighMnt2&lt=LT-1873143-HXyQmsnTerOo9BQztgXVVd6X2dswpC&execution=e1s1&_eventId=submit&submit=Login
+    headers:
+      Connection: [close]
+      Content-Length: ['124']
+      Content-Type: [application/x-www-form-urlencoded]
+      Cookie: [JSESSIONID=FB65AA09341F2C03201C25538A8CB369]
+      Host: [cas.wm.edu]
+      Referer: ['https://cas.wm.edu/cas/login?service=http%3A//localhost%3A8080/login/']
+      User-Agent: [Python-urllib/2.7]
+    method: POST
+    uri: https://cas.wm.edu/cas/login;jsessionid=FB65AA09341F2C03201C25538A8CB369?service=http%3A//localhost%3A8080/login/
+  response:
+    body: {string: !!python/unicode "\n\n\n\n\n\n\n\n\n\n<html lang=\"en\">\n<head>\n\
+        \    <meta content=\"IE=edge\" http-equiv=\"X-UA-Compatible\">\n    <meta\
+        \ charset=\"utf-8\">\n    <meta content=\"width=device-width, initial-scale=1\"\
+        \ name=\"viewport\">\n\n    <title>W&amp;M CAS &ndash; Central Authentication\
+        \ Service</title>\n    \n    <link type=\"text/css\" rel=\"stylesheet\" href=\"\
+        /cas/css/wm_rt_style.css\" />\n</head>\n\n<body>\n    <div id=\"container\"\
+        >\n        <header id=\"main_header\">\n            <img id=\"cypher\" src=\"\
+        assets/wmcypher.png\" alt=\"College of William &amp; Mary\" width=\"106\"\
+        \ height=\"97\"> <a href=\n            \"http://www.wm.edu\" id=\"logo\"><img\
+        \ id=\"stacked_wordmark\" src=\"assets/logo_with_line.png\" alt=\"College\
+        \ of William &amp; Mary\"\n            width=\"185\" height=\"91\"> <img id=\"\
+        single_line_wordmark\" src=\"assets/single-line-wordmark.png\" alt=\n    \
+        \        \"College of William & Mary\"></a>\n\n           <h1 class=\"bannerTitle\"\
+        ><a class=\"deptText XX-Small\" href=\"/cas/login\">Central Authentication\
+        \ Service</a></h1>\n        </header>\n        <div id=\"content\">\n\n\n\n\
+        \n<p>The Service you are attempting to access requires that you authenticate\
+        \ using the College of William &amp; Mary's Central Authentication Service.</p>\n\
+        <div id=\"login\">\n    <form id=\"credentials\" action=\"/cas/login?service=http%3A//localhost%3A8080/login/\"\
+        \ method=\"post\">\n        <div id=\"msg\">The credentials you provided cannot\
+        \ be determined to be authentic.</div>\n        <strong>Enter your WMuserid\
+        \ and Password</strong>\n            <label for=\"username\" ><span class=\"\
+        accesskey\">W</span>Muserid:</label>\n        \n\n        \n            \n\
+        \            <input id=\"username\" name=\"username\" class=\"required\" tabindex=\"\
+        1\" accesskey=\"w\" type=\"text\" value=\"username\" size=\"35\" autocomplete=\"\
+        false\"/>\n        \n        <label for=\"password\" <span class=\"accesskey\"\
+        >P</span>assword:</label>\n        \n        <input id=\"password\" name=\"\
+        password\" class=\"required\" tabindex=\"2\" accesskey=\"p\" type=\"password\"\
+        \ value=\"\" size=\"35\" autocomplete=\"off\"/>\n        <p><input id=\"warn\"\
+        \ name=\"warn\" value=\"true\" tabindex=\"3\" type=\"checkbox\" /> Warn me\
+        \ before logging me into other sites</p>\n        \n\n        <div>\n    \
+        \        <input type=\"hidden\" name=\"lt\" value=\"LT-1873144-WewHrbVzIbHhijhIl0gV703yMd2GVe\"\
+        \ />\n            <input type=\"hidden\" name=\"execution\" value=\"e1s2\"\
+        \ />\n            <input type=\"hidden\" name=\"_eventId\" value=\"submit\"\
+        \ />\n            <input class=\"btn-submit\" name=\"submit\" accesskey=\"\
+        l\" value=\"Login\" tabindex=\"4\" type=\"submit\" />\n        </div>\n  \
+        \  </form>\n</div>\n<br /><p><a href=\"http://www.wm.edu/offices/it/services/network/cas/index.php\"\
+        >About CAS</a><br /><a href=\"http://www.wm.edu/offices/it/services/accounts/faqsloginpassword/index.php\"\
+        >Need help with your WMuserid or Password?</a></p>\n<p>For security reasons,\
+        \ please Log Out and Exit your web browser when you are done accessing services\
+        \ that require authentication.</p>\n\n\n\n        </div>\n\n        <footer\
+        \ id=\"main_footer\">\n            <div class=\"college-info\">\n        \
+        \        <p class=\"college-name\">The College of William &amp; Mary</p>\n\
+        \n                <p class=\"college-location\">Williamsburg, VA. <a href=\"\
+        http://www.wm.edu/contactus/index.php\">Contact Us</a></p>\n\n           \
+        \     <p class=\"rights-reserved\">All Rights Reserved &#169; 2014</p>\n \
+        \           </div>\n        </footer>\n    </div><!-- end #container -->\n\
+        \        <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js\"\
+        ></script>\n        <script type=\"text/javascript\" src=\"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js\"\
+        ></script>\n        <script type=\"text/javascript\" src=\"/cas/js/cas.js\"\
+        ></script>\n    </body>\n    <!-- WMdebugInfo\n      LocalAddr: 10.80.160.24\n\
+        \      LocalName: casprd01\n      ServerName: cas.wm.edu\n      RemoteAddr:\
+        \ 204.11.129.249\n      Powered by Jasig Central Authentication Service 3.5.3\n\
+        \      http://www.jasig.org/casJasig\n    -->\n</html>\n\n"}
+    headers:
+      cache-control: [no-cache, no-store]
+      connection: [close]
+      content-length: ['3878']
+      content-type: [text/html;charset=UTF-8]
+      date: ['Thu, 13 Aug 2015 04:17:28 GMT']
+      expires: ['Thu, 01 Jan 1970 00:00:00 GMT']
+      pragma: [no-cache]
+      server: [Apache-Coyote/1.1]
+    status: {code: 200, message: OK}
+version: 1
