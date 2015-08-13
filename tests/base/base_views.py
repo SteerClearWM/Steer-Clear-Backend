@@ -39,10 +39,10 @@ class SteerClearBaseTestCase(testing.TestCase):
         self.admin_role = self.roles[1]
         self.foo_role = self.roles[2]
 
-        self.student_user = self._create_user(email='student', phone='+12223334444', role=self.student_role)
-        self.admin_user = self._create_user(email='admin', phone='+13334445555', role=self.admin_role)
-        self.foo_user = self._create_user(email='foo', phone='+14445556666', role=self.foo_role)
-        self.student_user2 = self._create_user(email='student2', phone='+15556667777', role=self.student_role)
+        self.student_user = self._create_user(username='student', phone='+12223334444', role=self.student_role)
+        self.admin_user = self._create_user(username='admin', phone='+13334445555', role=self.admin_role)
+        self.foo_user = self._create_user(username='foo', phone='+14445556666', role=self.foo_role)
+        self.student_user2 = self._create_user(username='student2', phone='+15556667777', role=self.student_role)
 
         self.users = [self.student_user, self.admin_user, self.foo_user]
 
@@ -81,11 +81,11 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------------
     Helper function that creates and returns a new User object in the db
     """
-    def _create_user(self, email='ryan', phone='+17572214000', role=None):
+    def _create_user(self, username='ryan', phone='+17572214000', role=None):
         if role is None:
             role = Role.query.filter_by(name='student').first()
 
-        user = User(username=email, phone=phone, roles=[role])
+        user = User(username=username, phone=phone, roles=[role])
         db.session.add(user)
         db.session.commit()
         return user

@@ -49,11 +49,11 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertContext('action', url_for('login.login'))
 
     """
-    test_login_failure_incorrect_email
+    test_login_failure_incorrect_username
     -------------------------------------
-    Tests that login fails if the user supplies the wrong email
+    Tests that login fails if the user supplies the wrong username
     """
-    def test_login_failure_incorrect_email(self):
+    def test_login_failure_incorrect_username(self):
         # replace validate_user function so it passes
         with Replacer() as r:
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
@@ -63,8 +63,8 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
             self.assertEquals(response.status_code, 400)
 
-            # test with user that has different email but same password
-            self._create_user(email='kyle')
+            # test with user that has different username but same password
+            self._create_user(username='kyle')
             response = self.client.post(url_for('login.login'), data=self.login_payload)
             self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
             self.assertEquals(response.status_code, 400)
@@ -87,8 +87,8 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
             self.assertEquals(response.status_code, 400)
 
-            # test with user that has same email but different password
-            self._create_user(email='ryan')
+            # test with user that has same username but different password
+            self._create_user(username='ryan')
             response = self.client.post(url_for('login.login'), data=self.login_payload)
             self.assertTemplateUsed(LOGIN_TEMPLATE_NAME)
             self.assertEquals(response.status_code, 400)
@@ -121,7 +121,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         # replace validate_user function so it passes
         with Replacer() as r:
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
-            self._create_user(email='ryan')
+            self._create_user(username='ryan')
             response = self.client.post(url_for('login.login'), data=self.login_payload)
             self.assertRedirects(response, url_for('driver_portal.index'))
 
@@ -145,7 +145,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
             
             # login a user
-            self._create_user(email='ryan')
+            self._create_user(username='ryan')
             self.client.post(url_for('login.login'), data=self.login_payload)
 
             # logout user
@@ -170,17 +170,17 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
         self.assertContext('action', url_for('login.register'))
 
     """
-    test_register_failure_email_exists
+    test_register_failure_username_exists
     -------------------------------------
     Tests that trying to register a new user with
-    a email that already exists fails
+    a username that already exists fails
     """
-    def test_register_failure_email_exists(self):
+    def test_register_failure_username_exists(self):
         # replace validate_user function so it passes
         with Replacer() as r:
             r.replace('steerclear.utils.cas.validate_user', self.mock_validate_user)
             # create a user
-            self._create_user(email='ryan')
+            self._create_user(username='ryan')
 
             # check that POST request failed
             response = self.client.post(url_for('login.register'), data=self.register_payload)
@@ -196,7 +196,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
     """
     def test_register_failure_form_failure(self):
         # create a user
-        self._create_user(email='ryan')
+        self._create_user(username='ryan')
 
         # check that POST request failed
         bad_payload = self.register_payload.copy()
