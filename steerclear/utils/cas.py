@@ -12,13 +12,13 @@ from urllib2 import HTTPError
 WM_CAS_SERVER_URL = 'https://cas.wm.edu/cas/login?service=http%3A//localhost%3A8080/login/'
 
 """
-is_valid_user
+validate_user
 -------------
 Checks if a Users' email and password credentials are valid,
 meaning that they are a valid W&M student and can use the
 steerclear service
 """
-def is_valid_user(email, password):
+def validate_user(email, password):
     # create new browser object
     browser = mechanize.Browser()
 
