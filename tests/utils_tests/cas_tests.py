@@ -46,13 +46,13 @@ class CASTestCase(unittest.TestCase):
         result = validate_user('username', self.password)
         self.assertFalse(result) 
 
-    """
-    test_validate_user_success
-    ----------------------------------------------
-    Tests that validation succeeds with valid credentials
-    """
-    @myvcr.use_cassette()
-    def test_validate_user_success(self):
-        result = validate_user(self.username, self.password)
-        self.assertTrue(result)
+    # """
+    # test_validate_user_success
+    # ----------------------------------------------
+    # Tests that validation succeeds with valid credentials
+    # """
+    # @myvcr.use_cassette()
+    # def test_validate_user_success(self):
+    #     result = validate_user(self.username, self.password)
+    #     self.assertTrue(result)
 
