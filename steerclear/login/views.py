@@ -166,10 +166,11 @@ POST - takes a email/password form and creates a new user.
 """
 @login_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    # GET request. return register page
     if request.method == 'GET':
         return render_template('login.html', action=url_for('.register'))
 
-    # attempt to validate RegisterForm
+    # POST request. attempt to validate RegisterForm and user with CAS server
     form = RegisterForm()
     if form.validate_on_submit() and cas.validate_user(form.email.data, form.password.data):
         
