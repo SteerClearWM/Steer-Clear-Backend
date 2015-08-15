@@ -3,7 +3,7 @@ Backend and web app for Steer Clear student ride request service
 
 ## TODO
 
-* Look into using W&M CAS server for user login
+* Add ride queue filtering by on/off campus
 
 * Change using Floats to store lat/long to using Decimals
 
