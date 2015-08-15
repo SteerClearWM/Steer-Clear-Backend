@@ -1,5 +1,5 @@
 # Steer-Clear-Backend
-Backend and web app repo for Steer Clear app
+Backend and web app for Steer Clear student ride request service
 
 ## TODO
 
