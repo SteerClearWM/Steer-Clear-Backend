@@ -34,12 +34,16 @@ class SteerClearGISClient():
     """
     def is_on_campus(self, point):
         x, y = point
-        return self.point_in_poly(x, y, self.campus_polygon)
+        return self.point_in_poly(y, x, self.campus_polygon)
 
     """
     point_in_poly
     -------------
     Algorithm to solve the point in polygon problem
+
+    :x:         longitude of point
+    :y:         latitude of point
+    :polygon:   list of lat/long pairs
     """
     def point_in_poly(self, x, y, poly):
 
