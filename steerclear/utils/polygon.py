@@ -1,5 +1,6 @@
 import shapefile
 
+import os
 """
 SteerClearGISClient
 -------------
