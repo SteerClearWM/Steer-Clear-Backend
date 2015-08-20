@@ -27,6 +27,10 @@ sms_client = sms.SteerClearSMSClient(
 from steerclear.utils.eta import SteerClearDMClient
 dm_client = SteerClearDMClient()
 
+# setup and load in shapefile of the campus map
+from steerclear.utils.polygon import SteerClearGISClient
+gis_client = SteerClearGISClient(app.config['CAMPUS_MAP_SHAPEFILE'])
+
 from steerclear.api.views import api_bp
 from steerclear.driver_portal.views import driver_portal_bp
 from steerclear.login.views import login_bp
