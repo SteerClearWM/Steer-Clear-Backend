@@ -31,7 +31,7 @@ dm_client = SteerClearDMClient()
 from steerclear.utils.polygon import SteerClearGISClient
 from os import path
 steerclear_dirname = path.dirname(path.abspath(__file__))
-campus_map_filename = steerclear_dirname + '/static/shapefiles/campus_map.sh/campus_map.shp'
+campus_map_filename = steerclear_dirname + '/static/shapefiles/campus_map/campus_map.shp'
 gis_client = SteerClearGISClient(campus_map_filename)
 
 from steerclear.api.views import api_bp
