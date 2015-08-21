@@ -188,6 +188,8 @@ Ride request objects have several fields:
 
 * **dropoff_address**: the string address of the dropoff location for the request
 
+* **on_campus**: boolean flag indicating if a ride request is on campus or off campus. On campus rides are classified as rides whose **pickup_loc** is on the main wm campus
+
 ## Rides
 API endpoint for getting, updating, and deleting ride requests. student users are only allowed to access ride requests they have requested. If a student attempts to access a ride request they have not placed, a 403 is returned
 
@@ -205,7 +207,8 @@ Sample request **GET /api/rides/2**:
         "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000", 
         "start_latitude": 37.2735, 
         "start_longitude": -76.7196, 
-        "travel_time": 239
+        "travel_time": 239,
+        "on_campus": true
     }
 
 * Returns the ride request object with the corresponding **ride_id**
@@ -236,7 +239,8 @@ Sample Response:
                 "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000", 
                 "start_latitude": 37.2735, 
                 "start_longitude": -76.7196, 
-                "travel_time": 239
+                "travel_time": 239,
+                "on_campus": true
             }, 
             {
                 "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
@@ -249,12 +253,20 @@ Sample Response:
                 "pickup_time": "Wed, 12 Aug 2015 05:36:35 -0000", 
                 "start_latitude": 37.2735, 
                 "start_longitude": -76.7196, 
-                "travel_time": 239
+                "travel_time": 239,
+                "on_campus": true
             }
         ]
     }
 
 * Returns the queue of ride requests as a json object
+
+### GET /api/rides?location=[on_campus | off_campus]
+* If you add the **location** query string parameter, you can filter the ride requests that are returned to you
+
+* setting **location=on_campus** returns the list of ride requests that are on campus
+
+* setting **location=off_campus** returns the list of ride requests that are off campus
 
 ### POST /api/rides
 * **only admin users can access this route**
