@@ -98,6 +98,18 @@ class SteerClearGISClientTestCase(unittest.TestCase):
         # test point by college deli
         self._test_point((37.273596, -76.712561), False)
 
+        # test point near ho house
+        self._test_point((37.274293, -76.713327), False)
+
+        # test point on harrison
+        self._test_point((37.274293, -76.713327), False)
+
+        # test point on dillard
+        self._test_point((37.276227, -76.716053), False)
+
+        # test point on matoaka court
+        self._test_point((37.276803, -76.721015), False)
+
     def _test_point(self, point, result):
         r = self.gis_client.is_on_campus(point)
         self.assertEqual(r, result)
