@@ -71,7 +71,7 @@ class RideListAPI(Resource):
 
         # check if the pickup_location for the ride request
         # is on campus or off campus
-        is_on_campus = gis_client.is_on_campus(pickup_loc)
+        on_campus = gis_client.is_on_campus(pickup_loc)
 
         # query distance matrix api and get eta time data and addresses
         result = query_distance_matrix_api(pickup_loc, dropoff_loc)
@@ -96,6 +96,7 @@ class RideListAPI(Resource):
             dropoff_time=dropoff_time,
             pickup_address=pickup_address,
             dropoff_address=dropoff_address,
+            on_campus=on_campus,
             user=current_user
         )
         

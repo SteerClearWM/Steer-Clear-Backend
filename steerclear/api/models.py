@@ -22,6 +22,8 @@ class Ride(db.Model):
     pickup_address = db.Column(db.String(255), nullable=False)
     dropoff_address = db.Column(db.String(255), nullable=False)
 
+    on_campus = db.Column(db.Boolean)
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
