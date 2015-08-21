@@ -94,6 +94,83 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.json, {'rides': [r1_dict, r2_dict, r3_dict]})
 
     """
+    test_get_ride_list_filter_by_location
+    -------------------------------------
+    Tests that using the filter query string 'location'
+    correctly filters the ride request queue
+    """
+    def test_get_ride_list_filter_by_location(self):
+        self._login(self.admin_user)
+
+        # create and save some off campus and on campus ride requests
+        n = 6
+        on_campus_rides = []
+        off_campus_rides = []
+        for _ in xrange(n):
+            on_campus_rides.append(self._create_ride(self.admin_user, on_campus=True))
+            off_campus_rides.append(self._create_ride(self.admin_user, on_campus=False))
+
+        # create 1 extra on campus ride just to have imbalance
+        on_campus_rides.append(self._create_ride(self.admin_user, on_campus=True))
+
+        # check that filtering by on campus rides only returns
+        # ride requests that were on campus
+        response = self.client.get(url_for('api.rides', location='on_campus'))
+        rides = response.json['rides']
+        for ride in rides:
+            # every ride in response should be on campus
+            self.assertTrue(ride['on_campus'])
+        # there should be n+1 number of rides on campus
+        self.assertEqual(len(rides), n+1)
+
+        # check that filtering by off campus rides only returns
+        # ride requests that were off campus
+        response = self.client.get(url_for('api.rides', location='off_campus'))
+        rides = response.json['rides']
+        for ride in rides:
+            # every ride in response should be off campus
+            self.assertFalse(ride['on_campus'])
+        # there should be n number of rides off campus
+        self.assertEquals(len(rides), n)
+
+        # check that putting a random value for 'location' returns
+        # all current ride requests
+        response = self.client.get(url_for('api.rides', location='foobar'))
+        rides = response.json['rides']
+        on_campus_count = 0
+        off_campus_count = 0
+        for ride in rides:
+            # count the number of on campus and off campus rides in response
+            if ride['on_campus']:
+                on_campus_count += 1
+            else:
+                off_campus_count += 1
+        # there should be n+n+1 number of rides,
+        # n+1 number of on campus rides,
+        # and n number of off campus rides
+        self.assertEquals(len(rides), n+n+1)
+        self.assertEquals(on_campus_count, n+1)
+        self.assertEquals(off_campus_count, n)
+
+        # check that omitting 'location' returns all rides
+        response = self.client.get(url_for('api.rides'))
+        rides = response.json['rides']
+        on_campus_count = 0
+        off_campus_count = 0
+        for ride in rides:
+            # count the number of on campus and off campus rides in response
+            if ride['on_campus']:
+                on_campus_count += 1
+            else:
+                off_campus_count += 1
+        # there should be n+n+1 number of rides,
+        # n+1 number of on campus rides,
+        # and n number of off campus rides
+        self.assertEquals(len(rides), n+n+1)
+        self.assertEquals(on_campus_count, n+1)
+        self.assertEquals(off_campus_count, n)
+
+    """
     test_post_ride_list_requires_login
     ----------------------------------
     Tests that the user must be logged in in order to

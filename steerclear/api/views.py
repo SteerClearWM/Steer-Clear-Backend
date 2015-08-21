@@ -54,20 +54,22 @@ class RideListAPI(Resource):
     """
     @admin_permission.require(http_exception=403)
     def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('location', type=str, location='args')
-        args = parser.parse_args()
-
+        # parser = reqparse.RequestParser()
+        # parser.add_argument('location', type=str, location='args')
+        # args = parser.parse_args()
+        args = request.args
         if args.get('location', '') == 'on_campus':
             # return list of all ride requests that are on campus
             on_campus_rides = Ride.query.filter_by(on_campus=True).all()
             on_campus_rides = map(Ride.as_dict, on_campus_rides)
             return {'rides': marshal(on_campus_rides, ride_fields)}, 200
+        
         elif args.get('location', '') == 'off_campus':
             # return list of all ride requests that are off campus
             off_campus_rides = Ride.query.filter_by(on_campus=False).all()
             off_campus_rides = map(Ride.as_dict, off_campus_rides)
             return {'rides': marshal(off_campus_rides, ride_fields)}, 200
+        
         else:
             # return list of all ride requests
             rides = Ride.query.all()                            # query db for Rides
