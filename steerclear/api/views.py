@@ -1,11 +1,11 @@
 from flask import Blueprint, request
-from flask_restful import Resource, Api, fields, marshal, abort
+from flask_restful import Resource, Api, fields, marshal, abort, reqparse
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
-from steerclear import sms_client, dm_client
+from steerclear import sms_client, dm_client, gis_client
 
 from steerclear.utils.permissions import (
     student_permission, 
@@ -32,7 +32,8 @@ ride_fields = {
     'travel_time': fields.Integer(),
     'dropoff_time': fields.DateTime(dt_format='rfc822'),
     'pickup_address': fields.String(),
-    'dropoff_address': fields.String(), 
+    'dropoff_address': fields.String(),
+    'on_campus': fields.Boolean(), 
 }
 
 """
@@ -53,9 +54,27 @@ class RideListAPI(Resource):
     """
     @admin_permission.require(http_exception=403)
     def get(self):
-        rides = Ride.query.all()                            # query db for Rides
-        rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
-        return {'rides': marshal(rides, ride_fields)}, 200  # return response
+        # parser = reqparse.RequestParser()
+        # parser.add_argument('location', type=str, location='args')
+        # args = parser.parse_args()
+        args = request.args
+        if args.get('location', '') == 'on_campus':
+            # return list of all ride requests that are on campus
+            on_campus_rides = Ride.query.filter_by(on_campus=True).all()
+            on_campus_rides = map(Ride.as_dict, on_campus_rides)
+            return {'rides': marshal(on_campus_rides, ride_fields)}, 200
+        
+        elif args.get('location', '') == 'off_campus':
+            # return list of all ride requests that are off campus
+            off_campus_rides = Ride.query.filter_by(on_campus=False).all()
+            off_campus_rides = map(Ride.as_dict, off_campus_rides)
+            return {'rides': marshal(off_campus_rides, ride_fields)}, 200
+        
+        else:
+            # return list of all ride requests
+            rides = Ride.query.all()                            # query db for Rides
+            rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
+            return {'rides': marshal(rides, ride_fields)}, 200  # return response
 
     """
     Create a new Ride object and place it in the queue
@@ -68,6 +87,10 @@ class RideListAPI(Resource):
         # get pickup and dropoff locations of Ride request
         pickup_loc = (form.start_latitude.data, form.start_longitude.data)
         dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
+
+        # check if the pickup_location for the ride request
+        # is on campus or off campus
+        on_campus = gis_client.is_on_campus(pickup_loc)
 
         # query distance matrix api and get eta time data and addresses
         result = query_distance_matrix_api(pickup_loc, dropoff_loc)
@@ -92,6 +115,7 @@ class RideListAPI(Resource):
             dropoff_time=dropoff_time,
             pickup_address=pickup_address,
             dropoff_address=dropoff_address,
+            on_campus=on_campus,
             user=current_user
         )
         

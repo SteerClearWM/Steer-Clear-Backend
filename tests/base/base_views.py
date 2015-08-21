@@ -95,7 +95,7 @@ class SteerClearBaseTestCase(testing.TestCase):
     ------------
     Helper function that creates and returns a new Ride object in the db
     """
-    def _create_ride(self, user, num_passengers=0, start_latitude=1.0, start_longitude=1.1, end_latitude=2.0, end_longitude=2.1, pickup_time=datetime(1,1,1), travel_time=10, dropoff_time=datetime(1,1,1), pickup_address='Foo', dropoff_address='Bar'):
+    def _create_ride(self, user, num_passengers=0, start_latitude=1.0, start_longitude=1.1, end_latitude=2.0, end_longitude=2.1, pickup_time=datetime(1,1,1), travel_time=10, dropoff_time=datetime(1,1,1), pickup_address='Foo', dropoff_address='Bar', on_campus=True):
         ride = Ride(
             num_passengers=num_passengers,
             start_latitude=start_latitude,
@@ -107,6 +107,7 @@ class SteerClearBaseTestCase(testing.TestCase):
             dropoff_time=dropoff_time,
             pickup_address=pickup_address,
             dropoff_address=dropoff_address,
+            on_campus=on_campus,
             user=user
         )
         db.session.add(ride)

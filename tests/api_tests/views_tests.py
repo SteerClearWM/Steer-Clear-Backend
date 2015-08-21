@@ -94,6 +94,83 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.json, {'rides': [r1_dict, r2_dict, r3_dict]})
 
     """
+    test_get_ride_list_filter_by_location
+    -------------------------------------
+    Tests that using the filter query string 'location'
+    correctly filters the ride request queue
+    """
+    def test_get_ride_list_filter_by_location(self):
+        self._login(self.admin_user)
+
+        # create and save some off campus and on campus ride requests
+        n = 6
+        on_campus_rides = []
+        off_campus_rides = []
+        for _ in xrange(n):
+            on_campus_rides.append(self._create_ride(self.admin_user, on_campus=True))
+            off_campus_rides.append(self._create_ride(self.admin_user, on_campus=False))
+
+        # create 1 extra on campus ride just to have imbalance
+        on_campus_rides.append(self._create_ride(self.admin_user, on_campus=True))
+
+        # check that filtering by on campus rides only returns
+        # ride requests that were on campus
+        response = self.client.get(url_for('api.rides', location='on_campus'))
+        rides = response.json['rides']
+        for ride in rides:
+            # every ride in response should be on campus
+            self.assertTrue(ride['on_campus'])
+        # there should be n+1 number of rides on campus
+        self.assertEqual(len(rides), n+1)
+
+        # check that filtering by off campus rides only returns
+        # ride requests that were off campus
+        response = self.client.get(url_for('api.rides', location='off_campus'))
+        rides = response.json['rides']
+        for ride in rides:
+            # every ride in response should be off campus
+            self.assertFalse(ride['on_campus'])
+        # there should be n number of rides off campus
+        self.assertEquals(len(rides), n)
+
+        # check that putting a random value for 'location' returns
+        # all current ride requests
+        response = self.client.get(url_for('api.rides', location='foobar'))
+        rides = response.json['rides']
+        on_campus_count = 0
+        off_campus_count = 0
+        for ride in rides:
+            # count the number of on campus and off campus rides in response
+            if ride['on_campus']:
+                on_campus_count += 1
+            else:
+                off_campus_count += 1
+        # there should be n+n+1 number of rides,
+        # n+1 number of on campus rides,
+        # and n number of off campus rides
+        self.assertEquals(len(rides), n+n+1)
+        self.assertEquals(on_campus_count, n+1)
+        self.assertEquals(off_campus_count, n)
+
+        # check that omitting 'location' returns all rides
+        response = self.client.get(url_for('api.rides'))
+        rides = response.json['rides']
+        on_campus_count = 0
+        off_campus_count = 0
+        for ride in rides:
+            # count the number of on campus and off campus rides in response
+            if ride['on_campus']:
+                on_campus_count += 1
+            else:
+                off_campus_count += 1
+        # there should be n+n+1 number of rides,
+        # n+1 number of on campus rides,
+        # and n number of off campus rides
+        self.assertEquals(len(rides), n+n+1)
+        self.assertEquals(on_campus_count, n+1)
+        self.assertEquals(off_campus_count, n)
+
+    """
     test_post_ride_list_requires_login
     ----------------------------------
     Tests that the user must be logged in in order to
@@ -130,14 +207,12 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
             u"dropoff_time": expected_dropoff_string,
             u'pickup_address': u'2006 Brooks Street, Williamsburg, VA 23185, USA',
             u'dropoff_address': u'1234 Richmond Road, Williamsburg, VA 23185, USA',
+            u'on_campus': True
           }
 
         response = self.client.post(url_for('api.rides'), data=payload)
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
-        print "response: " + str(response.json)
-        print "correct: " + str({u"ride": payload})
-
         self.assertEquals(response.json, {u"ride": payload})
         self.assertEquals(Ride.query.get(1).user, self.student_user)
 
@@ -544,7 +619,7 @@ class ETAAPITestCase(base.SteerClearBaseTestCase):
     @myvcr.use_cassette()
     def test_query_distance_matrix_api_with_last_ride(self):
         user = self._create_user()
-        ride = self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        ride = self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, dropoff_time=datetime(2015,6,13,1,2,3))
         pickup_loc = (37.273485, -76.719628)
         dropoff_loc = (37.280893, -76.719691)
         expected_pickup_time = datetime(2015,6,13,1,2,3) + timedelta(0, 373)
@@ -559,21 +634,12 @@ class ETAAPITestCase(base.SteerClearBaseTestCase):
 
         pickup_address, dropoff_address = result[1]
         self.assertEquals(pickup_address, u'2006 Brooks Street, Williamsburg, VA 23185, USA')
-        self.assertEquals(dropoff_address, u'1234 Richmond Road, Williamsburg, VA 23185, USA')
-
-    @myvcr.use_cassette()
-    def test_query_distance_matrix_api_with_last_ride_bad_start_loc(self):
-        user = self._create_user()
-        self._create_ride(user, 1, 0.0, 0.0, 0.0, 0.0, None, None, datetime(2015,6,13,1,2,3))
-        pickup_loc = (37.273485, -76.719628)
-        dropoff_loc = (37.280893, -76.719691)
-        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
-        self.assertEquals(result, None)    
+        self.assertEquals(dropoff_address, u'1234 Richmond Road, Williamsburg, VA 23185, USA') 
 
     @myvcr.use_cassette()
     def test_query_distance_matrix_api_with_last_ride_bad_pickup_loc(self):
         user = self._create_user()
-        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, dropoff_time=datetime(2015,6,13,1,2,3))
         pickup_loc = (0.0, 0.0)
         dropoff_loc = (37.280893, -76.719691)
         result = query_distance_matrix_api(pickup_loc, dropoff_loc)
@@ -582,7 +648,7 @@ class ETAAPITestCase(base.SteerClearBaseTestCase):
     @myvcr.use_cassette()
     def test_query_distance_matrix_api_with_last_ride_bad_dropoff_loc(self):
         user = self._create_user()
-        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, None, None, datetime(2015,6,13,1,2,3))
+        self._create_ride(user, 1, 0.0, 0.0, 37.272042, -76.714027, dropoff_time=datetime(2015,6,13,1,2,3))
         pickup_loc = (37.280893, -76.719691)
         dropoff_loc = (0.0, 0.0)
         result = query_distance_matrix_api(pickup_loc, dropoff_loc)
