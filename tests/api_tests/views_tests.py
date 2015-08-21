@@ -130,14 +130,12 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
             u"dropoff_time": expected_dropoff_string,
             u'pickup_address': u'2006 Brooks Street, Williamsburg, VA 23185, USA',
             u'dropoff_address': u'1234 Richmond Road, Williamsburg, VA 23185, USA',
+            u'on_campus': True
           }
 
         response = self.client.post(url_for('api.rides'), data=payload)
         payload[u'id'] = 1
         self.assertEquals(response.status_code, 201)
-        print "response: " + str(response.json)
-        print "correct: " + str({u"ride": payload})
-
         self.assertEquals(response.json, {u"ride": payload})
         self.assertEquals(Ride.query.get(1).user, self.student_user)
 

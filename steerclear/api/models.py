@@ -22,7 +22,7 @@ class Ride(db.Model):
     pickup_address = db.Column(db.String(255), nullable=False)
     dropoff_address = db.Column(db.String(255), nullable=False)
 
-    on_campus = db.Column(db.Boolean)
+    on_campus = db.Column(db.Boolean, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -53,4 +53,5 @@ class Ride(db.Model):
             'dropoff_time': self.dropoff_time,
             'pickup_address': self.pickup_address,
             'dropoff_address': self.dropoff_address,
+            'on_campus': self.on_campus
         }

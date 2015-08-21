@@ -32,7 +32,8 @@ ride_fields = {
     'travel_time': fields.Integer(),
     'dropoff_time': fields.DateTime(dt_format='rfc822'),
     'pickup_address': fields.String(),
-    'dropoff_address': fields.String(), 
+    'dropoff_address': fields.String(),
+    'on_campus': fields.Boolean(), 
 }
 
 """
