@@ -68,7 +68,35 @@ class SteerClearGISClientTestCase(unittest.TestCase):
         self._test_point((37.266099, -76.717825), True)
 
     def test_is_on_campus_points_not_on_campus(self):
-        pass
+        # test point near ludwell
+        self._test_point((37.264771, -76.719619), False)
+
+        # test along jamestown rd
+        self._test_point((37.265336, -76.718569), False)
+
+        # test point near churches on jamestown rd
+        self._test_point((37.266251, -76.716797), False)
+
+        # test point on indian springs
+        self._test_point((37.267543, -76.714164), False)
+
+        # test point on carry street
+        self._test_point((37.268366, -76.712508), False)
+
+        # test point on griffin street
+        self._test_point((37.268717, -76.711640), False)
+
+        # test point near campus center
+        self._test_point((37.269858, -76.708828), False)
+
+        # test point on armistead
+        self._test_point((37.272021, -76.709213), False)
+
+        # test point by wawa
+        self._test_point((37.273089, -76.711508), False)
+
+        # test point by college deli
+        self._test_point((37.273596, -76.712561), False)
 
     def _test_point(self, point, result):
         r = self.gis_client.is_on_campus(point)
