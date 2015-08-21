@@ -2,6 +2,7 @@ from steerclear.utils.polygon import SteerClearGISClient
 import unittest
 import os
 
+# build path to campus shapefiles
 cur_dirname = os.path.join(os.path.dirname(__file__), os.pardir)
 shapefile_filename = cur_dirname + '/fixtures/shapefiles/campus_map/campus_map.shp'
 
@@ -17,7 +18,13 @@ class SteerClearGISClientTestCase(unittest.TestCase):
     def setUp(self):
         self.gis_client = SteerClearGISClient(shapefile_filename)
 
-    def test_is_on_campus_points_in_center_of_campus(self):
+    """
+    test_is_on_campus_major_points_on_campus
+    ----------------------------------------
+    Tests that major buildings that are actually on the wm
+    campus are classified as being on campus
+    """
+    def test_is_on_campus_major_points_on_campus(self):
         # test with lat/long of william and mary
         self._test_point((37.272433, -76.716922), True)
 
@@ -33,6 +40,13 @@ class SteerClearGISClientTestCase(unittest.TestCase):
         # test point near botetourt
         self._test_point((37.270255, -76.721078), True)
 
+    """
+    test_is_on_campus_points_near_perimeter_of_campus
+    -------------------------------------------------
+    Tests that points that are still on the campus
+    but are on the perimeter of the main campus are
+    still classified as being on campus
+    """
     def test_is_on_campus_points_near_perimeter_of_campus(self):
         # test point near barret hall
         self._test_point((37.269028, -76.711410), True)
@@ -67,6 +81,12 @@ class SteerClearGISClientTestCase(unittest.TestCase):
         # test point near business school
         self._test_point((37.266099, -76.717825), True)
 
+    """
+    test_is_on_campus_points_not_on_campus
+    --------------------------------------
+    Tests that points that are not on campus
+    are classified as being not on campus
+    """
     def test_is_on_campus_points_not_on_campus(self):
         # test point near ludwell
         self._test_point((37.264771, -76.719619), False)
@@ -110,6 +130,15 @@ class SteerClearGISClientTestCase(unittest.TestCase):
         # test point on matoaka court
         self._test_point((37.276803, -76.721015), False)
 
+    """
+    _test_point
+    -----------
+    Helper method for testing if a lat/long point
+    is on campus or not
+
+    :point:     (lat, long) tuple
+    :result:    Boolean specifying if the point is on campus
+    """
     def _test_point(self, point, result):
         r = self.gis_client.is_on_campus(point)
         self.assertEqual(r, result)
