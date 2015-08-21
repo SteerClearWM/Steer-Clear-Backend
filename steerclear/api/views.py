@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_restful import Resource, Api, fields, marshal, abort
+from flask_restful import Resource, Api, fields, marshal, abort, reqparse
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 from sqlalchemy import exc
@@ -54,9 +54,25 @@ class RideListAPI(Resource):
     """
     @admin_permission.require(http_exception=403)
     def get(self):
-        rides = Ride.query.all()                            # query db for Rides
-        rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
-        return {'rides': marshal(rides, ride_fields)}, 200  # return response
+        parser = reqparse.RequestParser()
+        parser.add_argument('location', type=str, location='args')
+        args = parser.parse_args()
+
+        if args.get('location', '') == 'on_campus':
+            # return list of all ride requests that are on campus
+            on_campus_rides = Ride.query.filter_by(on_campus=True).all()
+            on_campus_rides = map(Ride.as_dict, on_campus_rides)
+            return {'rides': marshal(on_campus_rides, ride_fields)}, 200
+        elif args.get('location', '') == 'off_campus':
+            # return list of all ride requests that are off campus
+            off_campus_rides = Ride.query.filter_by(on_campus=False).all()
+            off_campus_rides = map(Ride.as_dict, off_campus_rides)
+            return {'rides': marshal(off_campus_rides, ride_fields)}, 200
+        else:
+            # return list of all ride requests
+            rides = Ride.query.all()                            # query db for Rides
+            rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
+            return {'rides': marshal(rides, ride_fields)}, 200  # return response
 
     """
     Create a new Ride object and place it in the queue
