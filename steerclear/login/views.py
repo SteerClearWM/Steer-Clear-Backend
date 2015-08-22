@@ -193,15 +193,3 @@ def register():
             return render_template('login.html', action=url_for('.register')), 409
         return redirect(url_for('.login'))
     return render_template('login.html', action=url_for('.register')), 400
-
-@login_bp.route('/test_student_permission')
-@login_required
-def test_student_permission():
-    if not student_permission.can():
-        abort(403)
-    return "Congrats, you are a student"
-
-@login_bp.route('/test_login')
-@login_required
-def test_login():
-    return "Congrats, you are logged in as user " + str(current_user)
