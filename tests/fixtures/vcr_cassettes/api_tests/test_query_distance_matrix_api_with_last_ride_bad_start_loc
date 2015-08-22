@@ -20,18 +20,18 @@ interactions:
         \             },\n               \"duration\" : {\n                  \"text\"\
         \ : \"1 min\",\n                  \"value\" : 0\n               },\n     \
         \          \"status\" : \"OK\"\n            },\n            {\n          \
-        \     \"distance\" : {\n                  \"text\" : \"1.2 km\",\n       \
-        \           \"value\" : 1233\n               },\n               \"duration\"\
-        \ : {\n                  \"text\" : \"3 mins\",\n                  \"value\"\
-        \ : 171\n               },\n               \"status\" : \"OK\"\n         \
+        \     \"distance\" : {\n                  \"text\" : \"1.4 km\",\n       \
+        \           \"value\" : 1353\n               },\n               \"duration\"\
+        \ : {\n                  \"text\" : \"4 mins\",\n                  \"value\"\
+        \ : 239\n               },\n               \"status\" : \"OK\"\n         \
         \   }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n"}
     headers:
       accept-ranges: [none]
       alternate-protocol: ['443:quic,p=1']
       cache-control: ['public, max-age=86400']
       content-type: [application/json; charset=UTF-8]
-      date: ['Sat, 06 Jun 2015 20:53:36 GMT']
-      expires: ['Sun, 07 Jun 2015 20:53:36 GMT']
+      date: ['Wed, 12 Aug 2015 04:34:39 GMT']
+      expires: ['Thu, 13 Aug 2015 04:34:39 GMT']
       server: [mafe]
       vary: ['Accept-Language,Accept-Encoding']
       x-frame-options: [SAMEORIGIN]

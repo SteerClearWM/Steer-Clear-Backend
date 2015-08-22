@@ -6,7 +6,7 @@ from datetime import datetime
 import json
 
 # format string for Ride.__repr__()
-RIDE_REPR_STRING = '<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD %r)>'
+RIDE_REPR_STRING = '<Ride(ID %rL, Passengers %rL, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %rL, ETD %r)>'
 
 """
 RideModelTestCase
@@ -40,7 +40,10 @@ class RideModelTestCase(base.SteerClearBaseTestCase):
             'end_longitude': 2.1, 
             'pickup_time': datetime(1,1,1), 
             'travel_time': 10, 
-            'dropoff_time': datetime(1,1,1)
+            'dropoff_time': datetime(1,1,1),
+            'pickup_address': 'Foo',
+            'dropoff_address': 'Bar',
+            'on_campus': True
         }
         self.assertEquals(self.default_ride.as_dict(), correct_default_dict)
 

@@ -2,12 +2,12 @@ import requests
 import sys
 
 def main():
-    email = raw_input('Enter user email: ')
+    username = raw_input('Enter user username: ')
     password = raw_input('Enter user password: ')
 
-    r1 = requests.post('http://localhost:5000/login', data={'email': email, 'password': password})
+    r1 = requests.post('http://localhost:5000/login', data={'username': username, 'password': password})
     if r1.status_code != 200:
-        print "Error: User does not exist with email=%s and password=%s" % (email, password)
+        print "Error: User does not exist with username=%s and password=%s" % (username, password)
         sys.exit(1)
 
     payload = {

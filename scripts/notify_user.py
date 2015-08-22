@@ -1,13 +1,13 @@
 import requests, sys
 
 def main():
-    email = raw_input('Enter admin email: ')
+    username = raw_input('Enter admin username: ')
     password = raw_input('Enter admin password: ')
     ride_id = raw_input('Enter ride_id to notify: ')
 
-    r1 = requests.post('http://localhost:5000/login', data={'email': email, 'password': password})
+    r1 = requests.post('http://localhost:5000/login', data={'username': username, 'password': password})
     if r1.status_code != 200:
-        print "Error: incorrect admin email=%s or password=%s" % (email, password)
+        print "Error: incorrect admin username=%s or password=%s" % (username, password)
         sys.exit(1)
 
     r2 = requests.post(

@@ -1,7 +1,13 @@
 # Steer-Clear-Backend
-Backend and web app repo for Steer Clear app
+Backend and web app for Steer Clear student ride request service
 
 ## TODO
+
+* Add ride queue filtering by on/off campus
+
+* Change using Floats to store lat/long to using Decimals
+
+* Write tests for cookie remember duration
 
 * Make sure student users can't access ride queue page
 
@@ -9,9 +15,45 @@ Backend and web app repo for Steer Clear app
 
 * Create custom api exceptions
 
-* add error checking/exception handling for database operations
-
 * add api key for google distancematrix api
+
+##Database Setup and Configuration
+
+You need to install the mysql-server and mysql-client
+
+Start the mysql server
+
+    # On Linux
+    $ sudo service mysql start
+
+    # On Mac
+    $ sudo /usr/local/mysql/support-files/mysql.server start
+
+    # Another way on Mac
+    $ sudo /usr/local/mysql/bin/mysqld_safe
+
+    # On Windows
+    $ "C:\Program Files\MySQL\MySQL Server 5.0\bin\mysqld"
+
+Use the mysql client to login as the root user of the mysql server and create 2 databases. 1 for production and 1 for testing
+
+**Optional:** Create a new user who has privileges over the 2 databases
+
+The script **/scripts/setup_db.sql** will create 2 databases (**db** and **test**) and a new user (**steerclear** with password **St33rCl3@r**) automatically. To run it, use the mysql client as the root user
+    
+    # On both Windows and Mac/Linux
+    $ mysql -u root -p < scripts/setup_db.sql
+    Enter Password: root_user_password_here
+
+In *steerclear/settings/default_settings.py replace the following with your mysql user username, password, and database names
+
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/db_name'
+    TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/test_db_name'
+
+If you ran the setup_db.sql script it should look like the first 2 lines in **/steerclear/settings/default_settings_example.py:**
+    
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/db'
+    TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/test'
 
 ##Setup and Installation
 `clone` project and `cd` into directory
@@ -28,14 +70,6 @@ Install requirements
 
 `$ pip install -r requirements.txt`
 
-Activate OS specific environment variables settings
-
-    #Linux/Mac
-    $ source ./scripts/setup.sh
-   
-    #Windows - do this is cmd not powershell. you might need to use setx instead
-    > set STEERCLEAR_SETTINGS=settings\windows_settings.py
-
 Create Database (NOTE: this will delete old database at the moment)
 
 `$ python create_db.py`
@@ -50,7 +84,7 @@ Run app
 
 App will now be accesible through `localhost:5000`
 
-**NOTE:** You need the default_settings.py config file for backend to work. Get from one of the repo overseers. Alternatively, you can create your own default settings file and fill in the corresponding values using the example default settings file
+***NOTE:** You need the default_settings.py config file for backend to work. Get from one of the repo overseers. Alternatively, you can create your own default settings file and fill in the corresponding values using **steerclear/settings/default_settings_example.py** file as a template
 
 ##Testing
 
@@ -61,8 +95,14 @@ To run tests use **nosetests**
 ## Helpful Scripts
 There a few helpful scripts for doing things such as creating a new user or ride request
 
+### /scripts/setup_db.sql
+* Creates the production and test databases
+
+* creates a new user, **steerclear**, that has privileges over both databases
+* **mysql server must be running**
+
 ### create_db.py
-* Creates and sets up the database
+* Creates and sets up the data model tables in the database
 * **NOTE: THIS WILL DELETE ALL DATA CURRENTLY IN THE DATABASE**
 * **TODO:** Change to use database migration
 
@@ -76,21 +116,21 @@ There a few helpful scripts for doing things such as creating a new user or ride
 
 ### /scripts/create_user.py
 * Creates a new User
-* Prompts for username/password input
+* Prompts for username/phone/role input
 * Displays message if user already exists
 
 ### /scripts/create_ride.py
 * Creates a new Ride request
 
 ## Login
-At the Moment, login is done with a username and password. We will be switching to just using an email address and a per session random cookie for login later.
+Login is done with a valid w&m account username and password. 
 
 ### GET /login
 * Returns the login page
 
 ### POST /login
 * Route to actually log a user in
-* Takes a form with a **email** and **password** field. 
+* Takes a form with a **username** and **password** field. 
 * On success, redirects to **index** page.
 * On failure, returns login page again and 400 status code
 
@@ -99,14 +139,14 @@ At the Moment, login is done with a username and password. We will be switching 
 * Logs the current user out of the system
 
 ## Registering Users
-You can register a new user (assuming the user does not already exist) by making a simple POST request with a username and password field. The new user will have all api permissions that a student has
+You can register a new user (assuming the user does not already exist) by making a simple POST request with a username, password, and phone field. The new user will have all api permissions that a student has
 
 ### GET /register
 * Returns the register page
 
 ### POST /register
 * Creates a new user. 
-* Takes a form with a **email** and **password** and a **phone** field.
+* Takes a form with a **username** and **password** and a **phone** field.
 * **phone** field must be a valid phone number string (i.e. +1xxxyyyzzzz) 
 * If the user already exists return the register page again and a 409 status code
 * **TODO** add error message
@@ -144,24 +184,31 @@ Ride request objects have several fields:
 
 * **dropoff_time**: estimated time for arriving at the dropoff location as a datetime object
 
+* **pickup_address**: the string address of the pickup location for the request
+
+* **dropoff_address**: the string address of the dropoff location for the request
+
+* **on_campus**: boolean flag indicating if a ride request is on campus or off campus. On campus rides are classified as rides whose **pickup_loc** is on the main wm campus
+
 ## Rides
 API endpoint for getting, updating, and deleting ride requests. student users are only allowed to access ride requests they have requested. If a student attempts to access a ride request they have not placed, a 403 is returned
 
 ### GET /api/rides/<int:ride_id>
 Sample request **GET /api/rides/2**:
 
-    {
-      "ride": {
-        "dropoff_time": "Sun, 07 Jun 2015 02:24:49 GMT", 
-        "end_latitude": 37.280893, 
-        "end_longitude": -76.719691, 
-        "id": 2, 
-        "num_passengers": 4, 
-        "pickup_time": "Sun, 07 Jun 2015 02:21:58 GMT", 
-        "start_latitude": 37.273485, 
-        "start_longitude": -76.719628, 
-        "travel_time": 171
-      }
+    "ride": {
+        "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
+        "dropoff_time": "Wed, 12 Aug 2015 05:33:08 -0000", 
+        "end_latitude": 37.2809, 
+        "end_longitude": -76.7197, 
+        "id": 1, 
+        "num_passengers": 3, 
+        "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
+        "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000", 
+        "start_latitude": 37.2735, 
+        "start_longitude": -76.7196, 
+        "travel_time": 239,
+        "on_campus": true
     }
 
 * Returns the ride request object with the corresponding **ride_id**
@@ -181,32 +228,45 @@ Sample Response:
 
     {
         "rides": [
-        {
-          "dropoff_time": "Sun, 07 Jun 2015 02:18:50 GMT", 
-          "end_latitude": 37.280893, 
-          "end_longitude": -76.719691, 
-          "id": 1, 
-          "num_passengers": 4, 
-          "pickup_time": "Sun, 07 Jun 2015 02:15:59 GMT", 
-          "start_latitude": 37.273485, 
-          "start_longitude": -76.719628, 
-          "travel_time": 171
-        }, 
-        {
-          "dropoff_time": "Sun, 07 Jun 2015 02:24:49 GMT", 
-          "end_latitude": 37.280893, 
-          "end_longitude": -76.719691, 
-          "id": 2, 
-          "num_passengers": 4, 
-          "pickup_time": "Sun, 07 Jun 2015 02:21:58 GMT", 
-          "start_latitude": 37.273485, 
-          "start_longitude": -76.719628, 
-          "travel_time": 171
-        }
-      ]
+            {
+                "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
+                "dropoff_time": "Wed, 12 Aug 2015 05:33:08 -0000", 
+                "end_latitude": 37.2809, 
+                "end_longitude": -76.7197, 
+                "id": 1, 
+                "num_passengers": 3, 
+                "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
+                "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000", 
+                "start_latitude": 37.2735, 
+                "start_longitude": -76.7196, 
+                "travel_time": 239,
+                "on_campus": true
+            }, 
+            {
+                "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
+                "dropoff_time": "Wed, 12 Aug 2015 05:40:34 -0000", 
+                "end_latitude": 37.2809, 
+                "end_longitude": -76.7197, 
+                "id": 2, 
+                "num_passengers": 3, 
+                "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
+                "pickup_time": "Wed, 12 Aug 2015 05:36:35 -0000", 
+                "start_latitude": 37.2735, 
+                "start_longitude": -76.7196, 
+                "travel_time": 239,
+                "on_campus": true
+            }
+        ]
     }
 
 * Returns the queue of ride requests as a json object
+
+### GET /api/rides?location=[on_campus | off_campus]
+* If you add the **location** query string parameter, you can filter the ride requests that are returned to you
+
+* setting **location=on_campus** returns the list of ride requests that are on campus
+
+* setting **location=off_campus** returns the list of ride requests that are off campus
 
 ### POST /api/rides
 * **only admin users can access this route**
@@ -214,7 +274,7 @@ Sample Response:
 * Returns the created ride object on success (this will most likely change to just returning the created ride id).
 * returns error code 400 on failure
 * Expects a form with the following fields
-  * **id**: id number of the ride object in the queue
+
 
   * **num_passengers**: number of passengers in the ride request
 
@@ -225,15 +285,6 @@ Sample Response:
   * **end_latitude**: latitude coordinate for the dropoff location
 
   * **end_longitude**: longitude coordinate for the dropoff location
-
-  * **pickup_time**: estimated pickup time. See note below for string format
-
-  * **travel_time**: estimated time it will take in seconds to go from pickup location to dropoff location
-
-  * **dropoff_time**: estimated time for arriving at the dropoff location. see note below for string format
-
-  * **NOTE**: the **pickup_time** and **dropoff_time** fields are datetime objects representing UTC times that are formatted as strings using the following format string **"%a, %d %b %Y %H:%M:%S GMT"**. Where **%a** is the weekday's abreviated name (i.e. Mon), **%d** is the day of the month as a zero-padded decimal number (i.e. 09 and 22), **%b** is the month's abreviated name (i.e. Sep), **%Y** is the four digit year value (i.e. 2015), **%H** is the hour zero-padded hour value (i.e. 02 or 20), **%M** is the zero-padded minute value (i.e. 05 or 52), and **%S** is the zero-padded seconds value (i.e. 06 or 33).
-
 
 ## Notifications
 API endpoint for sending sms notifications to Users. At the moment, sms messages will only be sent successfully to Users who have verified their phone number with the SteerClear Twilio account

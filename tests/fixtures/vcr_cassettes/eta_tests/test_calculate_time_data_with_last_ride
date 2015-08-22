@@ -7,40 +7,40 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.7.0 CPython/2.7.3 Linux/3.5.0-51-generic]
     method: GET
-    uri: https://maps.googleapis.com/maps/api/distancematrix/json?origins=37.272042%2C-76.714027%7C37.273485%2C-76.719628&destinations=37.273485%2C-76.719628%7C37.280893%2C-76.719691
+    uri: https://maps.googleapis.com/maps/api/distancematrix/json?origins=37.272000%2C-76.714000%7C37.273485%2C-76.719628&destinations=37.273485%2C-76.719628%7C37.280893%2C-76.719691
   response:
     body: {string: !!python/unicode "{\n   \"destination_addresses\" : [\n      \"\
-        2006 Brooks Street, Williamsburg, VA 23185, USA\",\n      \"Williamsburg Shopping\
-        \ Center, 1234 Richmond Road, Williamsburg, VA 23185, USA\"\n   ],\n   \"\
-        origin_addresses\" : [\n      \"249 Stadium Drive, Williamsburg, VA 23186,\
-        \ USA\",\n      \"2006 Brooks Street, Williamsburg, VA 23185, USA\"\n   ],\n\
-        \   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n    \
-        \           \"distance\" : {\n                  \"text\" : \"1.4 km\",\n \
-        \                 \"value\" : 1436\n               },\n               \"duration\"\
-        \ : {\n                  \"text\" : \"4 mins\",\n                  \"value\"\
-        \ : 252\n               },\n               \"status\" : \"OK\"\n         \
-        \   },\n            {\n               \"distance\" : {\n                 \
-        \ \"text\" : \"1.3 km\",\n                  \"value\" : 1271\n           \
-        \    },\n               \"duration\" : {\n                  \"text\" : \"\
-        4 mins\",\n                  \"value\" : 218\n               },\n        \
-        \       \"status\" : \"OK\"\n            }\n         ]\n      },\n      {\n\
-        \         \"elements\" : [\n            {\n               \"distance\" : {\n\
-        \                  \"text\" : \"1 m\",\n                  \"value\" : 0\n\
+        2006 Brooks Street, Williamsburg, VA 23185, USA\",\n      \"1234 Richmond\
+        \ Road, Williamsburg, VA 23185, USA\"\n   ],\n   \"origin_addresses\" : [\n\
+        \      \"248-278 Stadium Drive, Williamsburg, VA 23186, USA\",\n      \"2006\
+        \ Brooks Street, Williamsburg, VA 23185, USA\"\n   ],\n   \"rows\" : [\n \
+        \     {\n         \"elements\" : [\n            {\n               \"distance\"\
+        \ : {\n                  \"text\" : \"2.0 km\",\n                  \"value\"\
+        \ : 2025\n               },\n               \"duration\" : {\n           \
+        \       \"text\" : \"6 mins\",\n                  \"value\" : 375\n      \
+        \         },\n               \"status\" : \"OK\"\n            },\n       \
+        \     {\n               \"distance\" : {\n                  \"text\" : \"\
+        1.9 km\",\n                  \"value\" : 1877\n               },\n       \
+        \        \"duration\" : {\n                  \"text\" : \"6 mins\",\n    \
+        \              \"value\" : 344\n               },\n               \"status\"\
+        \ : \"OK\"\n            }\n         ]\n      },\n      {\n         \"elements\"\
+        \ : [\n            {\n               \"distance\" : {\n                  \"\
+        text\" : \"1 m\",\n                  \"value\" : 0\n               },\n  \
+        \             \"duration\" : {\n                  \"text\" : \"1 min\",\n\
+        \                  \"value\" : 0\n               },\n               \"status\"\
+        \ : \"OK\"\n            },\n            {\n               \"distance\" : {\n\
+        \                  \"text\" : \"1.3 km\",\n                  \"value\" : 1251\n\
         \               },\n               \"duration\" : {\n                  \"\
-        text\" : \"1 min\",\n                  \"value\" : 0\n               },\n\
-        \               \"status\" : \"OK\"\n            },\n            {\n     \
-        \          \"distance\" : {\n                  \"text\" : \"1.2 km\",\n  \
-        \                \"value\" : 1233\n               },\n               \"duration\"\
-        \ : {\n                  \"text\" : \"3 mins\",\n                  \"value\"\
-        \ : 171\n               },\n               \"status\" : \"OK\"\n         \
-        \   }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n"}
+        text\" : \"4 mins\",\n                  \"value\" : 239\n               },\n\
+        \               \"status\" : \"OK\"\n            }\n         ]\n      }\n\
+        \   ],\n   \"status\" : \"OK\"\n}\n"}
     headers:
       accept-ranges: [none]
       alternate-protocol: ['443:quic,p=1']
       cache-control: ['public, max-age=86400']
       content-type: [application/json; charset=UTF-8]
-      date: ['Sun, 07 Jun 2015 21:54:46 GMT']
-      expires: ['Mon, 08 Jun 2015 21:54:46 GMT']
+      date: ['Sun, 09 Aug 2015 04:18:46 GMT']
+      expires: ['Mon, 10 Aug 2015 04:18:46 GMT']
       server: [mafe]
       vary: ['Accept-Language,Accept-Encoding']
       x-frame-options: [SAMEORIGIN]

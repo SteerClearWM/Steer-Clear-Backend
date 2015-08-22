@@ -1,11 +1,11 @@
 from flask import Blueprint, request
-from flask_restful import Resource, Api, fields, marshal, abort
+from flask_restful import Resource, Api, fields, marshal, abort, reqparse
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
-from steerclear import sms_client
+from steerclear import sms_client, dm_client, gis_client
 
 from steerclear.utils.permissions import (
     student_permission, 
@@ -30,7 +30,10 @@ ride_fields = {
     'end_longitude': fields.Float(),
     'pickup_time': fields.DateTime(dt_format='rfc822'),
     'travel_time': fields.Integer(),
-    'dropoff_time': fields.DateTime(dt_format='rfc822'), 
+    'dropoff_time': fields.DateTime(dt_format='rfc822'),
+    'pickup_address': fields.String(),
+    'dropoff_address': fields.String(),
+    'on_campus': fields.Boolean(), 
 }
 
 """
@@ -51,9 +54,27 @@ class RideListAPI(Resource):
     """
     @admin_permission.require(http_exception=403)
     def get(self):
-        rides = Ride.query.all()                            # query db for Rides
-        rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
-        return {'rides': marshal(rides, ride_fields)}, 200  # return response
+        # parser = reqparse.RequestParser()
+        # parser.add_argument('location', type=str, location='args')
+        # args = parser.parse_args()
+        args = request.args
+        if args.get('location', '') == 'on_campus':
+            # return list of all ride requests that are on campus
+            on_campus_rides = Ride.query.filter_by(on_campus=True).all()
+            on_campus_rides = map(Ride.as_dict, on_campus_rides)
+            return {'rides': marshal(on_campus_rides, ride_fields)}, 200
+        
+        elif args.get('location', '') == 'off_campus':
+            # return list of all ride requests that are off campus
+            off_campus_rides = Ride.query.filter_by(on_campus=False).all()
+            off_campus_rides = map(Ride.as_dict, off_campus_rides)
+            return {'rides': marshal(off_campus_rides, ride_fields)}, 200
+        
+        else:
+            # return list of all ride requests
+            rides = Ride.query.all()                            # query db for Rides
+            rides = map(Ride.as_dict, rides)                    # convert all Rides to dictionaries
+            return {'rides': marshal(rides, ride_fields)}, 200  # return response
 
     """
     Create a new Ride object and place it in the queue
@@ -63,15 +84,26 @@ class RideListAPI(Resource):
         if not form.validate_on_submit():
             abort(400)
         
-        # calculate pickup and dropoff time
+        # get pickup and dropoff locations of Ride request
         pickup_loc = (form.start_latitude.data, form.start_longitude.data)
         dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
-        time_data = calculate_time_data(pickup_loc, dropoff_loc)
-        if time_data is None:
+
+        # check if the pickup_location for the ride request
+        # is on campus or off campus
+        on_campus = gis_client.is_on_campus(pickup_loc)
+
+        # query distance matrix api and get eta time data and addresses
+        result = query_distance_matrix_api(pickup_loc, dropoff_loc)
+        if result is None:
             abort(400)
+
+        # get pickup, travel, and dropoff times
+        pickup_time, travel_time, dropoff_time = result[0]
+
+        # get pickup and dropoff addresses
+        pickup_address, dropoff_address = result[1]
         
         # create new Ride object
-        pickup_time, travel_time, dropoff_time = time_data
         new_ride = Ride(
             num_passengers=form.num_passengers.data,
             start_latitude=form.start_latitude.data,
@@ -81,6 +113,9 @@ class RideListAPI(Resource):
             pickup_time=pickup_time,
             travel_time=travel_time,
             dropoff_time=dropoff_time,
+            pickup_address=pickup_address,
+            dropoff_address=dropoff_address,
+            on_campus=on_campus,
             user=current_user
         )
         
@@ -187,27 +222,77 @@ api.add_resource(RideListAPI, '/rides', endpoint='rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
 api.add_resource(NotificationAPI, '/notifications', endpoint='notifications')
 
-def calculate_time_data(pickup_loc, dropoff_loc):
+"""
+query_distance_matrix_api
+-------------------
+Takes a pickup and dropoff location for a Ride request
+and returns the pickup, travel, and dropoff times
+"""
+def query_distance_matrix_api(pickup_loc, dropoff_loc):
+    # check to see if there are any rides in the queue
     last_ride = db.session.query(Ride).order_by(Ride.id.desc()).first()
+
+    # if there are no rides in the queue, pickup_loc and
+    # dropoff_loc are our only destinations
     if last_ride is None:
-        eta = time_between_locations([pickup_loc], [dropoff_loc])
+        # eta = time_between_locations([pickup_loc], [dropoff_loc])
+
+        # query google distance matrix api and get response
+        response = dm_client.query_api([pickup_loc], [dropoff_loc])
+        
+        # get eta or return None
+        eta = response.get_eta()
         if eta is None:
             return None
        
+        # calculate pickup, travel, and dropoff times based off eta response
+        # assumes that van will arive at pickup_loc within 5 minutes
         pickup_time = datetime.utcnow() + timedelta(0, 10 * 60)
         travel_time = eta[0][0]
         dropoff_time = pickup_time + timedelta(0, travel_time)
+
+        # get addresses or return None
+        addresses = response.get_addresses()
+        if addresses is None:
+            return None
+
+        # get pickup and dropoff addresses.
+        # pickup address is the first address in origin_addresses (index 0)
+        # dropoff address is the first address in destination_addresses (index 1)
+        pickup_address = addresses[0][0]
+        dropoff_address = addresses[1][0]
+    
+    # else there are other rides in the queue, so we must factor
+    # in the dropoff time and location from the last ride in the queue
     else:
+        # get last ride dropoff location. this is our starting location
         start_loc = (last_ride.end_latitude, last_ride.end_longitude)
-        eta = time_between_locations([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
+
+        # query google distance matrix api and get response
+        response = dm_client.query_api([start_loc, pickup_loc], [pickup_loc, dropoff_loc])
+        
+        # get eta or return None
+        eta = response.get_eta()
         if eta is None:
             return None
+
+        # get addresses or return None
+        addresses = response.get_addresses()
+        if addresses is None:
+            return None
         
+        # calculate pickup, travel, and dropoff times based off eta response
         pickup_time = last_ride.dropoff_time + timedelta(0, eta[0][0])
         travel_time = eta[1][1]
         dropoff_time = pickup_time + timedelta(0, travel_time)
+
+        # get pickup and dropoff addresses.
+        # pickup address is the second address in origin_addresses (index 0)
+        # dropoff address is the second address in destination_addresses (index 1)
+        pickup_address = addresses[0][1]
+        dropoff_address = addresses[1][1]
     
-    return (pickup_time, travel_time, dropoff_time)
+    return (pickup_time, travel_time, dropoff_time), (pickup_address, dropoff_address)
 
 @api_bp.route('/clear')
 def clear():
