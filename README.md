@@ -70,9 +70,9 @@ Install requirements
 
 `$ pip install -r requirements.txt`
 
-Create Database (NOTE: this will delete old database at the moment)
+Create/Sync Database
 
-`$ python create_db.py`
+`$ python migrate.py db upgrade`
 
 Check that all tests pass
 
@@ -101,7 +101,7 @@ There a few helpful scripts for doing things such as creating a new user or ride
 * creates a new user, **steerclear**, that has privileges over both databases
 * **mysql server must be running**
 
-### create_db.py
+### /scripts/create_db.py
 * Creates and sets up the data model tables in the database
 * **NOTE: THIS WILL DELETE ALL DATA CURRENTLY IN THE DATABASE**
 * **TODO:** Change to use database migration
