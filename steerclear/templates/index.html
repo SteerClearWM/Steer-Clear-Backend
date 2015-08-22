@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="shortcun icon" href="static/assets/logo_dark.png">
 
     <title>Starter Template for Bootstrap</title>
 
@@ -20,47 +20,65 @@
 
   </head>
 
-  <body>
+  <body class="body" ng-app="SteerClear">
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+    <img src="static/assets/logo.png" class="center-block header-logo-small"></img>
+
+    <div class="container" ng-controller="RidesController">
+
+      <div class="col-xs-12">
+        <div class="input-group" ng-repeat="ride in rides track by $index" ng-show="$first">
+            <span class="input-group-btn">
+                <button class="btn btn-lg row-button" type="button">
+                    <span class="glyphicon glyphicon-remove button-icon" ng-click="deleteRide(ride)"></span>
+                </button>
+            </span>
+            <input class="form-control rides input-lg" ng-placeholder="ride.message" disabled></input>
+            <span class="input-group-btn">
+                <button class="btn btn-lg row-button" type="button" ng-show="$first">
+                    <span class="glyphicon glyphicon-check button-icon" ng-click="deleteRide(ride)"></span>
+                </button>
+                <button class="btn btn-lg row-button" type="button" ng-show="$first">
+                    <span class="glyphicon glyphicon-phone button-icon" ng-click="deleteRide(ride)"></span>
+                </button>
+            </span>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
       </div>
-    </nav>
 
-    <div class="container">
-
-          <ul class="list-group">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
-          </ul>
-
-    </div><!-- /.container -->
+      <div class="col-xs-offset-1 col-xs-10">
+        <div class="input-group" ng-repeat="ride in rides track by $index" ng-show="!$first">
+            <span class="input-group-btn">
+                <button class="btn row-button" type="button">
+                    <span class="glyphicon glyphicon-remove button-icon" ng-click="deleteRide(ride)"></span>
+                </button>
+            </span>
+            <input class="form-control rides" ng-placeholder="ride.message" disabled></input>
+            <span class="input-group-btn">
+                <button class="btn row-button" type="button" ng-show="$first">
+                    <span class="glyphicon glyphicon-check button-icon" ng-click="deleteRide(ride)"></span>
+                </button>
+                <button class="btn row-button" type="button" ng-show="$first">
+                    <span class="glyphicon glyphicon-phone button-icon" ng-click="deleteRide(ride)"></span>
+                </button>
+            </span>
+        </div>
+      </div>
+    </div>
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/api.js"></script>
+
+    <!-- AngularJs -->
+    <script src="static/js/angular.min.js"></script>
+    <script src="static/js/steer_clear.js"></script>
+    <script src="static/js/controllers/rides_controller.js"></script>
+    <script src="static/js/services/rides_service.js"></script>
+    <script src="static/js/directives/ng-placeholder.js"></script>
   </body>
 </html>
