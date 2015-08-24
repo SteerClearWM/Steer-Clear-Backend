@@ -27,7 +27,7 @@ Start the mysql server
     $ sudo service mysql start
 
     # On Mac
-    $ sudo /usr/local/mysql/support-files/mysql.server start
+    $ sudo mysql.server start
 
     # Another way on Mac
     $ sudo /usr/local/mysql/bin/mysqld_safe
@@ -72,7 +72,8 @@ Install requirements
 
 Create/Sync Database
 
-`$ python migrate.py db upgrade`
+    $ python migrate.py db migrate
+    $ python migrate.py db upgrade
 
 Check that all tests pass
 
@@ -80,9 +81,11 @@ Check that all tests pass
 
 Run app
 
-`$ python runserver.py`
-
-App will now be accesible through `localhost:5000`
+    # will run server on port 5000 by default
+    $ python runserver.py
+    
+    # will run server on specified port number and in debug mode
+    $ python runserver.py --port port_number --debug
 
 ***NOTE:** You need the default_settings.py config file for backend to work. Get from one of the repo overseers. Alternatively, you can create your own default settings file and fill in the corresponding values using **steerclear/settings/default_settings_example.py** file as a template
 
