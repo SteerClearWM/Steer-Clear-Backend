@@ -13,13 +13,11 @@ class SteerClearTestCase(base.SteerClearBaseTestCase):
     """
     test_heartbeat
     --------------
-    tests that server is up and running and that the
-    '/' route returns a 200 status code and "pulse"
+    tests that visiting '/' redirects to login page
     """
     def test_heartbeat(self):
         response = self.client.get('/')
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.get_data(), "pulse")
+        self.assertRedirects(response, url_for('login.login'))
 
     """
     test_get_index_requires_login

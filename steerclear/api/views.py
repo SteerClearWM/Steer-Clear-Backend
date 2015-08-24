@@ -293,9 +293,3 @@ def query_distance_matrix_api(pickup_loc, dropoff_loc):
         dropoff_address = addresses[1][1]
     
     return (pickup_time, travel_time, dropoff_time), (pickup_address, dropoff_address)
-
-@api_bp.route('/clear')
-def clear():
-    db.session.query(Ride).delete()
-    db.session.commit()
-    return "OK"

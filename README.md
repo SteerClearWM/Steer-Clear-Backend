@@ -27,7 +27,7 @@ Start the mysql server
     $ sudo service mysql start
 
     # On Mac
-    $ sudo /usr/local/mysql/support-files/mysql.server start
+    $ sudo mysql.server start
 
     # Another way on Mac
     $ sudo /usr/local/mysql/bin/mysqld_safe
@@ -70,9 +70,10 @@ Install requirements
 
 `$ pip install -r requirements.txt`
 
-Create Database (NOTE: this will delete old database at the moment)
+Create/Sync Database
 
-`$ python create_db.py`
+    $ python migrate.py db migrate
+    $ python migrate.py db upgrade
 
 Check that all tests pass
 
@@ -80,9 +81,11 @@ Check that all tests pass
 
 Run app
 
-`$ python runserver.py`
-
-App will now be accesible through `localhost:5000`
+    # will run server on port 5000 by default
+    $ python runserver.py
+    
+    # will run server on specified port number and in debug mode
+    $ python runserver.py --port port_number --debug
 
 ***NOTE:** You need the default_settings.py config file for backend to work. Get from one of the repo overseers. Alternatively, you can create your own default settings file and fill in the corresponding values using **steerclear/settings/default_settings_example.py** file as a template
 
@@ -101,7 +104,7 @@ There a few helpful scripts for doing things such as creating a new user or ride
 * creates a new user, **steerclear**, that has privileges over both databases
 * **mysql server must be running**
 
-### create_db.py
+### /scripts/create_db.py
 * Creates and sets up the data model tables in the database
 * **NOTE: THIS WILL DELETE ALL DATA CURRENTLY IN THE DATABASE**
 * **TODO:** Change to use database migration
