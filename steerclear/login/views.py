@@ -1,34 +1,34 @@
 from flask import (
-    Blueprint, 
-    render_template, 
-    url_for, 
-    redirect, 
+    Blueprint,
+    render_template,
+    url_for,
+    redirect,
     current_app,
     session,
     request
 )
 from flask.ext.login import (
-    login_user, 
-    logout_user, 
-    login_required, 
+    login_user,
+    logout_user,
+    login_required,
     current_user
 )
 from flask.ext.principal import (
     Principal,
-    Identity, 
-    AnonymousIdentity, 
-    identity_changed, 
-    identity_loaded, 
+    Identity,
+    AnonymousIdentity,
+    identity_changed,
+    identity_loaded,
     Permission,
-    RoleNeed, 
+    RoleNeed,
     UserNeed
 )
 from flask_restful import abort
 from sqlalchemy import exc
-from steerclear import login_manager, app 
+from steerclear import login_manager, app
 from steerclear.utils import cas
 from steerclear.utils.permissions import (
-    admin_permission, 
+    admin_permission,
     student_permission,
     AccessRideNeed
 )
@@ -76,7 +76,7 @@ def user_loader(user_id):
 identity_loaded
 ---------------
 Signal used by flask-principal. called when
-loading the user Identity for the request. 
+loading the user Identity for the request.
 """
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):
@@ -119,7 +119,7 @@ def login():
     # must validate LoginForm and CAS server
     form = LoginForm()
     if form.validate_on_submit() and cas.validate_user(form.username.data, form.password.data):
-        
+
         # get User object if exists
         user = User.query.filter_by(username=form.username.data).first()
         if user:
@@ -173,7 +173,7 @@ def register():
     # POST request. attempt to validate RegisterForm and user with CAS server
     form = RegisterForm()
     if form.validate_on_submit() and cas.validate_user(form.username.data, form.password.data):
-        
+
         # Find StudentRole. SHOULD EXIST ON STARTUP. IF NOT, THEN SERVER ERROR
         student_role = Role.query.filter_by(name='student').first()
         if student_role is None:
@@ -181,7 +181,7 @@ def register():
 
         # attempt to create a new User in the db
         new_user = User(
-            username=form.username.data, 
+            username=form.username.data,
             phone=form.phone.data,
             roles=[student_role]
         )
