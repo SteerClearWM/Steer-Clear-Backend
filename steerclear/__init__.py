@@ -37,10 +37,8 @@ gis_client = SteerClearGISClient(campus_map_filename)
 from steerclear.api.views import api_bp
 from steerclear.driver_portal.views import driver_portal_bp
 from steerclear.login.views import login_bp
-from steerclear.landing.views import landing_bp
 
 # register all blueprints to the app
 app.register_blueprint(api_bp)
 app.register_blueprint(driver_portal_bp)
 app.register_blueprint(login_bp)
-app.register_blueprint(landing_bp)
