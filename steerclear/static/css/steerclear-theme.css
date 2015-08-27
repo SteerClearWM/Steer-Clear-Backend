@@ -170,11 +170,12 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
   color: rgba(255, 255, 255, 0.8);
   text-decoration: underline;
   float: right;
+  font-size: 1.2em;
 }
 
 .landing-blurb {
   text-align: center;
-  font-size: 30px;
+  font-size: 2em;
   padding-top: 30px;
   padding-bottom: 30px;
 }
