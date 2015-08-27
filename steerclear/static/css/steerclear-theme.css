@@ -13,12 +13,13 @@
 /*All Pages*/
 
 @font-face {
-    font-family: antipasto;
-    src: url(../fonts/antipasto.otf);
+  font-family: antipasto;
+  src: url(../fonts/antipasto.otf);
 }
 
 .body {
 	font-family: antipasto;
+  color: rgba(255, 255, 255, 0.8);
  	background-color: #00486a;
  	background-image: url('../assets/background.png');
  	background-size: 100%;
@@ -137,11 +138,15 @@
 img {
 	max-width: 100%;
 	height: auto;
-    width: auto\9;
+  width: auto\9;
+}
+
+input {
+  text-align: center;
 }
 
 input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px white inset;
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
 /*Prevent early loading on angularjs*/
@@ -153,3 +158,31 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 .form-control:-moz-placeholder { color: rgba(255, 255, 255, 0.8);; }
 .form-control::-moz-placeholder { color: rgba(255, 255, 255, 0.8);; }
 .form-control:-ms-input-placeholder { color: rgba(255, 255, 255, 0.8);; }
+
+
+
+/*Landing Page*/
+.cypher-small {
+  width: 60px;
+}
+
+.cypher-container {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.download-badge {
+  height: 60px;
+  margin: 10px;
+}
+
+.badge-container {
+  width: 100%;
+  text-align: center;
+}
+
+.login-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: underline;
+  float: right;
+}
