@@ -1,4 +1,4 @@
-app.controller('RidesController', ['$scope', 'RidesService', '$location', function($scope, RidesService, $location){
+app.controller('RidesController', ['$scope', 'RidesService', function($scope, RidesService){
 
     var ride = {
         "num_passengers": 4,
@@ -11,7 +11,6 @@ app.controller('RidesController', ['$scope', 'RidesService', '$location', functi
 
     RidesService.createRide(ride)
 
-
 		init = function() {
 	      RidesService.getRides().then(function(data){
 	          for (var i =0; i < data.rides.length; i++){
@@ -21,7 +20,6 @@ app.controller('RidesController', ['$scope', 'RidesService', '$location', functi
 	          };
 	          $scope.rides = data.rides;
 	    	});
-        // alert($location.host());
     };
 
     init();
