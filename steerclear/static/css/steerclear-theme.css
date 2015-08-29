@@ -99,26 +99,19 @@
 	border-width: 1px;
 }
 
-.login-email {
+.login-username {
 	display: inline-block;
-	width: 30%;
+	width: 40%;
 	margin-right: 1px;
 	margin-top: 14px;
 }
 
 .login-password {
 	display: inline-block;
-	width: 30%;
+	width: 40%;
 	margin-left: 1px;
   margin-right: 1px;
 	margin-top: 14px;
-}
-
-.login-phone {
-  display: inline-block;
-  margin-left: 1px;
-  margin-top: 4px;
-  width: 30%;
 }
 
 .button-container {
