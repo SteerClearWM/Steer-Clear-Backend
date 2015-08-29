@@ -157,19 +157,6 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             self.assertEquals(response.status_code, 401)
 
     """
-    test_get_register_page
-    ----------------------
-    Tests that we can GET the register page correctly
-    with the right context
-    """
-    def test_get_register_page(self):
-        # check that GET request succeeded
-        response = self.client.get(url_for('login.register'))
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(REGISTER_TEMPLATE_NAME)
-        self.assertContext('action', url_for('login.register'))
-
-    """
     test_register_failure_username_exists
     -------------------------------------
     Tests that trying to register a new user with

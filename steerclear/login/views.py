@@ -159,17 +159,12 @@ def logout():
 register
 --------
 Main endpoint for registering new users in the system
-GET - returns the register user template
 POST - takes a username/password form and creates a new user.
        If a user already exists with the same username, flash an error message
        and return the register screen again. On success, redirect user to login page
 """
-@login_bp.route('/register', methods=['GET', 'POST'])
+@login_bp.route('/register', methods=['POST'])
 def register():
-    # GET request. return register page
-    if request.method == 'GET':
-        return render_template('login.html', action=url_for('.register'))
-
     # POST request. attempt to validate RegisterForm and user with CAS server
     form = RegisterForm()
     if form.validate_on_submit() and cas.validate_user(form.username.data, form.password.data):

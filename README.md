@@ -144,9 +144,6 @@ Login is done with a valid w&m account username and password.
 ## Registering Users
 You can register a new user (assuming the user does not already exist) by making a simple POST request with a username, password, and phone field. The new user will have all api permissions that a student has
 
-### GET /register
-* Returns the register page
-
 ### POST /register
 * Creates a new user. 
 * Takes a form with a **username** and **password** and a **phone** field.
