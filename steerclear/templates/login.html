@@ -26,7 +26,7 @@
 
     <div class="container">
 
-      <form id="form" class="form-signin" action="" method="POST">
+      <form id="form" class="form-signin" action="{{action}}" method="POST">
         <img src="static/assets/logo.png" class="center-block header-logo-large"></img>
         <div class="inputs">
           <input type="text" name="username" class="form-control login-email login-transparent" placeholder="Email" required autofocus>
@@ -39,11 +39,6 @@
       </form>
 
     </div>
-
-
-    <script>
-    $("#form").attr("action", "https://" + window.location.host + "{{action}}");
-    </script>
 
   </body>
 </html>
