@@ -29,14 +29,23 @@ class SteerClearTestCase(base.SteerClearBaseTestCase):
         self.assertEquals(response.status_code, 401)
 
     """
-    test_get_index
+    test_get_index_admin_user
     --------------
-    Tests that only logged in users can access the index page
+    Tests that only logged in admin users can access the index page
     """
-    def test_get_index(self):
-        user = self._create_user()
-        self._login(user)
+    def test_get_index_admin_user(self):
+        self._login(self.admin_user)
         response = self.client.get(url_for('driver_portal.index'))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('index.html')
+
+    """
+    test_get_index_student_user
+    ---------------------------
+    Tests that logged in student users are redirected to the landing page
+    """
+    def test_get_index_student_user(self):
+        self._login(self.student_user)
+        response = self.client.get(url_for('driver_portal.index'))
+        self.assertRedirects(response, url_for('driver_portal.heartbeat'))
 
