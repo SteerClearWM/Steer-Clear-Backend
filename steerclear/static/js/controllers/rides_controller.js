@@ -4,14 +4,15 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
         "num_passengers": 4,
         "start_latitude": 37.273485,
         "start_longitude": -76.719628,
-        "end_latitude": 37.280893,
-        "end_longitude": -76.1,
+        "end_latitude": 37 + Math.random(),
+        "end_longitude": -76 + Math.random(),
         "phone": 15555555555
     };
 
     RidesService.createRide(ride)
 
-		init = function() {
+		updateData = function() {
+        console.log('updating')
 	      RidesService.getRides().then(function(data){
 	          for (var i =0; i < data.rides.length; i++){
 	              data.rides[i].pickup_address = data.rides[i].pickup_address || "Start Address Not Found";
@@ -21,12 +22,19 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
 	    	});
     };
 
-    init();
-
-    console.log($scope.rides);
+    updateData();
+    // setInterval('updateData', 1000);
 
     $scope.deleteRide = function ( ride ) {
         if (confirm("Are you sure you want to delete this ride?")){
+            del_index = $scope.rides.indexOf(ride);
+            $scope.rides.splice(del_index,1);
+            RidesService.deleteRide(ride.id);
+        }
+    };
+
+    $scope.finishRide = function ( ride ) {
+        if (confirm("Are you sure you want to finish this ride? It will be removed from the queue forever.")){
             del_index = $scope.rides.indexOf(ride);
             $scope.rides.splice(del_index,1);
             RidesService.deleteRide(ride.id);
