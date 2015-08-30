@@ -5,7 +5,8 @@ app.service("RidesService", ['$http', '$q', function( $http, $q ) {
         createRide: createRide,
         getRides: getRides,
         getRide: getRide,
-        deleteRide: deleteRide
+        deleteRide: deleteRide,
+        notify: notify
     });
     // ---
     // PUBLIC METHODS.
@@ -31,6 +32,14 @@ app.service("RidesService", ['$http', '$q', function( $http, $q ) {
         var request = $http({
             method: "get",
             url: "api/rides/" + ride_id,
+        });
+        return( request.then( handleSuccess, handleError ) );
+    }
+
+    function notify( ride_id ) {
+        var request = $http({
+            method: "post",
+            url: "api/notifications/" + ride_id,
         });
         return( request.then( handleSuccess, handleError ) );
     }
