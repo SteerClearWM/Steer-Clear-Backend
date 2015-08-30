@@ -32,6 +32,11 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
         }
     };
 
+    $scope.notify = function ( ride ) {
+        RidesService.notify(ride.id);
+        console.log("notified")
+    }
+
     $scope.finishRide = function ( ride ) {
         if (confirm("Are you sure you want to finish this ride? It will be removed from the queue forever.")){
             del_index = $scope.rides.indexOf(ride);
