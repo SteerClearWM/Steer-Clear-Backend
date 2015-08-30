@@ -1,5 +1,5 @@
 app.service("RidesService", ['$http', '$q', function( $http, $q ) {
-    
+
     //Make the following methods public
     return({
         createRide: createRide,
@@ -15,7 +15,7 @@ app.service("RidesService", ['$http', '$q', function( $http, $q ) {
         var request = $http({
             method: "post",
             url: "api/rides",
-            data: ride_info 
+            data: ride_info
         });
         return( request.then( handleSuccess, handleError ) );
     }
@@ -34,7 +34,7 @@ app.service("RidesService", ['$http', '$q', function( $http, $q ) {
         });
         return( request.then( handleSuccess, handleError ) );
     }
-    
+
     function deleteRide( ride_id ) {
         var request = $http({
             method: "delete",
