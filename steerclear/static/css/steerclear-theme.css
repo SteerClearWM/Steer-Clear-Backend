@@ -169,3 +169,41 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 .form-control:-moz-placeholder { color: rgba(255, 255, 255, 0.8);; }
 .form-control::-moz-placeholder { color: rgba(255, 255, 255, 0.8);; }
 .form-control:-ms-input-placeholder { color: rgba(255, 255, 255, 0.8);; }
+
+/*Landing Page*/
+.clearfix {
+  overflow: auto;
+}
+
+.login-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: underline;
+  float: right;
+  font-size: 1.2em;
+}
+
+.landing-blurb {
+  text-align: center;
+  font-size: 2em;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.cypher-small {
+  width: 60px;
+}
+
+.cypher-container {
+  margin-top: 70px;
+  margin-bottom: 40px;
+}
+
+.download-badge {
+  height: 60px;
+  margin: 10px;
+}
+
+.badge-container {
+  width: 100%;
+  text-align: center;
+}

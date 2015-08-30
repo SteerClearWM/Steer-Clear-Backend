@@ -12,11 +12,13 @@ Simple check to see if server is running
 """
 @driver_portal_bp.route('/')
 def heartbeat():
-    return redirect(url_for('login.login'))
+    return render_template('landing.html')
+
+@driver_portal_bp.route('/login')
+def login():
+    return render_template('login.html')
 
 @driver_portal_bp.route('/index')
 @login_required
 def index():
-    if not admin_permission.can():
-        return redirect(url_for('.heartbeat'))
     return render_template('index.html')
