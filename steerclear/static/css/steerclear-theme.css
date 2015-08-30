@@ -39,6 +39,7 @@
 .rides {
 	background-color: rgba(255, 255, 255, 0.15) !important;
 	margin-top: 12px;
+  width: 50% !important;
 	border-radius: 5px;
 	border-style: solid;
 	border-color: rgba(255, 255, 255, 0.4);

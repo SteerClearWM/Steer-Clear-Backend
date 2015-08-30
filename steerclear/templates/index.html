@@ -27,13 +27,14 @@
     <div class="container" ng-controller="RidesController">
 
       <div class="col-xs-12">
-        <div class="input-group" ng-repeat="ride in rides track by $index" ng-show="$first">
+        <div class="input-group" ng-repeat="ride in rides track by ride.id" ng-show="$first">
             <span class="input-group-btn">
                 <button class="btn btn-lg row-button" type="button">
                     <span class="glyphicon glyphicon-remove button-icon" ng-click="deleteRide(ride)"></span>
                 </button>
             </span>
-            <input class="form-control rides input-lg" ng-placeholder="ride.message" disabled></input>
+            <input class="form-control rides input-lg" ng-placeholder="ride.pickup_address" disabled></input>
+            <input class="form-control rides input-lg" ng-placeholder="ride.dropoff_address" disabled></input>
             <span class="input-group-btn">
                 <button class="btn btn-lg row-button" type="button" ng-show="$first">
                     <span class="glyphicon glyphicon-check button-icon" ng-click="deleteRide(ride)"></span>
@@ -46,21 +47,14 @@
       </div>
 
       <div class="col-xs-offset-1 col-xs-10">
-        <div class="input-group" ng-repeat="ride in rides track by $index" ng-show="!$first">
+        <div class="input-group" ng-repeat="ride in rides track by ride.id" ng-show="!$first">
             <span class="input-group-btn">
                 <button class="btn row-button" type="button">
                     <span class="glyphicon glyphicon-remove button-icon" ng-click="deleteRide(ride)"></span>
                 </button>
             </span>
-            <input class="form-control rides" ng-placeholder="ride.message" disabled></input>
-            <span class="input-group-btn">
-                <button class="btn row-button" type="button" ng-show="$first">
-                    <span class="glyphicon glyphicon-check button-icon" ng-click="deleteRide(ride)"></span>
-                </button>
-                <button class="btn row-button" type="button" ng-show="$first">
-                    <span class="glyphicon glyphicon-phone button-icon" ng-click="deleteRide(ride)"></span>
-                </button>
-            </span>
+            <input class="form-control rides" ng-placeholder="ride.pickup_address" disabled></input>
+            <input class="form-control rides" ng-placeholder="ride.dropoff_address" disabled></input>
         </div>
       </div>
     </div>
