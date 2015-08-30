@@ -22,8 +22,7 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
 	    	});
     };
 
-    updateData();
-    // setInterval('updateData', 1000);
+    setInterval('updateData()', 5000);
 
     $scope.deleteRide = function ( ride ) {
         if (confirm("Are you sure you want to delete this ride?")){
