@@ -48,6 +48,11 @@
   cursor: initial !important;
 }
 
+.rides:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
 .first-ride {
   height: 80px;
 }

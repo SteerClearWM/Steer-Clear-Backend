@@ -10,6 +10,22 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
     };
 
     RidesService.createRide(ride)
+    $scope.filter = "both"
+
+    $scope.filterRides = function( filter ) {
+        $scope.filter = filter;
+        switch(filter) {
+            case "both":
+                $scope.rides = $scope.originalRides;
+                break;
+            case "oncampus":
+                $scope.rides = $scope.originalRides;
+                break;
+            case "offcampus":
+                $scope.rides = $scope.originalRides;
+                break;
+        }
+    }
 
 		updateData = function() {
 	      RidesService.getRides().then(function(data){
@@ -17,7 +33,8 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
 	              data.rides[i].pickup_address = data.rides[i].pickup_address || "Start Address Not Found";
 	              data.rides[i].dropoff_address = data.rides[i].dropoff_address || "End Address Not Found";
 	          };
-	          $scope.rides = data.rides;
+            $scope.originalRides = angular.copy(data.rides);
+	          $scope.filterRides($scope.filter);
 	    	});
     };
 
@@ -33,8 +50,8 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
     };
 
     $scope.notify = function ( ride ) {
-        RidesService.notify(ride.id);
-        console.log("notified")
+        response = RidesService.notify(ride.id)
+        alert("Text message sent!");
     }
 
     $scope.finishRide = function ( ride ) {
