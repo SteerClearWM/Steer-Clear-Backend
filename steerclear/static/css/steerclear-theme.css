@@ -13,8 +13,16 @@
 /*All Pages*/
 
 @font-face {
-    font-family: antipasto;
-    src: url(../fonts/antipasto.otf);
+    font-family: 'antipasto';
+    src: url(../fonts/antipasto.eot);
+    src: url(../fonts/antipasto.eot?#iefix) format('embedded-opentype'),
+         url(../fonts/antipasto.woff2) format('woff2'),
+         url(../fonts/antipasto.woff) format('woff'),
+         url(../fonts/antipasto.ttf) format('truetype'),
+         url(../fonts/antipasto.svg#antipastoregular) format('svg');
+    font-weight: normal;
+    font-style: normal;
+
 }
 
 .body {
