@@ -12,7 +12,6 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
     RidesService.createRide(ride)
 
 		updateData = function() {
-        console.log('updating')
 	      RidesService.getRides().then(function(data){
 	          for (var i =0; i < data.rides.length; i++){
 	              data.rides[i].pickup_address = data.rides[i].pickup_address || "Start Address Not Found";
@@ -22,6 +21,7 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
 	    	});
     };
 
+    updateData();
     setInterval('updateData()', 5000);
 
     $scope.deleteRide = function ( ride ) {
