@@ -21,4 +21,6 @@ def login():
 @driver_portal_bp.route('/index')
 @login_required
 def index():
+    if not admin_permission.can():
+        return redirect(url_for('.heartbeat'))
     return render_template('index.html')
