@@ -23,4 +23,4 @@ LOGGING_FILENAME = 'path_to_your_logfile.log'
 # mysql times out idle connections after a certain amount of time
 # set this to the amount of time db connections can remain
 # idle before being refreshed
-# SQLALCHEMY_POOL_RECYCLE = 'idle_time_limit_in_seconds'
+# SQLALCHEMY_POOL_RECYCLE = idle_time_limit_in_seconds
