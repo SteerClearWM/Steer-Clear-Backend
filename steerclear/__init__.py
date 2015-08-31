@@ -4,10 +4,10 @@ from flask.ext.sqlalchemy import SQLAlchemy
 #initialize flask app with correct configurations
 app = Flask(__name__)
 try:
-	app.config.from_object('steerclear.settings.default_settings')
+    app.config.from_object('steerclear.settings.default_settings')
 except ImportError as e:
-	print e
-	app.config.from_object('steerclear.settings.default_settings_example')
+    print e
+    app.config.from_object('steerclear.settings.default_settings_example')
 db = SQLAlchemy(app)
 
 # setup login manager for flask-login
@@ -42,3 +42,20 @@ from steerclear.login.views import login_bp
 app.register_blueprint(api_bp)
 app.register_blueprint(driver_portal_bp)
 app.register_blueprint(login_bp)
+
+if not app.debug:
+    import logging
+    from logging.handlers import RotatingFileHandler
+
+    # setup file to log errors to
+    file_handler = RotatingFileHandler(app.config['LOGGING_FILENAME'], maxBytes=10000, backupCount=4)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    app.logger.setLevel(logging.WARNING)
+    file_handler.setLevel(logging.WARNING)
+
+    # register log file to loggers
+    loggers = [app.logger, logging.getLogger('sqlalchemy')]
+    for logger in loggers:
+        logger.addHandler(file_handler)
