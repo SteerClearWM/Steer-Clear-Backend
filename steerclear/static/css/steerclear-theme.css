@@ -29,7 +29,10 @@
 	font-family: antipasto;
   background-color: #115740;
  	background-image: url('../assets/background.png');
- 	background-size: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 
