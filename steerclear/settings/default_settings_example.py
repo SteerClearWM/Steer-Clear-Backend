@@ -18,4 +18,4 @@ TEST_CAS_USERNAME = 'your-username'
 TEST_CAS_PASSWORD = 'your-password'
 
 # path to file you wish to send logs to
-LOGGING_FILENAME = '/path/to/your/logfile.log'
+LOGGING_FILENAME = 'path_to_your_logfile.log'
