@@ -14,10 +14,6 @@ Simple check to see if server is running
 def heartbeat():
     return render_template('landing.html')
 
-@driver_portal_bp.route('/login')
-def login():
-    return render_template('login.html')
-
 @driver_portal_bp.route('/index')
 @login_required
 def index():
