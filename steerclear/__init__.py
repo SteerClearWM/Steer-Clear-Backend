@@ -48,7 +48,7 @@ if not app.debug:
     from logging.handlers import RotatingFileHandler
 
     # setup file to log errors to
-    file_handler = RotatingFileHandler('/tmp/steerclear.wm.edu.log', maxBytes=10000, backupCount=4)
+    file_handler = RotatingFileHandler(app.config['LOGGING_FILENAME'], maxBytes=10000, backupCount=4)
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
     ))
