@@ -27,7 +27,6 @@
 
 .body {
 	font-family: antipasto;
- 	//background-color: #00486a;
   background-color: #115740;
  	background-image: url('../assets/background.png');
  	background-size: 100%;
@@ -184,6 +183,7 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 }
 
 .landing-blurb {
+  color: rgba(255, 255, 255, 0.8);
   text-align: center;
   font-size: 2em;
   padding-top: 30px;
