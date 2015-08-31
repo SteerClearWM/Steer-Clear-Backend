@@ -59,3 +59,5 @@ if not app.debug:
     loggers = [app.logger, logging.getLogger('sqlalchemy')]
     for logger in loggers:
         logger.addHandler(file_handler)
+
+    app.logger.warning('starting steerclear app')
