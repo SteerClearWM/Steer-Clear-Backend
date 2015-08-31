@@ -17,7 +17,7 @@ class SteerClearTestCase(base.SteerClearBaseTestCase):
     """
     def test_heartbeat(self):
         response = self.client.get('/')
-        self.assertRedirects(response, url_for('login.login'))
+        self.assertTemplateUsed('landing.html')
 
     """
     test_get_index_requires_login
