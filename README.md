@@ -55,6 +55,8 @@ If you ran the setup_db.sql script it should look like the first 2 lines in **/s
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/db'
     TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/test'
 
+Since we are using mysql, you might need to specify the amount of time database connections are allowed to be idle before being refreshed (http://docs.sqlalchemy.org/en/rel_1_0/core/pooling.html#setting-pool-recycle). There is a flag in steerclear/settings/default_settings.py that you can modify
+
 ##Setup and Installation
 `clone` project and `cd` into directory
 

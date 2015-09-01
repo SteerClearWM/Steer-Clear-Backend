@@ -16,3 +16,11 @@ TWILIO_NUMBER = "Your Twilio Number Here"
 # a valid wm account username and password for running tests
 TEST_CAS_USERNAME = 'your-username'
 TEST_CAS_PASSWORD = 'your-password'
+
+# path to file you wish to send logs to
+LOGGING_FILENAME = 'path_to_your_logfile.log'
+
+# mysql times out idle connections after a certain amount of time
+# set this to the amount of time db connections can remain
+# idle before being refreshed
+# SQLALCHEMY_POOL_RECYCLE = idle_time_limit_in_seconds
