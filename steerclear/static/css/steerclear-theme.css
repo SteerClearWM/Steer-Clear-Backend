@@ -9,15 +9,15 @@
 /*All Pages*/
 
 @font-face {
-    font-family: 'antipasto';
-    src: url(../fonts/antipasto.eot);
-    src: url(../fonts/antipasto.eot?#iefix) format('embedded-opentype'),
-         url(../fonts/antipasto.woff2) format('woff2'),
-         url(../fonts/antipasto.woff) format('woff'),
-         url(../fonts/antipasto.ttf) format('truetype'),
-         url(../fonts/antipasto.svg#antipastoregular) format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'antipasto';
+  src: url(../fonts/antipasto.eot);
+  src: url(../fonts/antipasto.eot?#iefix) format('embedded-opentype'),
+       url(../fonts/antipasto.woff2) format('woff2'),
+       url(../fonts/antipasto.woff) format('woff'),
+       url(../fonts/antipasto.ttf) format('truetype'),
+       url(../fonts/antipasto.svg#antipastoregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
 
 }
 
@@ -196,11 +196,11 @@
 img {
 	max-width: 100%;
 	height: auto;
-    width: auto\9;
+  width: auto\9;
 }
 
 input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px white inset;
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
 /*Prevent early loading on angularjs*/
@@ -214,6 +214,15 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 .form-control:-ms-input-placeholder { color: rgba(80, 80, 80, 0.8);; }
 
 /*Landing Page*/
+.landing {
+  background-color: #115740;
+  background-image: url('../assets/background.png');
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 .clearfix {
   overflow: auto;
 }
@@ -226,7 +235,7 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 }
 
 .landing-blurb {
-  color: rgba(80, 80, 80, 0.8);
+  color: rgba(255, 255, 255, 0.8);
   text-align: center;
   font-size: 2em;
   padding-top: 30px;
@@ -253,12 +262,12 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 }
 
 .nav-tabs > li, .nav-pills > li {
-    float:none;
-    display:inline-block;
-    *display:inline; /* ie7 fix */
-    zoom:1; /* hasLayout ie7 trigger */
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+  zoom:1; /* hasLayout ie7 trigger */
 }
 
 .nav-tabs, .nav-pills {
-    text-align:center;
+  text-align:center;
 }
