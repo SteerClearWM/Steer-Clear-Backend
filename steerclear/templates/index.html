@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="shortcun icon" href="static/assets/logo_dark.png">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Steer Clear Rides</title>
 
     <!-- Bootstrap core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
@@ -44,6 +44,7 @@
             <div ng-click="gps(ride.start_latitude, ride.start_longitude)"><input class="form-control rides input-lg" ng-placeholder="ride.pickup_address" disabled></input></div>
             <div ng-click="gps(ride.end_latitude, ride.end_longitude)"><input class="form-control rides input-lg" ng-placeholder="ride.dropoff_address" disabled></input></div>
             <span class="input-group-btn">
+                <button class="btn btn-lg row-button" type="button" ng-show="$first">{[{ride.num_passengers}]}</button>
                 <button class="btn btn-lg row-button" type="button" ng-show="$first">
                     <span class="glyphicon glyphicon-check button-icon" ng-click="finishRide(ride)"></span>
                 </button>
@@ -63,6 +64,9 @@
             </span>
             <div ng-click="gps(ride.start_latitude, ride.start_longitude)"><input class="form-control rides" ng-placeholder="ride.pickup_address" disabled></input></div>
             <div ng-click="gps(ride.end_latitude, ride.end_longitude)"><input class="form-control rides" ng-placeholder="ride.dropoff_address" disabled></input></div>
+            <span class="input-group-btn">
+                <button class="btn row-button" type="button">{[{ride.num_passengers}]}</button>
+            </span>
         </div>
       </div>
     </div>
