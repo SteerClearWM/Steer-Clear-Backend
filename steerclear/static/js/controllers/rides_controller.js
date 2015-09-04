@@ -1,15 +1,5 @@
 app.controller('RidesController', ['$scope', 'RidesService', function($scope, RidesService){
 
-    var ride = {
-        "num_passengers": 4,
-        "start_latitude": 37.273485,
-        "start_longitude": -76.719628,
-        "end_latitude": 37 + Math.random(),
-        "end_longitude": -76 + Math.random(),
-        "phone": 15555555555
-    };
-
-    RidesService.createRide(ride)
     $scope.filter = "both"
 
     $scope.filterRides = function( filter ) {
@@ -48,9 +38,9 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
           url = url + "&saddr=" + slat + "," + slong;
         }
         if ($scope.iOS) {
-            window.location = "comgooglemapsurl://" + url;
+            window.open("comgooglemapsurl://" + url);
         } else {
-            window.location = "http://" + url;
+            window.open("http://" + url, '_blank');
         }
     }
 
@@ -74,5 +64,21 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
             RidesService.deleteRide(ride.id);
         }
     };
+
+
+
+    //For demo purposes....
+
+    var ride = {
+        "num_passengers": 4,
+        "start_latitude": 37.273485,
+        "start_longitude": -76.719628,
+        "end_latitude": 37 + Math.random(),
+        "end_longitude": -76 + Math.random(),
+        "phone": 15555555555
+    };
+
+    if (document.location.hostname == "localhost" || document.location.hostname == "127.0.0.1")
+      RidesService.createRide(ride)
 
 }]);
