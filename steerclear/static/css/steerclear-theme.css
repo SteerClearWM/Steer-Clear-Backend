@@ -42,7 +42,7 @@
 	border-color: rgba(80, 80, 80, 0.4);
 	border-width: 1px;
 	white-space: nowrap;
-  cursor: initial !important;
+  cursor: pointer !important;
 }
 
 .rides:hover {
@@ -88,6 +88,12 @@
 .ride-text {
 	font-size: 120%;
 	color: rgba(80, 80, 80, 0.6);
+}
+
+.passengers:hover {
+  background-color: rgba(80, 80, 80, 0.2);
+  border-color: rgba(80, 80, 80, 0.4);
+  cursor: initial !important;
 }
 
 .header-logo-small {
