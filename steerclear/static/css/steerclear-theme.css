@@ -1,12 +1,8 @@
 /*
 	Corynne's Color Palette
 
-	lighter-blue: #266380;
-	steer-clear-blue: #00486a;
-	darker-blue: #00283A;
-
-	alternate-blue: #1a3a69;
-	white: ffffff;
+	green: #115740;
+	gold: #OO486a
 */
 
 
@@ -27,8 +23,6 @@
 
 .body {
 	font-family: antipasto;
-  background-color: #115740;
- 	background-image: url('../assets/background.png');
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -40,15 +34,20 @@
 /*Rides Queue*/
 
 .rides {
-	background-color: rgba(255, 255, 255, 0.15) !important;
+	background-color: rgba(80, 80, 80, 0.15) !important;
 	margin-top: 12px;
   width: 50% !important;
 	border-radius: 5px;
 	border-style: solid;
-	border-color: rgba(255, 255, 255, 0.4);
+	border-color: rgba(80, 80, 80, 0.4);
 	border-width: 1px;
 	white-space: nowrap;
   cursor: initial !important;
+}
+
+.rides:hover {
+  background-color: rgba(O, O, O, 0.25);
+  border-color: rgba(80, 80, 80, 0.9);
 }
 
 .first-ride {
@@ -57,17 +56,17 @@
 
 .row-button {
   margin-top: 12px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(80, 80, 80, 0.2);
+  border-color: rgba(80, 80, 80, 0.4);
 }
 
 .row-button:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(80, 80, 80, 0.25);
+  border-color: rgba(80, 80, 80, 0.6);
 }
 
 .button-icon {
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(80, 80, 80, 0.4);
 }
 
 .btn:focus {
@@ -77,26 +76,42 @@
 .check-icon {
 	margin-top: 2px;
 	margin-right: 7px;
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(80, 80, 80, 0.4);
 }
 
 .phone-icon {
 	margin-top: 2px;
 	margin-right: 20px;
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(80, 80, 80, 0.4);
 }
 
 .ride-text {
 	font-size: 120%;
-	color: rgba(255, 255, 255, 0.6);
+	color: rgba(80, 80, 80, 0.6);
 }
 
 .header-logo-small {
-	margin-top: 2px;
-	height: 135px;
-	margin-bottom: 10px;
+	height: 150px;
 }
 
+.header-body {
+  background-color: #115740;
+  height: 165px;
+}
+
+.header-bar {
+  background-color: #daa520;
+  height: 4px;
+  margin-bottom: 20px;
+}
+
+.footer-bar {
+  background-color: #daa520;
+  height: 4px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 
 
 /*Login Pages*/
@@ -105,9 +120,9 @@
 }
 
 .login-transparent {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-	border-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(80, 80, 80, 0.15) !important;
+  color: rgba(80, 80, 80, 0.8) !important;
+	border-color: rgba(80, 80, 80, 0.8);
 	border-width: 1px;
 }
 
@@ -135,10 +150,10 @@
 	width: 42%;
 	margin-top: 18px;
 	height: 50px;
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  color: rgba(255, 255, 255, .8) !important;
+  background-color: rgba(80, 80, 80, 0.15) !important;
+  color: rgba(80, 80, 80, .8) !important;
   font-size: 150%;
-	border-color: rgba(255, 255, 255, 0.8);
+	border-color: rgba(80, 80, 80, 0.8);
 	border-width: 1px;
 }
 
@@ -149,8 +164,27 @@
 }
 
 .header-logo-large {
-	margin-top: 10px;
 	height: 300px;
+}
+
+.header-bar-large {
+  background-color: #daa520;
+  height: 8px;
+  margin-bottom: 40px;
+}
+
+.login-header-body {
+  background-color: #115740;
+  height: 310px;
+  width: 100%;
+}
+
+.footer-bar-large {
+  background-color: #daa520;
+  height: 8px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 img {
@@ -168,10 +202,10 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
   display: none !important;
 }
 
-.form-control::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.8); }
-.form-control:-moz-placeholder { color: rgba(255, 255, 255, 0.8);; }
-.form-control::-moz-placeholder { color: rgba(255, 255, 255, 0.8);; }
-.form-control:-ms-input-placeholder { color: rgba(255, 255, 255, 0.8);; }
+.form-control::-webkit-input-placeholder { color: rgba(80, 80, 80, 0.8); }
+.form-control:-moz-placeholder { color: rgba(80, 80, 80, 0.8);; }
+.form-control::-moz-placeholder { color: rgba(80, 80, 80, 0.8);; }
+.form-control:-ms-input-placeholder { color: rgba(80, 80, 80, 0.8);; }
 
 /*Landing Page*/
 .clearfix {
@@ -179,14 +213,14 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 }
 
 .login-link {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(80, 80, 80, 0.8);
   text-decoration: underline;
   float: right;
   font-size: 1.2em;
 }
 
 .landing-blurb {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(80, 80, 80, 0.8);
   text-align: center;
   font-size: 2em;
   padding-top: 30px;

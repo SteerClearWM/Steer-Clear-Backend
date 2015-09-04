@@ -21,8 +21,10 @@
   </head>
 
   <body class="body" ng-app="SteerClear">
-
-    <img src="static/assets/logo.png" class="center-block header-logo-small"></img>
+    <div class="header-body">
+      <img src="static/assets/logo.png" class="center-block header-logo-small"></img>
+    </div>
+    <div class="header-bar"></div>
 
     <div class="container" ng-controller="RidesController">
 
@@ -40,7 +42,7 @@
                     <span class="glyphicon glyphicon-check button-icon" ng-click="finishRide(ride)"></span>
                 </button>
                 <button class="btn btn-lg row-button" type="button" ng-show="$first">
-                    <span class="glyphicon glyphicon-phone button-icon" ng-click="notify(ride)"></span>
+                    <span class="glyphicon glyphicon-phone button-icon" ng-click="notify(ride)" data-toggle="popover" data-content="Text message has been sent!"></span>
                 </button>
             </span>
         </div>
@@ -58,6 +60,8 @@
         </div>
       </div>
     </div>
+
+    <div class="footer-bar"></div>
 
 
     <!-- Bootstrap core JavaScript
