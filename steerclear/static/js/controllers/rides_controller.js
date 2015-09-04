@@ -8,11 +8,23 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
             case "both":
                 $scope.rides = $scope.originalRides;
                 break;
-            case "oncampus":
-                $scope.rides = $scope.originalRides;
+            case "on_campus":
+                temp = [];
+                for (var i=0; i < $scope.originalRides.length; i++){
+                    if ($scope.originalRides[i].on_campus == true){
+                        temp.push($scope.originalRides[i]);
+                    }
+                }
+                $scope.rides = angular.copy(temp);
                 break;
-            case "offcampus":
-                $scope.rides = $scope.originalRides;
+            case "off_campus":
+                temp = [];
+                for (var i=0; i < $scope.originalRides.length; i++){
+                    if ($scope.originalRides[i].on_campus == false){
+                        temp.push($scope.originalRides[i]);
+                    }
+                }
+                $scope.rides = angular.copy(temp);
                 break;
         }
     }
@@ -74,7 +86,7 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
         "start_latitude": 37.273485,
         "start_longitude": -76.719628,
         "end_latitude": 37 + Math.random(),
-        "end_longitude": -76 + Math.random(),
+        "end_longitude": -76.2 + Math.random(),
         "phone": 15555555555
     };
 
