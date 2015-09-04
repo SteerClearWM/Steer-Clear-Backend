@@ -35,8 +35,8 @@
                     <span class="glyphicon glyphicon-remove button-icon" ng-click="deleteRide(ride)"></span>
                 </button>
             </span>
-            <input class="form-control rides input-lg" ng-placeholder="ride.pickup_address" disabled></input>
-            <input class="form-control rides input-lg" ng-placeholder="ride.dropoff_address" disabled></input>
+            <div ng-click="gps(ride.start_latitude, ride.start_longitude)"><input class="form-control rides input-lg" ng-placeholder="ride.pickup_address" disabled></input></div>
+            <div ng-click="gps(ride.end_latitude, ride.end_longitude)"><input class="form-control rides input-lg" ng-placeholder="ride.dropoff_address" disabled></input></div>
             <span class="input-group-btn">
                 <button class="btn btn-lg row-button" type="button" ng-show="$first">
                     <span class="glyphicon glyphicon-check button-icon" ng-click="finishRide(ride)"></span>
@@ -55,8 +55,8 @@
                     <span class="glyphicon glyphicon-remove button-icon" ng-click="deleteRide(ride)"></span>
                 </button>
             </span>
-            <input class="form-control rides" ng-placeholder="ride.pickup_address" disabled></input>
-            <input class="form-control rides" ng-placeholder="ride.dropoff_address" disabled></input>
+            <div ng-click="gps(ride.start_latitude, ride.start_longitude)"><input class="form-control rides" ng-placeholder="ride.pickup_address" disabled></input></div>
+            <div ng-click="gps(ride.end_latitude, ride.end_longitude)"><input class="form-control rides" ng-placeholder="ride.dropoff_address" disabled></input></div>
         </div>
       </div>
     </div>
