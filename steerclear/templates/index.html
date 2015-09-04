@@ -28,6 +28,12 @@
 
     <div class="container" ng-controller="RidesController">
 
+      <ul class="nav nav-tabs ride-tabs">
+        <li role="presentation" ng-class="{'active': filter == 'on_campus'}" ng-click="filterRides('on_campus')"><a href="#">On Campus</a></li>
+        <li role="presentation" ng-class="{'active': filter == 'both'}" ng-click="filterRides('both')"><a href="#">All Rides</a></li>
+        <li role="presentation" ng-class="{'active': filter == 'off_campus'}" ng-click="filterRides('off_campus')"><a href="#">Off Campus</a></li>
+      </ul>
+
       <div class="col-xs-12">
         <div class="input-group" ng-repeat="ride in rides track by ride.id" ng-show="$first">
             <span class="input-group-btn">
