@@ -41,6 +41,19 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
     updateData();
     setInterval('updateData()', 5000);
 
+    $scope.gps = function ( dlat, dlong, slat, slong ) {
+        $scope.iOS = /iPad|iPhone|iPod/.test(navigator.platform);
+        url = "maps.google.com?daddr=" + dlat + "," + dlong
+        if (slat & slong) {
+          url = url + "&saddr=" + slat + "," + slong;
+        }
+        if ($scope.iOS) {
+            window.location = "comgooglemapsurl://" + url;
+        } else {
+            window.location = "http://" + url;
+        }
+    }
+
     $scope.deleteRide = function ( ride ) {
         if (confirm("Are you sure you want to delete this ride?")){
             del_index = $scope.rides.indexOf(ride);
