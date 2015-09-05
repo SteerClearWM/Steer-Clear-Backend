@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
-from steerclear import sms_client, dm_client, campus_gis_client
+from steerclear import sms_client, dm_client, campus_gis_client, radius_gis_client
 
 from steerclear.utils.permissions import (
     student_permission, 
@@ -87,6 +87,11 @@ class RideListAPI(Resource):
         # get pickup and dropoff locations of Ride request
         pickup_loc = (form.start_latitude.data, form.start_longitude.data)
         dropoff_loc = (form.end_latitude.data, form.end_longitude.data)
+
+        # check that pickup and dropoff locations are within the service radius
+        # of steerclear and return an error if they are not
+        if not (radius_gis_client.is_in_polygon(pickup_loc) and radius_gis_client.is_in_polygon(dropoff_loc)):
+            abort(400)
 
         # check if the pickup_location for the ride request
         # is on campus or off campus
