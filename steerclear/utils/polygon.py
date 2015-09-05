@@ -12,18 +12,18 @@ class SteerClearGISClient():
     """
     Creates a new SteerClearGIS instance
 
-    :campus_map_filename: File path to the shapefile
-                          containing the campus map GIS info
+    :shapefilename: Filename of shapefile that
+                    contains polygon
     """
-    def __init__(self, campus_map_filename):
+    def __init__(self, shapefilename):
         # read shapefile data
-        sf = shapefile.Reader(campus_map_filename)
+        sf = shapefile.Reader(shapefilename)
 
         # get campus map shape
         shape = sf.shapes()[0]
 
         # save campus polygon
-        self.campus_polygon = shape.points
+        self.polygon = shape.points
 
     """
     is_on_campus
@@ -34,7 +34,7 @@ class SteerClearGISClient():
     """
     def is_on_campus(self, point):
         x, y = point
-        return self.point_in_poly(y, x, self.campus_polygon)
+        return self.point_in_poly(y, x, self.polygon)
 
     """
     point_in_poly
