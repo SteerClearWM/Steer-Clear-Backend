@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import exc
 
 from steerclear.utils.eta import time_between_locations
-from steerclear import sms_client, dm_client, gis_client
+from steerclear import sms_client, dm_client, campus_gis_client
 
 from steerclear.utils.permissions import (
     student_permission, 
@@ -90,7 +90,7 @@ class RideListAPI(Resource):
 
         # check if the pickup_location for the ride request
         # is on campus or off campus
-        on_campus = gis_client.is_in_polygon(pickup_loc)
+        on_campus = campus_gis_client.is_in_polygon(pickup_loc)
 
         # query distance matrix api and get eta time data and addresses
         result = query_distance_matrix_api(pickup_loc, dropoff_loc)
