@@ -217,6 +217,45 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
         self.assertEquals(Ride.query.get(1).user, self.student_user)
 
     """
+    test_post_ride_list_pickup_loc_outside_radius
+    ---------------------------------------------
+    Tests that requesting a bad pickup location returns a 400
+    """
+    def test_post_ride_list_pickup_loc_outside_radius(self):
+        self._login(self.student_user)
+
+        payload = {
+            u"num_passengers": 3,
+            u"start_latitude": 37.269850,
+            u"start_longitude": -76.758869,
+            u"end_latitude": 37.2809,
+            u"end_longitude": -76.7197
+        }
+
+        response = self.client.post(url_for('api.rides'), data=payload)
+        self.assertEquals(response.status_code, 400)
+
+    """
+    test_post_ride_list_dropoff_loc_outside_radius
+    ---------------------------------------------
+    Tests that requesting a bad dropoff location returns a 400
+    """
+    def test_post_ride_list_dropoff_loc_outside_radius(self):
+        self._login(self.student_user)
+
+        payload = {
+            u"num_passengers": 3,
+            u"start_latitude": 37.2735,
+            u"start_longitude": -76.7196,
+            u"end_latitude": 37.269850,
+            u"end_longitude": -76.758869,
+        }
+
+        response = self.client.post(url_for('api.rides'), data=payload)
+        self.assertEquals(response.status_code, 400)
+
+
+    """
     test_post_ride_list_bad_form_data
     ---------------------------------
     Tests that trying to create a new ride fails if

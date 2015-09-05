@@ -140,5 +140,5 @@ class SteerClearGISClientTestCase(unittest.TestCase):
     :result:    Boolean specifying if the point is on campus
     """
     def _test_point(self, point, result):
-        r = self.gis_client.is_on_campus(point)
+        r = self.gis_client.is_in_polygon(point)
         self.assertEqual(r, result)

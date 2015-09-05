@@ -275,6 +275,7 @@ Sample Response:
 * Creates a new ride request
 * Returns the created ride object on success (this will most likely change to just returning the created ride id).
 * returns error code 400 on failure
+* ride requests that are outside the radius that steerclear services are ignored
 * Expects a form with the following fields
 
 
