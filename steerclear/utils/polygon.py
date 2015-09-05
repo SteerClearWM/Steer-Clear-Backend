@@ -26,13 +26,13 @@ class SteerClearGISClient():
         self.polygon = shape.points
 
     """
-    is_on_campus
+    is_in_polygon
     ------------
-    Checks if a given lat/long point is on campus
+    Checks if a given lat/long point is on the polygon
 
     :point: lat/long point tuple
     """
-    def is_on_campus(self, point):
+    def is_in_polygon(self, point):
         x, y = point
         return self.point_in_poly(y, x, self.polygon)
 
