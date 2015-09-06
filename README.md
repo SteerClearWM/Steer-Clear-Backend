@@ -1,3 +1,5 @@
+![](https://travis-ci.org/RyanBeatty/Steer-Clear-Backend.svg?branch=master)
+
 # Steer-Clear-Backend
 Backend and web app for Steer Clear student ride request service
 
@@ -40,7 +42,7 @@ Use the mysql client to login as the root user of the mysql server and create 2 
 **Optional:** Create a new user who has privileges over the 2 databases
 
 The script **/scripts/setup_db.sql** will create 2 databases (**db** and **test**) and a new user (**steerclear** with password **St33rCl3@r**) automatically. To run it, use the mysql client as the root user
-    
+
     # On both Windows and Mac/Linux
     $ mysql -u root -p < scripts/setup_db.sql
     Enter Password: root_user_password_here
@@ -51,7 +53,7 @@ In *steerclear/settings/default_settings.py replace the following with your mysq
     TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://username:password@localhost/test_db_name'
 
 If you ran the setup_db.sql script it should look like the first 2 lines in **/steerclear/settings/default_settings_example.py:**
-    
+
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/db'
     TEST_SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://steerclear:St33rCl3@r@localhost/test'
 
@@ -85,7 +87,7 @@ Run app
 
     # will run server on port 5000 by default
     $ python runserver.py
-    
+
     # will run server on specified port number and in debug mode
     $ python runserver.py --port port_number --debug
 
@@ -128,14 +130,14 @@ There a few helpful scripts for doing things such as creating a new user or ride
 * Creates a new Ride request
 
 ## Login
-Login is done with a valid w&m account username and password. 
+Login is done with a valid w&m account username and password.
 
 ### GET /login
 * Returns the login page
 
 ### POST /login
 * Route to actually log a user in
-* Takes a form with a **username** and **password** field. 
+* Takes a form with a **username** and **password** field.
 * On success, redirects to **index** page.
 * On failure, returns login page again and 400 status code
 
@@ -147,9 +149,9 @@ Login is done with a valid w&m account username and password.
 You can register a new user (assuming the user does not already exist) by making a simple POST request with a username, password, and phone field. The new user will have all api permissions that a student has
 
 ### POST /register
-* Creates a new user. 
+* Creates a new user.
 * Takes a form with a **username** and **password** and a **phone** field.
-* **phone** field must be a valid phone number string (i.e. +1xxxyyyzzzz) 
+* **phone** field must be a valid phone number string (i.e. +1xxxyyyzzzz)
 * If the user already exists return the register page again and a 409 status code
 * **TODO** add error message
 
@@ -199,16 +201,16 @@ API endpoint for getting, updating, and deleting ride requests. student users ar
 Sample request **GET /api/rides/2**:
 
     "ride": {
-        "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
-        "dropoff_time": "Wed, 12 Aug 2015 05:33:08 -0000", 
-        "end_latitude": 37.2809, 
-        "end_longitude": -76.7197, 
-        "id": 1, 
-        "num_passengers": 3, 
-        "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
-        "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000", 
-        "start_latitude": 37.2735, 
-        "start_longitude": -76.7196, 
+        "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA",
+        "dropoff_time": "Wed, 12 Aug 2015 05:33:08 -0000",
+        "end_latitude": 37.2809,
+        "end_longitude": -76.7197,
+        "id": 1,
+        "num_passengers": 3,
+        "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA",
+        "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000",
+        "start_latitude": 37.2735,
+        "start_longitude": -76.7196,
         "travel_time": 239,
         "on_campus": true
     }
@@ -231,30 +233,30 @@ Sample Response:
     {
         "rides": [
             {
-                "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
-                "dropoff_time": "Wed, 12 Aug 2015 05:33:08 -0000", 
-                "end_latitude": 37.2809, 
-                "end_longitude": -76.7197, 
-                "id": 1, 
-                "num_passengers": 3, 
-                "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
-                "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000", 
-                "start_latitude": 37.2735, 
-                "start_longitude": -76.7196, 
+                "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA",
+                "dropoff_time": "Wed, 12 Aug 2015 05:33:08 -0000",
+                "end_latitude": 37.2809,
+                "end_longitude": -76.7197,
+                "id": 1,
+                "num_passengers": 3,
+                "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA",
+                "pickup_time": "Wed, 12 Aug 2015 05:29:09 -0000",
+                "start_latitude": 37.2735,
+                "start_longitude": -76.7196,
                 "travel_time": 239,
                 "on_campus": true
-            }, 
+            },
             {
-                "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA", 
-                "dropoff_time": "Wed, 12 Aug 2015 05:40:34 -0000", 
-                "end_latitude": 37.2809, 
-                "end_longitude": -76.7197, 
-                "id": 2, 
-                "num_passengers": 3, 
-                "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA", 
-                "pickup_time": "Wed, 12 Aug 2015 05:36:35 -0000", 
-                "start_latitude": 37.2735, 
-                "start_longitude": -76.7196, 
+                "dropoff_address": "1234 Richmond Road, Williamsburg, VA 23185, USA",
+                "dropoff_time": "Wed, 12 Aug 2015 05:40:34 -0000",
+                "end_latitude": 37.2809,
+                "end_longitude": -76.7197,
+                "id": 2,
+                "num_passengers": 3,
+                "pickup_address": "2006 Brooks Street, Williamsburg, VA 23185, USA",
+                "pickup_time": "Wed, 12 Aug 2015 05:36:35 -0000",
+                "start_latitude": 37.2735,
+                "start_longitude": -76.7196,
                 "travel_time": 239,
                 "on_campus": true
             }
