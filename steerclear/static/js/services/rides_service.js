@@ -39,7 +39,8 @@ app.service("RidesService", ['$http', '$q', function( $http, $q ) {
     function notify( ride_id ) {
         var request = $http({
             method: "post",
-            url: "api/notifications/" + ride_id,
+            url: "api/notifications",
+            data: {ride_id: ride_id}
         });
         return( request.then( handleSuccess, handleError ) );
     }
