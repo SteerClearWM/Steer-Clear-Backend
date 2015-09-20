@@ -65,8 +65,9 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
     };
 
     $scope.notify = function ( ride ) {
-        response = RidesService.notify(ride.id)
-        alert("Text message sent!");
+        if (confirm("Would you like to notify the user that their ride is ready?")) {
+            response = RidesService.notify(ride.id)
+        }
     }
 
     $scope.finishRide = function ( ride ) {
