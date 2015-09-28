@@ -232,6 +232,13 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
   text-decoration: underline;
   float: right;
   font-size: 1.2em;
+  margin-right: 1em;
+}
+
+.privacy-policy-link {
+  color: rgb(152,152,152);
+  float: right;
+  font-size: 1.2em;
 }
 
 .landing-blurb {
