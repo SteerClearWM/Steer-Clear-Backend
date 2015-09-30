@@ -129,6 +129,9 @@ There a few helpful scripts for doing things such as creating a new user or ride
 ### /scripts/create_ride.py
 * Creates a new Ride request
 
+### /scripts/make_admin.py
+* Makes an existing user an admin if they aren't already one
+
 ## Login
 Login is done with a valid w&m account username and password.
 
