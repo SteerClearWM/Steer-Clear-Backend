@@ -45,10 +45,11 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
 
     $scope.gps = function ( dlat, dlong, slat, slong ) {
         $scope.iOS = /iPad|iPhone|iPod/.test(navigator.platform);
-        url = "maps.google.com?daddr=" + dlat + "," + dlong
+        url = "maps.google.com?&daddr=" + dlat + "," + dlong
         if (slat & slong) {
           url = url + "&saddr=" + slat + "," + slong;
         }
+        url += "&zoom=15";
         if ($scope.iOS) {
             window.open("comgooglemapsurl://" + url);
         } else {
