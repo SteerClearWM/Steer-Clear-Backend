@@ -1,0 +1,1 @@
+2015-09-29 20:18:42,185 WARNING: starting steerclear app [in /Users/nathanowen/workspace/steer-clear-backend/steerclear/__init__.py:66]

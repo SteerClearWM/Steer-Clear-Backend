@@ -22,6 +22,7 @@
 
   <body class="body" ng-app="SteerClear">
     <div class="header-body">
+      <a href="/logout"><img src="static/assets/logout.png" class="logout-button"></img></a>
       <img src="static/assets/logo_very_small.png" class="center-block header-logo-small"></img>
     </div>
     <div class="header-bar"></div>
@@ -34,21 +35,21 @@
         <li role="presentation" ng-class="{'active': filter == 'off_campus'}" ng-click="filterRides('off_campus')"><a href="#">Off Campus</a></li>
       </ul>
 
-      <div class="col-xs-12">
+      <div class="col-xs-12" ng-show="rides[0]">
         <div class="input-group">
             <span class="input-group-btn">
                 <button class="btn btn-lg row-button" type="button" ng-click="deleteRide(rides[0])">
                     <span class="glyphicon glyphicon-remove button-icon"></span>
                 </button>
             </span>
-            <div ng-click="gps(rides[0].start_latitude, rides[0].start_longitude)"><input class="form-control rides input-lg" ng-placeholder="rides[0].pickup_address" disabled></input></div>
-            <div ng-click="gps(rides[0].end_latitude, rides[0].end_longitude)"><input class="form-control rides input-lg" ng-placeholder="rides[0].dropoff_address" disabled></input></div>
+            <div ng-click="gps(rides[0].start_latitude, rides[0].start_longitude)" title="Open in Google Maps"><input class="form-control rides input-lg" ng-placeholder="rides[0].pickup_address" disabled></input></div>
+            <div ng-click="gps(rides[0].end_latitude, rides[0].end_longitude)" title="Open in Google Maps"><input class="form-control rides input-lg" ng-placeholder="rides[0].dropoff_address" disabled></input></div>
             <span class="input-group-btn">
-                <button class="btn btn-lg row-button passengers" type="button">{[{rides[0].num_passengers}]}</button>
-                <button class="btn btn-lg row-button" type="button" ng-click="finishRide(rides[0])">
+                <button class="btn btn-lg row-button passengers" type="button" title="Number of Passengers">{[{rides[0].num_passengers}]}</button>
+                <button class="btn btn-lg row-button" type="button" ng-click="finishRide(rides[0])" title="Finish Ride">
                     <span class="glyphicon glyphicon-check button-icon"></span>
                 </button>
-                <button class="btn btn-lg row-button" type="button" ng-click="notify(rides[0])">
+                <button class="btn btn-lg row-button" type="button" ng-click="notify(rides[0])" title="Text this pickup you're coming">
                     <span class="glyphicon glyphicon-phone button-icon"></span>
                 </button>
             </span>
@@ -62,14 +63,14 @@
                     <span class="glyphicon glyphicon-remove button-icon"></span>
                 </button>
             </span>
-            <div ng-click="gps(ride.start_latitude, ride.start_longitude)"><input class="form-control rides" ng-placeholder="ride.pickup_address" disabled></input></div>
-            <div ng-click="gps(ride.end_latitude, ride.end_longitude)"><input class="form-control rides" ng-placeholder="ride.dropoff_address" disabled></input></div>
+            <div ng-click="gps(ride.start_latitude, ride.start_longitude)" title="Open in Google Maps"><input class="form-control rides" ng-placeholder="ride.pickup_address" disabled></input></div>
+            <div ng-click="gps(ride.end_latitude, ride.end_longitude)" title="Open in Google Maps"><input class="form-control rides" ng-placeholder="ride.dropoff_address" disabled></input></div>
             <span class="input-group-btn">
-                <button class="btn row-button passengers" type="button">{[{ride.num_passengers}]}</button>
-                <button class="btn row-button" type="button" ng-click="finishRide(ride)">
+                <button class="btn row-button passengers" type="button" title="Number of Passengers">{[{ride.num_passengers}]}</button>
+                <button class="btn row-button" type="button" ng-click="finishRide(ride)" title="Finish Ride">
                     <span class="glyphicon glyphicon-check button-icon"></span>
                 </button>
-                <button class="btn row-button" type="button" ng-click="notify(ride)">
+                <button class="btn row-button" type="button" ng-click="notify(ride)" title="Text this pickup you're coming">
                     <span class="glyphicon glyphicon-phone button-icon"></span>
                 </button>
             </span>
