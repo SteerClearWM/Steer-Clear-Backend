@@ -20,3 +20,8 @@ def index():
     if not admin_permission.can():
         return redirect(url_for('.heartbeat'))
     return render_template('index.html')
+
+@driver_portal_bp.route('/privacy-policy', defaults={'path': 'index.html'})
+@driver_portal_bp.route('/privacy-policy/<path:path>')
+def privacy_policy(path):
+    return render_template('privacy-policy/' + path)
