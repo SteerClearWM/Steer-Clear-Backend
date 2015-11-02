@@ -46,6 +46,14 @@ app.register_blueprint(api_bp)
 app.register_blueprint(driver_portal_bp)
 app.register_blueprint(login_bp)
 
+from steerclear.models import TimeLock
+# checks if timelock exists and creates it
+if TimeLock.query.first() is None:
+    print "creating TimeLock object"
+    lock = TimeLock(lock = False)
+    db.session.add(lock)
+    db.session.commit()
+
 if not app.debug:
     import logging
     from logging.handlers import RotatingFileHandler

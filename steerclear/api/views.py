@@ -20,6 +20,23 @@ from forms import *
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_bp)
 
+class TimeLockAPI(Resource):
+    # Require that user must be logged in and
+    # that the user is an admin
+    method_decorators = [
+        admin_permission.require(http_exception=403),
+        login_required
+    ]
+
+    def get(self):
+        timelock = TimeLock.query.first()
+        if timelock is None:
+            abort(500)
+        return {'lock': timelock.lock}, 200
+
+
+
+
 # response format for Ride objects
 ride_fields = {
     'id': fields.Integer(),
@@ -223,6 +240,7 @@ class NotificationAPI(Resource):
         return '', 201
 
 # route urls to resources
+api.add_resource(TimeLockAPI, '/timelock', endpoint='timelock')
 api.add_resource(RideListAPI, '/rides', endpoint='rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
 api.add_resource(NotificationAPI, '/notifications', endpoint='notifications')
