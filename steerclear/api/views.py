@@ -28,11 +28,28 @@ class TimeLockAPI(Resource):
         login_required
     ]
 
+    """
+    Returns status of the lock
+    """
     def get(self):
         timelock = TimeLock.query.first()
         if timelock is None:
             abort(500)
         return {'lock': timelock.lock}, 200
+
+    def post(self):
+        form = TimeLockForm()
+        if not form.validate_on_submit():
+            abort(400)
+        timelock = TimeLock.query.first()
+        if not timelock:
+            abort(500)
+        if form.new_state == 'on':
+            timelock.state = True
+        else:
+            timelock.state = False
+        db.session.commit()
+        return '', 201
 
 
 

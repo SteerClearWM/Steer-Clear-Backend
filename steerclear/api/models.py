@@ -5,10 +5,10 @@ from datetime import datetime
 
 class TimeLock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    lock = db.Column(db.Boolean)
+    state = db.Column(db.Boolean)
 
     def __repr__(self):
-        return "<TimeLock(ID %r, lock %r)>" % (self.id, self.lock)
+        return "<TimeLock(ID %r, state %r)>" % (self.id, self.state)
 
 
 """
