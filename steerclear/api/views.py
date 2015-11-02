@@ -44,7 +44,7 @@ class TimeLockAPI(Resource):
         timelock = TimeLock.query.first()
         if not timelock:
             abort(500)
-        if form.new_state == 'on':
+        if form.new_state.data == 'on':
             timelock.state = True
         else:
             timelock.state = False
