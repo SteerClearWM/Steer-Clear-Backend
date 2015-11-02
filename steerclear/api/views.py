@@ -35,7 +35,7 @@ class TimeLockAPI(Resource):
         timelock = TimeLock.query.first()
         if timelock is None:
             abort(500)
-        return {'lock': timelock.lock}, 200
+        return {'state': timelock.state}, 200
 
     def post(self):
         form = TimeLockForm()
