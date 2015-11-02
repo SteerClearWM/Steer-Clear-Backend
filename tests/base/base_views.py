@@ -1,7 +1,7 @@
 from flask import url_for
 from flask.ext import testing
 from steerclear import app, db
-from steerclear.models import User, Ride, Role
+from steerclear.models import User, Ride, Role, TimeLock
 from testfixtures import Replacer
 
 from datetime import datetime
@@ -34,6 +34,10 @@ class SteerClearBaseTestCase(testing.TestCase):
     """
     def setUp(self):
         db.create_all()
+        timelock = TimeLock(state=True)
+        db.session.add(timelock)
+        db.session.commit()
+
         self.roles = self._create_default_roles()
         self.student_role = self.roles[0]
         self.admin_role = self.roles[1]
