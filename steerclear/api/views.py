@@ -20,6 +20,55 @@ from forms import *
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_bp)
 
+"""
+Called before each request made to the api.
+If the timelock is off and the user is not
+an admin, then restrict access to the api
+"""
+@api_bp.before_request
+def create_timelock():
+    timelock = TimeLock.query.first()
+    if timelock is None:
+        timelock = TimeLock(state = False)
+        db.session.add(timelock)
+        db.session.commit()
+    if not timelock.state and not admin_permission.can():
+        abort(503)
+
+class TimeLockAPI(Resource):
+    # Require that user must be logged in and
+    # that the user is an admin
+    method_decorators = [
+        admin_permission.require(http_exception=403),
+        login_required
+    ]
+
+    """
+    Returns state of the lock
+    """
+    def get(self):
+        timelock = TimeLock.query.first()
+        if timelock is None:
+            abort(500)
+        return {'state': timelock.state}, 200
+
+    """
+    Changes the timelock state to either 'on' or 'off'
+    """
+    def post(self):
+        form = TimeLockForm()
+        if not form.validate_on_submit():
+            abort(400)
+        timelock = TimeLock.query.first()
+        if not timelock:
+            abort(500)
+        if form.new_state.data == 'on':
+            timelock.state = True
+        else:
+            timelock.state = False
+        db.session.commit()
+        return '', 201
+
 # response format for Ride objects
 ride_fields = {
     'id': fields.Integer(),
@@ -223,6 +272,7 @@ class NotificationAPI(Resource):
         return '', 201
 
 # route urls to resources
+api.add_resource(TimeLockAPI, '/timelock', endpoint='timelock')
 api.add_resource(RideListAPI, '/rides', endpoint='rides')
 api.add_resource(RideAPI, '/rides/<int:ride_id>', endpoint='ride')
 api.add_resource(NotificationAPI, '/notifications', endpoint='notifications')

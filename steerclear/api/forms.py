@@ -1,6 +1,14 @@
 from flask_wtf import Form
 from wtforms import IntegerField, StringField, FloatField
-from wtforms.validators import DataRequired, NumberRange, Length
+from wtforms.validators import DataRequired, NumberRange, Length, AnyOf
+
+"""
+TimeLockForm
+------------
+Form validator for changing the state of the timelock
+"""
+class TimeLockForm(Form):
+	new_state = StringField('new_state', [AnyOf(values=['on', 'off'])])
 
 """
 RideForm

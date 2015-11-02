@@ -1,5 +1,5 @@
 from steerclear import app, db
-from steerclear.models import Ride
+from steerclear.models import Ride, TimeLock
 from steerclear.api.views import query_distance_matrix_api
 from tests.base import base
 
@@ -559,6 +559,119 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
         # check that the second student can delete the ride they placed
         response = self.client.delete(url_for('api.ride', ride_id=2))
         self.assertEquals(response.status_code, 204)
+
+"""
+TimeLockAPITestCase
+-------------------
+Test Case for testing the timelock
+"""
+class TimeLockAPITestCase(base.SteerClearBaseTestCase):
+    
+    """
+    setUp
+    -----
+    Overrides super class setUp(). Makes sure the user
+    is logged in before each test is run
+    """
+    def setUp(self):
+        super(TimeLockAPITestCase, self).setUp()
+
+    """
+    test_get_timelock_requires_admin_permission
+    -------------------------------------------
+    Tests that only admins can get the state of the timelock
+    """
+    def test_get_timelock_requires_admin_permission(self):
+        self._login(self.student_user)
+        response = self.client.get(url_for('api.timelock'))
+        self.assertEquals(response.status_code, 403)
+
+    """
+    test_get_timelock
+    -----------------
+    Tests that getting the state of the timelock works correctly
+    """
+    def test_get_timelock(self):
+        self._login(self.admin_user)
+        response = self.client.get(url_for('api.timelock'))
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.json, {'state': True})
+
+    """
+    test_post_timelock_requires_admin_permission
+    --------------------------------------------
+    Tests that only admins can change state of timelock
+    """
+    def test_post_timelock_requires_admin_permission(self):
+        self._login(self.student_user)
+        response = self.client.post(url_for('api.timelock'), data={'new_state': 'on'})
+        self.assertEquals(response.status_code, 403)
+
+    """
+    test_post_timelock_bad_input
+    ----------------------------
+    Tests that trying to change the state of timelock with bad input fails
+    """
+    def test_post_timelock_bad_input(self):
+        self._login(self.admin_user)
+        response = self.client.post(url_for('api.timelock'), data={'new_state': 'On'})
+        self.assertEquals(response.status_code, 400)
+
+    """
+    test_post_timelock
+    ------------------
+    Test that changing the state of the timelock multiple times works correctly
+    """
+    def test_post_timelock(self):
+        self._login(self.admin_user)
+        response = self.client.post(url_for('api.timelock'), data={'new_state': 'on'})
+        self.assertEquals(response.status_code, 201)
+        self.assertTrue(TimeLock.query.first().state)
+
+        response = self.client.post(url_for('api.timelock'), data={'new_state': 'off'})
+        self.assertEquals(response.status_code, 201)
+        self.assertFalse(TimeLock.query.first().state)
+
+        response = self.client.post(url_for('api.timelock'), data={'new_state': 'off'})
+        self.assertEquals(response.status_code, 201)
+        self.assertFalse(TimeLock.query.first().state)
+
+        response = self.client.post(url_for('api.timelock'), data={'new_state': 'on'})
+        self.assertEquals(response.status_code, 201)
+        self.assertTrue(TimeLock.query.first().state)
+
+    """
+    test_timelock_blocks_requests
+    -----------------------------
+    Tests that only admins can access api if timelock is off.
+    Tests that students cannot access api if timelock is off
+    """
+    def test_timelock_blocks_requests(self):
+        # login as admin and turn api off
+        self._login(self.admin_user)
+        self.client.post(url_for('api.timelock'), data={'new_state': 'off'})
+
+        # check that admins can still use api
+        response = self.client.get(url_for('api.rides'))
+        self.assertEquals(response.status_code, 200)
+        self._logout()
+
+        # check that students cant use api
+        self._login(self.student_user)
+        self._create_ride(self.student_user)
+        response = self.client.get(url_for('api.ride', ride_id=1))
+        self.assertEquals(response.status_code, 503)
+        self._logout()
+
+        # turn api back on
+        self._login(self.admin_user)
+        self.client.post(url_for('api.timelock'), data={'new_state': 'on'})
+        self._logout()
+
+        # check that students can now use api
+        self._login(self.student_user)
+        response = self.client.get(url_for('api.ride', ride_id=1))
+        self.assertEquals(response.status_code, 200)
 
 
 """

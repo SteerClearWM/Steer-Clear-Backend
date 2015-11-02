@@ -170,6 +170,24 @@ Desktop app that allows steerclear drivers to log in and manage the queue of rid
 * All API routes are prefixed by **/api/**
 * Some API routes require the user to have certain permissions (e.x. be a student, be an admin, etc...)
 
+## TimeLock
+The timelock is in place to allow steerclear to disable access to the api/service when they are not running. When the timelock is off, only admins may access the api. If the timelock is off and a student tries to make any api request, they recieve a 503
+
+### GET /api/timelock
+Sample response
+    
+    {
+        'state': True
+    }
+
+* returns the state of the timelock object (True or False) in json format
+* returns 200 on success
+
+### POST /api/timelock
+* Changes the state of the timelock
+* Expects a form with the following fields:
+  * 'new_state': must be either 'on' or 'off'
+
 ## Ride Request Objects
 Ride request objects have several fields:
 
