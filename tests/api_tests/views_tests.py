@@ -319,6 +319,7 @@ class RideAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideAPITestCase, self).setUp()
+        self._change_timelock(False)
 
     """
     test_get_ride_requires_login
@@ -689,6 +690,7 @@ class NotificationAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(NotificationAPITestCase, self).setUp()
+        self._change_timelock(False)
 
     """
     test_post_notifications_requires_login
