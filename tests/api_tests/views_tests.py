@@ -27,6 +27,7 @@ class RideListAPITestCase(base.SteerClearBaseTestCase):
     """
     def setUp(self):
         super(RideListAPITestCase, self).setUp()
+        self._change_timelock(False)
 
     """
     test_get_ride_list_requires_login
