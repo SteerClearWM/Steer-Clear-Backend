@@ -175,6 +175,11 @@ class SteerClearBaseTestCase(testing.TestCase):
                     self.assertEquals(response.status_code, 403)
                     break
 
+    def _change_timelock(self, new_state):
+        timelock = TimeLock.query.first()
+        timelock.state = new_state
+        db.session.commit()
+
     """
     mock_validate_user
     ------------------

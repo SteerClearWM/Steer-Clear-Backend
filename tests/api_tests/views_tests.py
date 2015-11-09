@@ -582,6 +582,7 @@ class TimeLockAPITestCase(base.SteerClearBaseTestCase):
     Tests that only admins can get the state of the timelock
     """
     def test_get_timelock_requires_admin_permission(self):
+        self._change_timelock(False)
         self._login(self.student_user)
         response = self.client.get(url_for('api.timelock'))
         self.assertEquals(response.status_code, 403)
@@ -603,6 +604,7 @@ class TimeLockAPITestCase(base.SteerClearBaseTestCase):
     Tests that only admins can change state of timelock
     """
     def test_post_timelock_requires_admin_permission(self):
+        self._change_timelock(False)
         self._login(self.student_user)
         response = self.client.post(url_for('api.timelock'), data={'new_state': 'on'})
         self.assertEquals(response.status_code, 403)
@@ -647,11 +649,10 @@ class TimeLockAPITestCase(base.SteerClearBaseTestCase):
     Tests that students cannot access api if timelock is off
     """
     def test_timelock_blocks_requests(self):
-        # login as admin and turn api off
+        # login as admin
         self._login(self.admin_user)
-        self.client.post(url_for('api.timelock'), data={'new_state': 'off'})
 
-        # check that admins can still use api
+        # check that admins can still use api with timelock on
         response = self.client.get(url_for('api.rides'))
         self.assertEquals(response.status_code, 200)
         self._logout()
@@ -664,9 +665,7 @@ class TimeLockAPITestCase(base.SteerClearBaseTestCase):
         self._logout()
 
         # turn api back on
-        self._login(self.admin_user)
-        self.client.post(url_for('api.timelock'), data={'new_state': 'on'})
-        self._logout()
+        self._change_timelock(False)
 
         # check that students can now use api
         self._login(self.student_user)
