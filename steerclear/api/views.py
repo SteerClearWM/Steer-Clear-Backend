@@ -32,7 +32,8 @@ def create_timelock():
         timelock = TimeLock(state = False)
         db.session.add(timelock)
         db.session.commit()
-    if not timelock.state and not admin_permission.can():
+
+    if timelock.state and not admin_permission.can():
         abort(503)
 
 class TimeLockAPI(Resource):
