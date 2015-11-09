@@ -1,25 +1,32 @@
-import requests, sys
+import sys, os
+
+# change path to parent directory to import modules
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from steerclear import db
+from steerclear.models import TimeLock
+from sqlalchemy import exc
 
 def main():
-    username = raw_input('Enter admin username: ')
-    password = raw_input('Enter admin password: ')
-    new_state = raw_input('Enter new state (on/off): ')
+	# prompt for input
+	new_state = raw_input('Enter New TimeLock State(on/off): ')
+	
+	if new_state not in ['on', 'off']:
+		print 'Error: invalid state input selection'
+		sys.exit(1)
 
-    r1 = requests.post('http://localhost:5000/login', data={'username': username, 'password': password})
-    if r1.status_code != 200:
-        print "Error: incorrect admin username=%s or password=%s" % (username, password)
-        sys.exit(1)
+	timelock = TimeLock.query.first()
+	if timelock is None:
+		print "Error: TimeLock not initialized. make request to api to create timelock"
+		sys.exit(1)
+	
+	if new_state == 'on':
+		timelock.state = True
+	else:
+		timelock.state = False
+	db.session.commit()
+	print 'Timelocks state changed to %s' % new_state
 
-    r2 = requests.post(
-        'http://localhost:5000/api/timelock', 
-        data={'new_state': new_state},
-        cookies=r1.cookies
-    )
-    if r2.status_code != 201:
-        print "Bad Status Code: %d" % r2.status_code
-        print "Error: failed to change state of timelock"
-        sys.exit(1)
-    print "Successfully changed state to: " + new_state
 
 if __name__ == '__main__':
     main()
