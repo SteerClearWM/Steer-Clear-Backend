@@ -34,7 +34,7 @@ def create_timelock():
         db.session.commit()
 
     if timelock.state and not admin_permission.can():
-        abort(503)
+        abort(405)
 
 class TimeLockAPI(Resource):
     # Require that user must be logged in and

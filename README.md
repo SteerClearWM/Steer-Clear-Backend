@@ -171,7 +171,7 @@ Desktop app that allows steerclear drivers to log in and manage the queue of rid
 * Some API routes require the user to have certain permissions (e.x. be a student, be an admin, etc...)
 
 ## TimeLock
-The timelock is in place to allow steerclear to disable access to the api/service when they are not running. When the timelock is off, only admins may access the api. If the timelock is off and a student tries to make any api request, they recieve a 503
+The timelock is in place to allow steerclear to disable access to the api/service when they are not running. When the timelock is off, only admins may access the api. If the timelock is off and a student tries to make any api request, they recieve a 405 (chosen arbitrarily)
 
 ### GET /api/timelock
 Sample response

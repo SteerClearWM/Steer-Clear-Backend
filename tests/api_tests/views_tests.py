@@ -663,7 +663,7 @@ class TimeLockAPITestCase(base.SteerClearBaseTestCase):
         self._login(self.student_user)
         self._create_ride(self.student_user)
         response = self.client.get(url_for('api.ride', ride_id=1))
-        self.assertEquals(response.status_code, 503)
+        self.assertEquals(response.status_code, 405)
         self._logout()
 
         # turn api back on
