@@ -16,9 +16,8 @@ def heartbeat():
 
 @driver_portal_bp.route('/index')
 @login_required
+@admin_permission.require(http_exception=403)
 def index():
-    if not admin_permission.can():
-        return redirect(url_for('.heartbeat'))
     return render_template('index.html')
 
 @driver_portal_bp.route('/privacy-policy', defaults={'path': 'index.html'})

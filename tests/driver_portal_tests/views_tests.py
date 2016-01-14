@@ -47,5 +47,5 @@ class SteerClearTestCase(base.SteerClearBaseTestCase):
     def test_get_index_student_user(self):
         self._login(self.student_user)
         response = self.client.get(url_for('driver_portal.index'))
-        self.assertRedirects(response, url_for('driver_portal.heartbeat'))
+        self.assertEquals(response.status_code, 403)
 
