@@ -132,7 +132,7 @@ def login():
                                   identity=Identity(user.id))
 
             return redirect(url_for('driver_portal.index'))
-    return render_template('login.html', action=url_for('.login')), 400
+    return render_template('login.html', action=url_for('.login'), error="Invalid user credentials."), 400
 
 """
 logout

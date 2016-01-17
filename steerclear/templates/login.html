@@ -30,6 +30,22 @@
 
     <div class="header-bar-large"></div>
 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% block body %}{% endblock %}
+
+    {% if error %}
+      <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+
+
     <div class="container">
 
       <form id="form" class="form-signin" action="{{action}}" method="POST">
