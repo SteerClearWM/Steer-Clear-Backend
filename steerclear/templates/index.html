@@ -10,7 +10,7 @@
     <link rel="shortcun icon" href="static/assets/logo_dark_very_small.png">
 
     <title>Steer Clear Rides</title>
-
+              
     <!-- Bootstrap core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
@@ -20,14 +20,14 @@
 
   </head>
 
-  <body class="body" ng-app="SteerClear">
+  <body class="body" ng-app="SteerClear" ng-controller="RidesController">
     <div class="header-body">
-      <a href="/logout"><img src="static/assets/logout.png" class="logout-button"></img></a>
+      <img ng-click="logout()" src="static/assets/logout.png" class="logout-button"></img>
       <img src="static/assets/logo_very_small.png" class="center-block header-logo-small"></img>
     </div>
     <div class="header-bar"></div>
 
-    <div class="container" ng-controller="RidesController">
+    <div class="container">
 
       <ul class="nav nav-tabs ride-tabs">
         <li role="presentation" ng-class="{'active': filter == 'on_campus'}" ng-click="filterRides('on_campus')"><a href="#">On Campus</a></li>

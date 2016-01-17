@@ -1,4 +1,4 @@
-app.controller('RidesController', ['$scope', 'RidesService', function($scope, RidesService){
+app.controller('RidesController', ['$scope', 'RidesService', '$window', function($scope, RidesService, $window){
 
     $scope.filter = "both"
 
@@ -79,6 +79,13 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
         }
     };
 
+    $scope.logout = function () {
+        console.log("THing");
+        if (confirm('Are you sure you want to log out?')){
+            $window.location.href = '/logout';
+        }
+    };
+
 
 
     //For demo purposes....
@@ -87,8 +94,8 @@ app.controller('RidesController', ['$scope', 'RidesService', function($scope, Ri
         "num_passengers": 4,
         "start_latitude": 37.273485,
         "start_longitude": -76.719628,
-        "end_latitude": 37 + Math.random(),
-        "end_longitude": -76.2 + Math.random(),
+        "end_latitude": 37 + Math.random()/5,
+        "end_longitude": -76.2 + Math.random()/5,
         "phone": 15555555555
     };
 

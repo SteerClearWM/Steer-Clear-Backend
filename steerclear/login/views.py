@@ -5,7 +5,8 @@ from flask import (
     redirect, 
     current_app,
     session,
-    request
+    request,
+    flash
 )
 from flask.ext.login import (
     login_user, 
@@ -115,6 +116,8 @@ def login():
     if request.method == 'GET':
         return render_template('login.html', action=url_for('.login'))
 
+    error = None
+
     # POST request. attempt to login
     # must validate LoginForm and CAS server
     form = LoginForm()
@@ -124,15 +127,28 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
 
-            # login user
-            login_user(user)
+            admin_role = Role.query.filter_by(name='admin').first()
+            if admin_role in user.roles:
 
-            # Tell Flask-Principal the identity changed
-            identity_changed.send(current_app._get_current_object(),
-                                  identity=Identity(user.id))
+                # login user
+                login_user(user)
 
-            return redirect(url_for('driver_portal.index'))
-    return render_template('login.html', action=url_for('.login'), error="Invalid user credentials."), 400
+                # Tell Flask-Principal the identity changed
+                identity_changed.send(current_app._get_current_object(),
+                                      identity=Identity(user.id))
+
+                return redirect(url_for('driver_portal.index'))
+
+            else:
+                error = "Account does not have admin privileges."
+
+        else:
+            error = "This William and Mary account is not registered with Steer-Clear."
+
+    else:
+        error = "Invalid login credentials for William and Mary CAS."
+
+    return render_template('login.html', action=url_for('.login'), error=error), 400
 
 """
 logout
@@ -153,6 +169,7 @@ def logout():
     identity_changed.send(current_app._get_current_object(),
                           identity=AnonymousIdentity())
 
+    flash('Logout successful.')
     return redirect(url_for('.login'))
 
 """
