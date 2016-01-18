@@ -34,7 +34,6 @@ app.controller('RidesController', ['$scope', 'RidesService', '$window', function
             for (var i =0; i < data.rides.length; i++){
               data.rides[i].pickup_address = data.rides[i].pickup_address || "Start Address Not Found";
               data.rides[i].dropoff_address = data.rides[i].dropoff_address || "End Address Not Found";
-              data.rides[i].pickup_time = new Date(data.rides[i].pickup_time)
             };
         $scope.originalRides = angular.copy(data.rides);
             $scope.filterRides($scope.filter);

@@ -23,6 +23,7 @@ api = Api(api_bp)
 # response format for Ride objects
 ride_fields = {
     'id': fields.Integer(),
+    'created': fields.DateTime(dt_format='iso8601'),
     'num_passengers': fields.Integer(),
     'start_latitude': fields.Float(),
     'start_longitude': fields.Float(),

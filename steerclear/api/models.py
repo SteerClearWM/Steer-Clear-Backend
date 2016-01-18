@@ -1,13 +1,14 @@
 from steerclear import db
 import sqlalchemy.types as types
 from datetime import datetime
+from pytz import timezone
 
 """
 Model class for the Ride object
 """
 class Ride(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    created = db.Column(db.DateTime, default=datetime.datetime.now())
+    created = db.Column(db.DateTime, default=datetime.now())
     num_passengers = db.Column(db.Integer, nullable=False)
     
     start_latitude = db.Column(db.Float, nullable=False)
@@ -31,6 +32,7 @@ class Ride(db.Model):
         return "<Ride(ID %r, Passengers %r, Pickup <%r, %r>, Dropoff <%r, %r>, ETP %r, Duration %r, ETD %r)>" % \
                 (
                     self.id,
+                    self.created,
                     self.num_passengers, 
                     self.start_latitude, 
                     self.start_longitude,
@@ -44,6 +46,7 @@ class Ride(db.Model):
     def as_dict(self):
         return {
             'id': self.id,
+            'created': self.created,
             'num_passengers': self.num_passengers,
             'start_latitude': self.start_latitude,
             'start_longitude': self.start_longitude,
