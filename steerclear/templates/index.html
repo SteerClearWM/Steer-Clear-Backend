@@ -20,7 +20,7 @@
 
   </head>
 
-  <body class="body" ng-app="SteerClear" ng-controller="RidesController">
+  <body class="body" ng-app="SteerClear" ng-controller="RidesController" ng-cloak>
     <div class="header-body">
       <img ng-click="logout()" src="static/assets/logout.png" class="logout-button"></img>
       <img src="static/assets/logo_very_small.png" class="center-block header-logo-small"></img>
@@ -34,6 +34,8 @@
         <li role="presentation" ng-class="{'active': filter == 'both'}" ng-click="filterRides('both')"><a href="#">All Rides</a></li>
         <li role="presentation" ng-class="{'active': filter == 'off_campus'}" ng-click="filterRides('off_campus')"><a href="#">Off Campus</a></li>
       </ul>
+
+      <h2 class="no-rides-notice" ng-if="!rides.length">No ride requests at the moment.</h2>
 
       <div class="col-xs-12" ng-show="rides[0]">
         <div class="input-group">

@@ -33,6 +33,11 @@
 
 /*Rides Queue*/
 
+.no-rides-notice {
+  text-align: center;
+  margin-top: 70px;
+}
+
 .rides {
 	background-color: rgba(80, 80, 80, 0.15) !important;
 	margin-top: 12px;
@@ -104,7 +109,15 @@
   position: absolute;
   right: 14px;
   top: 12px;
-  width: 36px;
+  width: 50px;
+  border-style: outset;
+  border-width: 5px;
+  padding: 3px 3px 3px 3px;
+  border-color: rgba(80, 80, 80, 0.25);
+}
+
+.logout-button:hover {
+  border-style: inset;
 }
 
 .header-body {
