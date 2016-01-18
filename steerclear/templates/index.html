@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
     <link rel="shortcun icon" href="static/assets/logo_dark_very_small.png">
 
     <title>Steer Clear Rides</title>
-              
+
     <!-- Bootstrap core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
@@ -18,26 +18,27 @@
     <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/static/css/steerclear-theme.css">
 
-  </head>
+</head>
 
-  <body class="body" ng-app="SteerClear" ng-controller="RidesController" ng-cloak>
+<body class="body" ng-app="SteerClear" ng-controller="RidesController" ng-cloak>
     <div class="header-body">
       <img ng-click="logout()" src="static/assets/logout.png" class="logout-button"></img>
       <img src="static/assets/logo_very_small.png" class="center-block header-logo-small"></img>
-    </div>
-    <div class="header-bar"></div>
+  </div>
+  <div class="header-bar"></div>
 
-    <div class="container">
+  <div class="container-fluid">
 
       <ul class="nav nav-tabs ride-tabs">
         <li role="presentation" ng-class="{'active': filter == 'on_campus'}" ng-click="filterRides('on_campus')"><a href="#">On Campus</a></li>
         <li role="presentation" ng-class="{'active': filter == 'both'}" ng-click="filterRides('both')"><a href="#">All Rides</a></li>
         <li role="presentation" ng-class="{'active': filter == 'off_campus'}" ng-click="filterRides('off_campus')"><a href="#">Off Campus</a></li>
-      </ul>
+    </ul>
 
-      <h2 class="no-rides-notice" ng-if="!rides.length">No ride requests at the moment.</h2>
+    <h2 class="no-rides-notice" ng-if="!rides.length">No ride requests at the moment.</h2>
 
-      <div class="col-xs-12" ng-show="rides[0]">
+    <div class="col-xs-12" ng-show="rides[0]">
+        <div class="timestamp-first"><p>{[{rides[0].pickup_time | date:'h:mm'}]}</p></div>
         <div class="input-group">
             <span class="input-group-btn">
                 <button class="btn btn-lg row-button" type="button" ng-click="deleteRide(rides[0])">
@@ -56,31 +57,35 @@
                 </button>
             </span>
         </div>
-      </div>
-
-      <div class="col-xs-offset-1 col-xs-10">
-        <div class="input-group" ng-repeat="ride in rides track by ride.id" ng-show="!$first">
-            <span class="input-group-btn">
-                <button class="btn row-button" type="button" ng-click="deleteRide(ride)">
-                    <span class="glyphicon glyphicon-remove button-icon"></span>
-                </button>
-            </span>
-            <div ng-click="gps(ride.start_latitude, ride.start_longitude)" title="Open in Google Maps"><input class="form-control rides" ng-placeholder="ride.pickup_address" disabled></input></div>
-            <div ng-click="gps(ride.end_latitude, ride.end_longitude)" title="Open in Google Maps"><input class="form-control rides" ng-placeholder="ride.dropoff_address" disabled></input></div>
-            <span class="input-group-btn">
-                <button class="btn row-button passengers" type="button" title="Number of Passengers">{[{ride.num_passengers}]}</button>
-                <button class="btn row-button" type="button" ng-click="finishRide(ride)" title="Finish Ride">
-                    <span class="glyphicon glyphicon-check button-icon"></span>
-                </button>
-                <button class="btn row-button" type="button" ng-click="notify(ride)" title="Text this pickup you're coming">
-                    <span class="glyphicon glyphicon-phone button-icon"></span>
-                </button>
-            </span>
-        </div>
-      </div>
     </div>
 
-    <div class="footer-bar"></div>
+    
+    <div class="col-xs-offset-1 col-xs-10">
+        <div ng-repeat="ride in rides track by ride.id" ng-show="!$first">
+            <div class="timestamp"><p>{[{ride.pickup_time | date:'h:mm'}]}</p></div>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn row-button" type="button" ng-click="deleteRide(ride)">
+                        <span class="glyphicon glyphicon-remove button-icon"></span>
+                    </button>
+                </span>
+                <div ng-click="gps(ride.start_latitude, ride.start_longitude)" title="Open in Google Maps"><input class="form-control rides" ng-placeholder="ride.pickup_address" disabled></input></div>
+                <div ng-click="gps(ride.end_latitude, ride.end_longitude)" title="Open in Google Maps"><input class="form-control rides" ng-placeholder="ride.dropoff_address" disabled></input></div>
+                <span class="input-group-btn">
+                    <button class="btn row-button passengers" type="button" title="Number of Passengers">{[{ride.num_passengers}]}</button>
+                    <button class="btn row-button" type="button" ng-click="finishRide(ride)" title="Finish Ride">
+                        <span class="glyphicon glyphicon-check button-icon"></span>
+                    </button>
+                    <button class="btn row-button" type="button" ng-click="notify(ride)" title="Text this pickup you're coming">
+                        <span class="glyphicon glyphicon-phone button-icon"></span>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer-bar"></div>
 
 
     <!-- Bootstrap core JavaScript
@@ -97,5 +102,5 @@
     <script src="static/js/controllers/rides_controller.js"></script>
     <script src="static/js/services/rides_service.js"></script>
     <script src="static/js/directives/ng-placeholder.js"></script>
-  </body>
+</body>
 </html>

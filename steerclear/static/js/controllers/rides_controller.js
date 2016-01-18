@@ -29,15 +29,17 @@ app.controller('RidesController', ['$scope', 'RidesService', '$window', function
         }
     }
 
-		updateData = function() {
-	      RidesService.getRides().then(function(data){
-	          for (var i =0; i < data.rides.length; i++){
-	              data.rides[i].pickup_address = data.rides[i].pickup_address || "Start Address Not Found";
-	              data.rides[i].dropoff_address = data.rides[i].dropoff_address || "End Address Not Found";
-	          };
-            $scope.originalRides = angular.copy(data.rides);
-	          $scope.filterRides($scope.filter);
-	    	});
+	updateData = function() {
+      RidesService.getRides().then(function(data){
+            for (var i =0; i < data.rides.length; i++){
+              data.rides[i].pickup_address = data.rides[i].pickup_address || "Start Address Not Found";
+              data.rides[i].dropoff_address = data.rides[i].dropoff_address || "End Address Not Found";
+              data.rides[i].pickup_time = new Date(data.rides[i].pickup_time)
+            };
+        $scope.originalRides = angular.copy(data.rides);
+            $scope.filterRides($scope.filter);
+    	});
+        console.log($scope.rides)
     };
 
     updateData();
@@ -47,7 +49,7 @@ app.controller('RidesController', ['$scope', 'RidesService', '$window', function
         $scope.iOS = /iPad|iPhone|iPod/.test(navigator.platform);
         url = "maps.google.com?&daddr=" + dlat + "," + dlong
         if (slat & slong) {
-          url = url + "&saddr=" + slat + "," + slong;
+            url = url + "&saddr=" + slat + "," + slong;
         }
         url += "&zoom=15";
         if ($scope.iOS) {
@@ -94,12 +96,12 @@ app.controller('RidesController', ['$scope', 'RidesService', '$window', function
         "num_passengers": 4,
         "start_latitude": 37.273485,
         "start_longitude": -76.719628,
-        "end_latitude": 37 + Math.random()/5,
-        "end_longitude": -76.2 + Math.random()/5,
+        "end_latitude": 37.273,
+        "end_longitude": -76.719628,
         "phone": 15555555555
     };
 
     if (document.location.hostname == "localhost" || document.location.hostname == "127.0.0.1")
-      RidesService.createRide(ride)
+        RidesService.createRide(ride)
 
 }]);

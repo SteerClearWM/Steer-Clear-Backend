@@ -26,6 +26,7 @@ def upgrade():
     )
     op.create_table('ride',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('created', sa.Integer(), nullable=False),
     sa.Column('num_passengers', sa.Integer(), nullable=False),
     sa.Column('start_latitude', sa.Float(), nullable=False),
     sa.Column('start_longitude', sa.Float(), nullable=False),

@@ -7,6 +7,7 @@ Model class for the Ride object
 """
 class Ride(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    created = db.Column(db.DateTime, default=datetime.datetime.now())
     num_passengers = db.Column(db.Integer, nullable=False)
     
     start_latitude = db.Column(db.Float, nullable=False)

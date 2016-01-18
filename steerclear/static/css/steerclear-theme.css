@@ -101,6 +101,21 @@
   cursor: initial !important;
 }
 
+.timestamp-first {
+  float: left;
+  width: 44px;
+  margin-top: 22px;
+  font-size: 18px;
+  color: rgba(190, 190, 190, 1);
+}
+
+.timestamp {
+  float: left;
+  width: 44px;
+  margin-top: 16px;
+  color: rgba(190, 190, 190, 1);
+}
+
 .header-logo-small {
 	height: 150px;
 }
