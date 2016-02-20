@@ -29,8 +29,8 @@ class User(db.Model, login.UserMixin):
     roles = db.relationship('Role', backref='user', lazy='dynamic')
 
     def __repr__(self):
-        return "User(ID %r, Username %r, Phone %r)" % (
+        return "User(ID %r, Username %r, Roles %r)" % (
             self.id,
             self.username,
-            self.phone
+            self.roles.all()
         )
