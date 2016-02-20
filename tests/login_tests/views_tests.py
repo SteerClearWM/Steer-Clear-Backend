@@ -227,7 +227,7 @@ class SteerClearLoginTestCase(base.SteerClearBaseTestCase):
             self.assertIsNotNone(user)
             self.assertEquals(user.username, self.register_payload[u'username'])
             self.assertEquals(user.phone.e164, self.register_payload[u'phone'])
-            self.assertEquals(user.roles.all(), [self.student_role])
+            self.assertEquals(user.roles, [self.student_role])
 
             # make sure we can log in as new user
             response = self.client.post(url_for('login.login'), data=self.register_payload)
