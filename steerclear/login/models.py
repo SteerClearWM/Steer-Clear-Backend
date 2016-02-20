@@ -36,5 +36,5 @@ class User(db.Model, login.UserMixin):
         return "User(ID %r, Username %r, Roles %r)" % (
             self.id,
             self.username,
-            self.roles.all()
+            self.roles
         )

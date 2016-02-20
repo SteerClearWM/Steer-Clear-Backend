@@ -30,5 +30,5 @@ class SteerClearPermissionsTestCase(base.SteerClearBaseTestCase):
 
         # Check that each user has the student permission
         for student in students:
-            self.assertIn(self.student_role, student.roles.all())
+            self.assertIn(self.student_role, student.roles)
 
