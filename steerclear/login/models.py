@@ -16,10 +16,8 @@ class Role(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return "Role(ID %r, Name %r, Description %r" % (
-                self.id,
+        return "Role(Name %r)" % (
                 self.name,
-                self.description
             )
 
 class User(db.Model, login.UserMixin):
