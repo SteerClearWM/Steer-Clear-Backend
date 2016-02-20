@@ -8,12 +8,17 @@ from sqlalchemy_utils import force_auto_coercion
 # coerce the string to a phone number object
 force_auto_coercion()
 
+association_table = db.Table('association_table',
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
+
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
-
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+    users = db.relationship('User', secondary=association_table, backref='roles', lazy='dynamic')
 
     def __repr__(self):
         return "Role(Name %r)" % (
@@ -26,7 +31,6 @@ class User(db.Model, login.UserMixin):
     phone = db.Column(PhoneNumberType, unique=True)
 
     rides = db.relationship('Ride', backref='user', lazy='dynamic')
-    roles = db.relationship('Role', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return "User(ID %r, Username %r, Roles %r)" % (
